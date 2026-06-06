@@ -12,8 +12,10 @@ export default async function LoginPage({
     <div className="min-h-screen bg-bg flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="flex items-center justify-center mb-8">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Litug" className="h-20 w-auto" />
+          <Link href="/" aria-label="Retour à l'accueil" className="inline-block">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="Litug — accueil" className="h-20 w-auto" />
+          </Link>
         </div>
 
         <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-8">

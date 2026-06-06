@@ -4,9 +4,11 @@ import { getDataProvider } from '@/lib/data/provider';
 import { DocumentTypeBadge } from '@/components/ui/DocumentTypeBadge';
 import { VerificationBadge } from '@/components/ui/VerificationBadge';
 import { StatusBadge } from '@/components/ui/StatusBadge';
+import { PublishBadge } from '@/components/ui/PublishBadge';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SaleStatusActions } from './SaleStatusActions';
 import { VerificationActions } from './VerificationActions';
+import { PublishActions } from './PublishActions';
 import { PhotoManager } from './PhotoManager';
 import { formatFcfa, formatEur, formatDate } from '@/lib/utils';
 
@@ -63,6 +65,7 @@ export default async function LandDetailPage({ params }: Props) {
 
           {/* Badges */}
           <div className="flex flex-wrap gap-2">
+            <PublishBadge published={land.published} />
             <DocumentTypeBadge type={land.documentType} />
             <VerificationBadge
               status={land.verificationStatus}
@@ -138,6 +141,9 @@ export default async function LandDetailPage({ params }: Props) {
               </div>
             </div>
           </div>
+
+          {/* Publication (visible par le public ou non) */}
+          <PublishActions landId={land.id} published={land.published ?? false} />
 
           {/* Actions vente */}
           <SaleStatusActions landId={land.id} currentStatus={land.saleStatus} />

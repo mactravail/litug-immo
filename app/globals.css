@@ -1,25 +1,70 @@
 @import "tailwindcss";
 
-@theme {
-  --color-bg: #FAFAF8;
-  --color-text: #1A1A1A;
-  --color-muted: #6B6B66;
-  --color-accent: #15573F;
-  --color-accent-light: #E8F0EC;
-  --color-gold: #C9A86A;
-  --color-gold-light: #F5EDD8;
-
-  --font-serif: var(--font-fraunces), "Lora", "Libre Baskerville", serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-}
+/* ============================================================
+   Litug — palette "Sahel" : source de vérité unique pour
+   TOUT le projet (landing + dashboard + auth).
+   Accent TRUST = bordeaux / vin (ex-vert, ex-teal).
+   ============================================================ */
 
 :root {
-  --background: #FAFAF8;
-  --foreground: #1A1A1A;
+  /* Sahel palette */
+  --ink: #200B11;
+  --ink-soft: #33121A;
+  --paper: #F7F2E9;
+  --paper-2: #EFE7D6;
+  --surface: #FFFFFF;
+  --green: #7A2233;
+  --green-bright: #973047;
+  --gold: #C9A24A;
+  --gold-soft: #E4CE92;
+  --text: #221316;
+  --text-muted: #6E5B5E;
+  --text-on-ink: #F1E7E9;
+  --text-on-ink-muted: #B29CA1;
+  --line: rgba(34, 19, 22, 0.10);
+  --line-on-ink: rgba(241, 231, 233, 0.12);
+
+  /* Backwards-compatible aliases used by the dashboard/auth */
+  --background: var(--paper);
+  --foreground: var(--text);
+}
+
+@theme {
+  /* Brand surfaces & text */
+  --color-bg: #F7F2E9;            /* --paper */
+  --color-paper-2: #EFE7D6;
+  --color-surface: #FFFFFF;
+  --color-ink: #200B11;
+  --color-ink-soft: #33121A;
+  --color-text: #221316;
+  --color-muted: #6E5B5E;
+  --color-line: rgba(34, 19, 22, 0.10);
+
+  /* Trust accent — bordeaux / vin */
+  --color-accent: #7A2233;
+  --color-accent-bright: #973047;
+  --color-accent-light: #F1E2E5;
+
+  /* Premium gold */
+  --color-gold: #C9A24A;
+  --color-gold-soft: #E4CE92;
+  --color-gold-light: #F4EBCF;
+
+  /* On-ink text */
+  --color-on-ink: #F1E7E9;
+  --color-on-ink-muted: #B29CA1;
+
+  /* Fonts — Space Grotesk (display) + Manrope (body) */
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-space-grotesk), var(--font-manrope), system-ui, sans-serif;
+  /* Alias : les titres du dashboard/auth utilisent `font-serif` → on les
+     bascule sur la police d'affichage Sahel (Space Grotesk). */
+  --font-serif: var(--font-space-grotesk), var(--font-manrope), system-ui, sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
 }

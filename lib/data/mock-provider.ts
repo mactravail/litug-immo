@@ -1,5 +1,5 @@
 import type { DataProvider } from './provider';
-import type { Stats, Land, Lead, Conversation, Seller, LandFilter, LeadFilter, NewLand, Visit, NewVisit, VisitStatus } from './types';
+import type { Stats, Land, Lead, Conversation, Seller, LandFilter, LeadFilter, NewLand, Visit, NewVisit, VisitStatus, PublicLand, PublicLandDetail, PublicLandFilter, PublicVisitSlot } from './types';
 import { SEED_LANDS, SEED_LEADS, SEED_CONVERSATIONS, SEED_SELLER, SEED_VISITS } from './seed';
 
 let seller: Seller = { ...SEED_SELLER };
@@ -59,6 +59,7 @@ export const mockProvider: DataProvider = {
       id: `land-${Date.now()}`,
       verificationStatus: 'non_verifie',
       saleStatus: 'disponible',
+      published: false,
       photos: input.photos ?? [],
       documents: input.documents ?? [],
       createdAt: new Date().toISOString(),
@@ -117,5 +118,32 @@ export const mockProvider: DataProvider = {
     if (idx === -1) throw new Error(`Visit ${id} not found`);
     visits = visits.map(v => v.id === id ? { ...v, status } : v);
     return visits.find(v => v.id === id)!;
+  },
+
+  async listPublicLands(filter?: PublicLandFilter) {
+    const sellerName = (sellerId: string) => sellerId === seller.id ? seller.businessName : '';
+    let result = lands.filter(l => l.published === true);
+    if (filter?.documentType) result = result.filter(l => l.documentType === filter.documentType);
+    if (filter?.availableOnly) result = result.filter(l => l.saleStatus === 'disponible');
+    // Available first, then most recent.
+    result.sort((a, b) => {
+      if (a.saleStatus !== b.saleStatus) return a.saleStatus.localeCompare(b.saleStatus);
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+    if (filter?.limit) result = result.slice(0, filter.limit);
+    return result.map(l => ({ ...l, documents: [], sellerName: sellerName(l.sellerId) }));
+  },
+
+  async getPublicLandDetail(id: string) {
+    const land = lands.find(l => l.id === id);
+    if (!land) return null;
+    const sellerName = land.sellerId === seller.id ? seller.businessName : '';
+    const now = Date.now();
+    const upcomingVisits: PublicVisitSlot[] = visits
+      .filter(v => v.landId === id && (v.status === 'planifiee' || v.status === 'confirmee') && new Date(v.visitDate).getTime() >= now)
+      .sort((a, b) => new Date(a.visitDate).getTime() - new Date(b.visitDate).getTime())
+      .map(v => ({ id: v.id, visitDate: v.visitDate, status: v.status as PublicVisitSlot['status'] }));
+    const publicLand: PublicLand = { ...land, documents: [], sellerName };
+    return { land: publicLand, upcomingVisits } satisfies PublicLandDetail;
   },
 };

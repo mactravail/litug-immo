@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { logout } from '@/app/(auth)/login/actions';
 
 const NAV = [
-  { href: '/',           label: 'Tableau de bord', icon: LayoutDashboard },
+  { href: '/dashboard',  label: 'Tableau de bord', icon: LayoutDashboard },
   { href: '/terrains',   label: 'Terrains',         icon: Map },
   { href: '/clients',    label: 'Clients',          icon: Users },
   { href: '/visites',    label: 'Visites',          icon: CalendarDays },
@@ -48,7 +48,7 @@ export function Sidebar({ businessName, subscriptionStatus }: Props) {
 
       <nav className="flex-1 space-y-1">
         {NAV.map(({ href, label, icon: Icon }) => {
-          const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
+          const active = href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(href);
           return (
             <Link
               key={href}

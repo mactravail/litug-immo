@@ -1,4 +1,4 @@
-import type { Stats, Land, Lead, Conversation, Seller, LandFilter, LeadFilter, NewLand, Visit, NewVisit, VisitStatus } from './types';
+import type { Stats, Land, Lead, Conversation, Seller, LandFilter, LeadFilter, NewLand, Visit, NewVisit, VisitStatus, PublicLand, PublicLandDetail, PublicLandFilter } from './types';
 
 export interface DataProvider {
   getSeller(id: string): Promise<Seller | null>;
@@ -15,6 +15,9 @@ export interface DataProvider {
   listVisits(sellerId: string): Promise<Visit[]>;
   createVisit(input: NewVisit): Promise<Visit>;
   updateVisitStatus(id: string, status: VisitStatus): Promise<Visit>;
+  // Buyer-facing public reads (all sellers, anonymous visitors)
+  listPublicLands(filter?: PublicLandFilter): Promise<PublicLand[]>;
+  getPublicLandDetail(id: string): Promise<PublicLandDetail | null>;
 }
 
 let _provider: DataProvider | null = null;

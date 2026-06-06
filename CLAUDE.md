@@ -1,4 +1,4 @@
-# CLAUDE.md — TerreVérifiée *(working title — replace with the real brand name)*
+# CLAUDE.md — Litug *(working title — replace with the real brand name)*
 
 > Project context for Claude Code. **Read this first, every session.**
 > This file is the single source of truth for what we are building and the rules that must never be broken.
@@ -96,34 +96,46 @@ Core entities (English names in code/DB):
 - **Phase 0 — CURRENT: Supabase data model.** Tables, fields, relations, RLS, storage buckets.
 - **Phase 1 — AI agent on n8n.** The demo / sales hook: WhatsApp → Claude qualifies → reads Supabase → replies → saves lead. *This conversation is the sales demo for sellers.*
 - **Phase 2 — Seller dashboard (frontend).** Add/edit plots, upload docs/photos, see captured leads, see verification badges, collect testimonials.
-- **Phase 3 — Landing page + buyer-facing site.** The trust story, verified listings, badges, testimonials, "how it works".
+- **Phase 3 — Landing page + buyer-facing site (STARTED).** The trust story, verified listings, badges, testimonials, "how it works". The public landing **is the home page** (`/`, `app/page.tsx`) — bilingual FR/EN, mobile-first. Login/dashboard live behind the **"Se connecter"** link (`/login`); `proxy.ts` keeps `/` public and gates the protected routes.
 - **Phase 4 — later:** verification request + payment flow, notaire séquestre, architect/construction funnel.
 
 **First milestone target:** 1 seller, 3–4 real plots in Supabase, the AI answering on WhatsApp, 1 lead saved. Make *that* work fully, then scale.
 
 ---
 
-## 8. Design system
+## 8. Design system — **palette "Sahel"** (single source of truth)
 
-Sober, clean, premium. Whitespace is the elegance.
+Sober, clean, premium. Whitespace is the elegance. **One palette across the whole product** — the landing page, the seller dashboard, and the auth pages all share the same tokens. The canonical tokens live in `app/globals.css` (`:root` + Tailwind `@theme`); `app/landing.css` inherits them and only adds optional palette/font *variants* for the design-exploration panel.
 
-**Colors (design tokens):**
+**Colors (design tokens — Sahel):**
 ```
---bg:     #FAFAF8   /* warm white — base surface */
---text:   #1A1A1A   /* charcoal — never pure black */
---muted:  #6B6B66   /* warm gray — secondary text, borders */
---accent: #15573F   /* deep green — TRUST. Verified badges, CTAs, security signals ONLY */
---gold:   #C9A86A   /* rare premium accent — tiny doses only */
+--ink:               #200B11   /* dark anchor — hero, footer, impact bands (bordeaux/vin) */
+--ink-soft:          #33121A   /* softer dark surface */
+--paper:             #F7F2E9   /* warm white — base surface */
+--paper-2:           #EFE7D6   /* alternate warm surface */
+--surface:           #FFFFFF   /* cards, inputs */
+--green:             #7A2233   /* TRUST (bordeaux/vin) — primary CTAs, verified badge, security signals. Var name kept for compatibility. */
+--green-bright:      #973047   /* hover / brighter bordeaux */
+--gold:              #C9A24A   /* rare premium accent — small doses */
+--gold-soft:         #E4CE92   /* gold tint */
+--text:              #221316   /* main text — never pure black */
+--text-muted:        #6E5B5E   /* secondary text, borders */
+--text-on-ink:       #F1E7E9   /* text on dark surfaces */
+--text-on-ink-muted: #B29CA1   /* secondary text on dark */
+--line:              rgba(34,19,22,.10)  /* subtle borders */
 ```
-- **Green is reserved.** Use it only on the verified badge, primary CTAs, and security signals. Its power comes from being rare (≤10% of the surface).
+- **Bordeaux = TRUST.** The accent is a deep **bordeaux / vin** (the `--green*` variable *names* are kept for code compatibility, but the hue is bordeaux). The dark wine `--ink`/`--green` **anchors** the dark bands (hero, footer, impact) and carries every trust signal: primary CTAs, the *Vérifié* badge, security cues. Keep it meaningful — never use it as a random decorative fill. ⚠️ Bordeaux is intentionally kept **darker and less saturated than the 🔴 Délibération badge** (pure red = danger/fraud) so the two never read the same.
+- **Gold is the rare premium accent.** Tiny doses only (a highlighted word, a pin, an icon). Its power comes from being rare.
+- **Trust badge colors are semantic, not brand.** The document-type badges (🟢 TF · 🟡 Bail · 🔴 Délibération · ⚪ Non vérifié, see §3) stay visually **distinct** from the brand bordeaux/gold — the 🟢 TF badge stays **green** and the 🔴 Délibération badge stays **bright red**, both distinct from the bordeaux brand accent. Never merge them into the brand palette.
 
 **Typography (Google Fonts):**
-- Headings: **Fraunces** (serif). Fallbacks: Lora / Libre Baskerville.
-- Body & dashboard: **Inter**.
+- Headings / display: **Space Grotesk** (`--font-space-grotesk` → `--font-display`).
+- Body & dashboard: **Manrope** (`--font-manrope` → `--font-sans`).
+- *(Fraunces / Inter from the old system are retired — do not reintroduce them.)*
 
 **Layout rules:**
-- ~60% whitespace, ~30% text/structure, **≤10% green**.
-- **Mobile-first.** Most users are on phones with variable bandwidth — compress images, keep it fast.
+- ~60% whitespace, ~30% text/structure, accent colors sparing.
+- **Mobile-first — non-negotiable.** **>80% of visitors are on phones** with variable bandwidth: design for 360–390px first, compress images, keep the font payload small, keep it fast.
 
 ---
 

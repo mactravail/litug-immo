@@ -5,6 +5,7 @@ import { formatFcfa, formatEur } from '@/lib/utils';
 import { DocumentTypeBadge } from './DocumentTypeBadge';
 import { VerificationBadge } from './VerificationBadge';
 import { StatusBadge } from './StatusBadge';
+import { PublishBadge } from './PublishBadge';
 
 interface Props {
   land: Land;
@@ -12,10 +13,11 @@ interface Props {
 
 export function LandCard({ land }: Props) {
   const isVendu = land.saleStatus === 'vendu';
+  const isDraft = !land.published;
 
   return (
     <Link href={`/terrains/${land.id}`} className="block group">
-      <article className="bg-white rounded-2xl overflow-hidden border border-stone-100 shadow-sm hover:shadow-md transition-shadow">
+      <article className={`bg-white rounded-2xl overflow-hidden border shadow-sm hover:shadow-md transition-shadow ${isDraft ? 'border-amber-200 border-dashed' : 'border-stone-100'}`}>
         <div className="relative h-44 bg-stone-100">
           {land.photos.length > 0 ? (
             <img
@@ -40,6 +42,7 @@ export function LandCard({ land }: Props) {
 
         <div className="p-4 space-y-3">
           <div className="flex flex-wrap gap-1.5">
+            <PublishBadge published={land.published} />
             <DocumentTypeBadge type={land.documentType} />
             <VerificationBadge
               status={land.verificationStatus}

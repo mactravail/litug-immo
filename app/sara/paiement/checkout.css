@@ -1,0 +1,80 @@
+/* ============ Page paiement Sara (Wave) — styles ============ */
+
+.checkout-grid {
+  display: grid; grid-template-columns: 1.05fr .95fr;
+  gap: clamp(24px, 4vw, 44px); align-items: start;
+  margin-top: clamp(28px, 4vw, 44px);
+}
+@media (max-width: 880px) {
+  .checkout-grid { grid-template-columns: 1fr; }
+  .checkout-pay-col { order: -1; }
+}
+
+.co-card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--r-lg, 24px); box-shadow: var(--shadow-card);
+  padding: clamp(22px, 3vw, 30px);
+}
+.co-card + .co-card { margin-top: 20px; }
+.co-card h2 { font-family: var(--font-display); font-size: 20px; }
+.co-card .hint { color: var(--text-muted); font-size: 14px; margin-top: 4px; }
+
+.co-form { display: flex; flex-direction: column; gap: 16px; margin-top: 22px; }
+.co-form .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 480px) { .co-form .two { grid-template-columns: 1fr; } }
+.co-form .btn { width: 100%; margin-top: 6px; }
+.co-tx { padding-top: 18px; margin-top: 4px; border-top: 1px dashed var(--line); }
+
+/* ---- Récap commande ---- */
+.co-line { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 11px 0; font-size: 15px; }
+.co-line + .co-line { border-top: 1px solid var(--line); }
+.co-line .desc small { display: block; color: var(--text-muted); font-size: 12px; margin-top: 2px; }
+.co-line .amt { font-family: var(--font-display); font-weight: 600; white-space: nowrap; }
+.co-total { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-top: 14px; padding-top: 16px; border-top: 2px solid var(--ink); }
+.co-total .lbl { font-weight: 700; font-size: 15px; }
+.co-total .val { text-align: right; }
+.co-total .val .big { font-family: var(--font-display); font-weight: 600; font-size: 26px; color: var(--text); letter-spacing: -.02em; }
+.co-total .val small { display: block; color: var(--text-muted); font-size: 13px; margin-top: 2px; }
+.co-recurring { margin-top: 14px; color: var(--text-muted); font-size: 13px; }
+
+/* ---- Bloc Wave ---- */
+.wave-head { display: flex; align-items: center; gap: 12px; }
+.wave-logo {
+  width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0;
+  display: block; object-fit: contain;
+}
+.wave-head b { font-family: var(--font-display); font-size: 17px; display: block; }
+.wave-head span { color: var(--text-muted); font-size: 13px; }
+
+.qr-box {
+  margin: 20px auto 0; width: min(240px, 80%); aspect-ratio: 1;
+  background: #fff; border: 1px solid var(--line); border-radius: 18px;
+  padding: 16px; box-shadow: var(--shadow-card); display: grid; place-items: center;
+}
+.qr-box svg, .qr-box img { width: 100%; height: 100%; display: block; object-fit: contain; }
+.qr-missing { color: var(--text-muted); font-size: 13px; text-align: center; }
+.qr-cap { text-align: center; color: var(--text-muted); font-size: 13px; margin-top: 12px; }
+
+.wave-steps { list-style: none; padding: 0; margin: 22px 0 0; display: flex; flex-direction: column; gap: 12px; }
+.wave-steps li { display: flex; gap: 12px; align-items: flex-start; font-size: 14.5px; }
+.wave-steps .n {
+  flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%;
+  background: var(--green); color: #fff; font-size: 13px; font-weight: 700;
+  display: grid; place-items: center;
+}
+.wave-steps b { font-family: var(--font-display); }
+
+/* ---- Succès ---- */
+.co-success { text-align: center; padding: 8px 4px; }
+.co-success .ic {
+  width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 18px;
+  background: color-mix(in srgb, var(--green) 14%, transparent); color: var(--green);
+  display: grid; place-items: center;
+}
+.co-success h2 { font-family: var(--font-display); font-size: 24px; }
+.co-success p { color: var(--text-muted); margin-top: 10px; font-size: 15px; }
+.co-success .ref {
+  margin-top: 18px; display: inline-block; padding: 10px 16px; border-radius: 12px;
+  background: var(--paper-2); border: 1px solid var(--line); font-size: 14px;
+}
+.co-success .ref b { font-family: var(--font-display); }

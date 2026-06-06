@@ -6,7 +6,7 @@ import { LayoutDashboard, Map, Users, Settings, CalendarDays } from 'lucide-reac
 import { cn } from '@/lib/utils';
 
 const NAV = [
-  { href: '/',           label: 'Accueil',  icon: LayoutDashboard },
+  { href: '/dashboard',  label: 'Accueil',  icon: LayoutDashboard },
   { href: '/terrains',   label: 'Terrains', icon: Map },
   { href: '/clients',    label: 'Clients',  icon: Users },
   { href: '/visites',    label: 'Visites',  icon: CalendarDays },
@@ -20,7 +20,7 @@ export function MobileNav() {
     <nav className="lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-stone-100 z-50">
       <div className="flex">
         {NAV.map(({ href, label, icon: Icon }) => {
-          const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
+          const active = href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(href);
           return (
             <Link
               key={href}

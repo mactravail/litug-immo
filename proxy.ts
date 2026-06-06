@@ -27,19 +27,40 @@ export async function proxy(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
 
-  const isAuthRoute =
-    request.nextUrl.pathname.startsWith('/login') ||
-    request.nextUrl.pathname.startsWith('/register') ||
-    request.nextUrl.pathname.startsWith('/auth') ||
-    request.nextUrl.pathname.startsWith('/forgot-password') ||
-    request.nextUrl.pathname.startsWith('/reset-password');
+  const { pathname } = request.nextUrl;
 
-  if (!user && !isAuthRoute) {
+  const isPublicRoute =
+    pathname === '/' ||
+    pathname.startsWith('/login') ||
+    pathname.startsWith('/register') ||
+    pathname.startsWith('/auth') ||
+    pathname.startsWith('/forgot-password') ||
+    pathname.startsWith('/reset-password') ||
+    pathname.startsWith('/nos-terrains') ||
+    pathname.startsWith('/blog') ||
+    pathname.startsWith('/sara') ||
+    pathname.startsWith('/mustaf') ||
+    pathname.startsWith('/produits') ||
+    pathname.startsWith('/a-propos') ||
+    pathname.startsWith('/carrieres') ||
+    pathname.startsWith('/mentions-legales') ||
+    pathname.startsWith('/confidentialite') ||
+    pathname.startsWith('/conditions');
+
+  const isProtectedRoute =
+    pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/terrains') ||   // dashboard vendeur — /terrains/[id], etc.
+    pathname.startsWith('/clients') ||
+    pathname.startsWith('/visites') ||
+    pathname.startsWith('/parametres') ||
+    pathname.startsWith('/aide');
+
+  if (!user && isProtectedRoute) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/register')) {
-    return NextResponse.redirect(new URL('/', request.url));
+  if (user && (pathname === '/login' || pathname === '/register')) {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
   return supabaseResponse;

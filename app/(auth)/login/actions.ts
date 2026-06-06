@@ -18,11 +18,11 @@ export async function login(
     return { error: 'Email ou mot de passe incorrect.' };
   }
 
-  redirect('/');
+  redirect('/dashboard');
 }
 
 export async function logout() {
   const supabase = await createSupabaseServerClient();
   await supabase.auth.signOut();
-  redirect('/login');
+  redirect('/');
 }

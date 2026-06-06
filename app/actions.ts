@@ -12,6 +12,15 @@ export async function updateLandSaleStatus(landId: string, status: SaleStatus) {
   revalidatePath('/');
 }
 
+export async function setLandPublished(landId: string, published: boolean) {
+  await getDataProvider().updateLand(landId, { published });
+  revalidatePath(`/terrains/${landId}`);
+  revalidatePath('/terrains');
+  revalidatePath('/nos-terrains');
+  revalidatePath(`/nos-terrains/${landId}`);
+  revalidatePath('/');
+}
+
 export async function requestVerification(landId: string) {
   await getDataProvider().updateLand(landId, { verificationStatus: 'a_verifier' });
   revalidatePath(`/terrains/${landId}`);

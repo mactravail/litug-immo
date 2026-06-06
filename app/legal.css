@@ -1,0 +1,211 @@
+/* ============================================================
+   Pages informationnelles (À propos, Carrières, Légal)
+   Palette Sahel — hérite des tokens de globals.css / landing.css
+   ============================================================ */
+
+/* ── Nav ─────────────────────────────────────────────────── */
+
+.info-nav {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 72px;
+  padding-inline: clamp(20px, 3vw, 40px);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  border-bottom: 1px solid var(--line);
+}
+
+.info-nav .brand img { height: 34px; width: auto; display: block; }
+.info-nav-right { display: flex; align-items: center; gap: 10px; }
+
+.info-nav-links { display: flex; align-items: center; gap: 4px; }
+
+.info-nav-link {
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--text-muted);
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.info-nav-link:hover {
+  color: var(--text);
+  background: color-mix(in srgb, var(--text) 5%, transparent);
+}
+
+@media (max-width: 860px) { .info-nav-links { display: none; } }
+@media (max-width: 560px) { .info-nav-right .btn-ghost { display: none; } }
+
+/* ── Hero ─────────────────────────────────────────────────── */
+
+.info-hero {
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  padding-block: clamp(56px, 9vw, 104px);
+}
+
+.info-hero-inner { max-width: 760px; }
+
+.info-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(34px, 6vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 14px 0 0;
+  color: var(--text);
+}
+
+.info-hero-sub {
+  margin-top: 18px;
+  font-size: clamp(16px, 2.2vw, 19px);
+  line-height: 1.6;
+  color: var(--text-muted);
+  max-width: 620px;
+}
+
+.info-meta {
+  margin-top: 22px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ── Corps / prose ────────────────────────────────────────── */
+
+.info-main { padding-block: clamp(48px, 8vw, 88px); }
+
+.info-prose { max-width: 760px; }
+
+.info-prose h2 {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3.2vw, 28px);
+  letter-spacing: -0.01em;
+  color: var(--text);
+  margin: 48px 0 14px;
+}
+.info-prose h2:first-child { margin-top: 0; }
+
+.info-prose h3 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 28px 0 8px;
+}
+
+.info-prose p,
+.info-prose li {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+.info-prose p { margin: 0 0 14px; }
+
+.info-prose ul {
+  margin: 0 0 16px;
+  padding-left: 22px;
+  list-style: disc;
+}
+.info-prose li { margin-bottom: 8px; }
+
+.info-prose a { color: var(--green); font-weight: 600; }
+.info-prose strong { color: var(--text); font-weight: 600; }
+
+.info-prose .info-note {
+  margin-top: 8px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  font-size: 14px;
+}
+
+/* ── Grilles de cartes (valeurs, postes) ──────────────────── */
+
+.info-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+  margin-top: 12px;
+}
+
+.info-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.info-card .info-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--green) 12%, transparent);
+  color: var(--green);
+  margin-bottom: 14px;
+}
+
+.info-card h3 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 6px;
+}
+
+.info-card p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ── Poste (Carrières) ────────────────────────────────────── */
+
+.info-job {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 22px 24px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  margin-bottom: 14px;
+}
+
+.info-job h3 { margin: 0 0 4px; font-size: 17px; color: var(--text); }
+.info-job p { margin: 0; font-size: 14px; color: var(--text-muted); }
+.info-job .info-job-tags { font-size: 13px; color: var(--text-muted); }
+
+/* ── CTA bandeau ──────────────────────────────────────────── */
+
+.info-cta {
+  margin-top: 56px;
+  padding: clamp(28px, 5vw, 44px);
+  border-radius: 20px;
+  background: var(--ink);
+  text-align: center;
+}
+.info-cta h2 { color: var(--text-on-ink); margin: 0 0 10px; }
+.info-cta p { color: var(--text-on-ink-muted); margin: 0 auto 22px; max-width: 460px; }
+
+/* ── Footer ───────────────────────────────────────────────── */
+
+.info-foot {
+  text-align: center;
+  padding: 48px 20px 64px;
+  color: var(--text-muted);
+  font-size: 14px;
+  border-top: 1px solid var(--line);
+}
+.info-foot a { color: var(--green); font-weight: 600; }

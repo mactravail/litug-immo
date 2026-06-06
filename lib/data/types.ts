@@ -17,6 +17,7 @@ export interface Land {
   verifiedAt?: string;
   registryChecked?: string;
   saleStatus: SaleStatus;
+  published?: boolean;
   photos: string[];
   documents: string[];
   description?: string;
@@ -108,3 +109,29 @@ export interface Visit {
 }
 
 export type NewVisit = Omit<Visit, 'id' | 'createdAt'>;
+
+/* --- Buyer-facing public listings (no private seller/lead data) --- */
+
+// A land as shown publicly: same fields as Land (minus private `documents`),
+// plus the seller's display name. `documents` is kept as [] for type compat.
+export interface PublicLand extends Land {
+  sellerName: string;
+}
+
+// A scheduled visit exposed publicly: date + status only, no lead identity.
+export interface PublicVisitSlot {
+  id: string;
+  visitDate: string;
+  status: Extract<VisitStatus, 'planifiee' | 'confirmee'>;
+}
+
+export interface PublicLandDetail {
+  land: PublicLand;
+  upcomingVisits: PublicVisitSlot[];
+}
+
+export interface PublicLandFilter {
+  documentType?: DocumentType;
+  availableOnly?: boolean;
+  limit?: number;
+}

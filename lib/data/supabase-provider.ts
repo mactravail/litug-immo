@@ -3,6 +3,7 @@ import type { DataProvider } from './provider';
 import type {
   Stats, Land, Lead, Conversation, Seller,
   LandFilter, LeadFilter, NewLand, Visit, NewVisit, VisitStatus,
+  PublicLand, PublicLandDetail, PublicLandFilter, PublicVisitSlot,
 } from './types';
 
 // --- Mappers DB (snake_case) → TypeScript (camelCase) ---
@@ -32,6 +33,7 @@ function mapLand(row: Record<string, unknown>): Land {
     verifiedAt: row.verified_at as string | undefined ?? undefined,
     registryChecked: row.registry_checked as string | undefined ?? undefined,
     saleStatus: row.sale_status as Land['saleStatus'],
+    published: (row.published as boolean) ?? false,
     photos: (row.photos as string[]) ?? [],
     documents: (row.documents as string[]) ?? [],
     description: row.description as string | undefined ?? undefined,
@@ -60,6 +62,14 @@ function mapConversation(row: Record<string, unknown>): Conversation {
     id: row.id as string,
     leadId: row.lead_id as string,
     messages: (row.messages as Conversation['messages']) ?? [],
+  };
+}
+
+function mapPublicLand(row: Record<string, unknown>): PublicLand {
+  return {
+    ...mapLand(row),
+    documents: [], // private — never exposed publicly
+    sellerName: (row.seller_name as string) ?? '',
   };
 }
 
@@ -193,6 +203,7 @@ export const supabaseProvider: DataProvider = {
     if (patch.verifiedAt !== undefined) update.verified_at = patch.verifiedAt;
     if (patch.registryChecked !== undefined) update.registry_checked = patch.registryChecked;
     if (patch.saleStatus !== undefined) update.sale_status = patch.saleStatus;
+    if (patch.published !== undefined) update.published = patch.published;
     if (patch.photos !== undefined) update.photos = patch.photos;
     if (patch.documents !== undefined) update.documents = patch.documents;
     if (patch.description !== undefined) update.description = patch.description;
@@ -298,5 +309,46 @@ export const supabaseProvider: DataProvider = {
       .single();
     if (error || !data) throw new Error(error?.message ?? `Visit ${id} not found`);
     return mapVisit(data);
+  },
+
+  async listPublicLands(filter?: PublicLandFilter) {
+    const supabase = await createSupabaseServerClient();
+    let query = supabase.from('lands_public').select('*');
+    if (filter?.documentType) query = query.eq('document_type', filter.documentType);
+    if (filter?.availableOnly) query = query.eq('sale_status', 'disponible');
+    // Available first, then most recent — keeps "Vendu" visible but lower (Sold != deleted).
+    query = query
+      .order('sale_status', { ascending: true })
+      .order('created_at', { ascending: false });
+    if (filter?.limit) query = query.limit(filter.limit);
+    const { data, error } = await query;
+    if (error) throw new Error(error.message);
+    return (data ?? []).map(mapPublicLand);
+  },
+
+  async getPublicLandDetail(id: string) {
+    const supabase = await createSupabaseServerClient();
+    const { data: landRow, error: landErr } = await supabase
+      .from('lands_public')
+      .select('*')
+      .eq('id', id)
+      .single();
+    if (landErr || !landRow) return null;
+
+    const nowIso = new Date().toISOString();
+    const { data: visitRows } = await supabase
+      .from('visits_public')
+      .select('id, visit_date, status')
+      .eq('land_id', id)
+      .gte('visit_date', nowIso)
+      .order('visit_date', { ascending: true });
+
+    const upcomingVisits: PublicVisitSlot[] = (visitRows ?? []).map(v => ({
+      id: v.id as string,
+      visitDate: v.visit_date as string,
+      status: v.status as PublicVisitSlot['status'],
+    }));
+
+    return { land: mapPublicLand(landRow), upcomingVisits };
   },
 };

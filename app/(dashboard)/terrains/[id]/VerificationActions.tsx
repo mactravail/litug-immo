@@ -36,7 +36,7 @@ export function VerificationActions({ landId, currentStatus }: Props) {
       <button
         disabled={pending}
         onClick={() => startTransition(() => requestVerification(landId))}
-        className="w-full text-sm font-semibold bg-accent text-white px-4 py-2.5 rounded-xl hover:bg-accent/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+        className="w-full text-sm font-semibold bg-blue-600 text-white px-4 py-2.5 rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
       >
         <ShieldCheck size={15} />
         {pending ? 'Demande en cours…' : 'Demander la vérification'}

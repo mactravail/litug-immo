@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Check, ShieldCheck, Sparkles, ArrowRight, Info, Settings } from 'lucide-react';
 import '../landing.css';
 import './offer.css';
+import SiteHeader from '../components/SiteHeader';
 
 export const metadata: Metadata = {
   title: 'Activer Sara — Offre & tarifs | Litug',
@@ -49,19 +50,7 @@ const FAQ = [
 export default function SaraOfferPage() {
   return (
     <div className="landing-root">
-      {/* Nav simple */}
-      <nav className="offer-nav">
-        <Link className="brand" href="/">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Litug" />
-        </Link>
-        <div className="offer-nav-right">
-          <Link className="btn btn-ghost" href="/login">Se connecter</Link>
-          <Link className="btn btn-primary" href="/register">
-            Créer mon compte <ArrowRight size={16} className="arr" />
-          </Link>
-        </div>
-      </nav>
+      <SiteHeader cta={{ label: 'Créer mon compte', href: '/register' }} />
 
       {/* Hero */}
       <header className="wrap offer-hero">

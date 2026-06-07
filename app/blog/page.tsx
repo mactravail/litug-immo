@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowRight, Clock, Calendar, BookOpen, ShieldCheck } from 'lucide-react';
 import '../landing.css';
 import './blog.css';
+import SiteHeader from '../components/SiteHeader';
 
 export const metadata: Metadata = {
   title: 'Blog — Guides & conseils immobiliers au Sénégal | Litug',
@@ -137,18 +138,7 @@ export default function BlogPage() {
     <div className="landing-root">
 
       {/* ── Nav ─────────────────────────────────────────────────── */}
-      <nav className="blog-nav">
-        <Link className="brand" href="/">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Litug" />
-        </Link>
-        <div className="blog-nav-right">
-          <Link className="btn btn-ghost" href="/login">Se connecter</Link>
-          <Link className="btn btn-primary" href="/#contact">
-            Commencer <ArrowRight size={16} className="arr" />
-          </Link>
-        </div>
-      </nav>
+      <SiteHeader cta={{ label: 'Commencer', href: '/#contact' }} />
 
       {/* ── Hero ────────────────────────────────────────────────── */}
       <header className="blog-hero">
@@ -181,6 +171,13 @@ export default function BlogPage() {
               className="blog-featured-img"
               style={{ background: FEATURED.gradient }}
             >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`/blog/${FEATURED.slug}.jpg`}
+                alt={FEATURED.title}
+                className="blog-img"
+                loading="lazy"
+              />
               <span className={`blog-cat blog-cat-${FEATURED.catColor}`}>
                 {FEATURED.category}
               </span>
@@ -219,6 +216,13 @@ export default function BlogPage() {
                   className="blog-card-img"
                   style={{ background: a.gradient }}
                 >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={`/blog/${a.slug}.jpg`}
+                    alt={a.title}
+                    className="blog-img"
+                    loading="lazy"
+                  />
                   <span className={`blog-cat blog-cat-${a.catColor}`}>
                     {a.category}
                   </span>

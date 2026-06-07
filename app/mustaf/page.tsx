@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import '../landing.css';
 import './pricing.css';
+import SiteHeader from '../components/SiteHeader';
 import FaqPanel from './FaqPanel';
 
 export const metadata: Metadata = {
@@ -124,18 +125,7 @@ export default function MustafPricingPage() {
     <div className="landing-root">
 
       {/* ── Nav ─────────────────────────────────────────────────── */}
-      <nav className="mustaf-nav">
-        <Link className="brand" href="/">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Litug" />
-        </Link>
-        <div className="mustaf-nav-right">
-          <Link className="btn btn-ghost" href="/login">Se connecter</Link>
-          <Link className="btn btn-primary" href="/#contact">
-            Parler à Mustaf <ArrowRight size={16} className="arr" />
-          </Link>
-        </div>
-      </nav>
+      <SiteHeader cta={{ label: 'Parler à Mustaf', href: '/#contact' }} />
 
       {/* ── Hero ────────────────────────────────────────────────── */}
       <header className="mustaf-hero">

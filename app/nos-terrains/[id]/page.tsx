@@ -2,11 +2,12 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import {
-  ArrowLeft, ArrowRight, MapPin, Maximize2, ShieldCheck, ShieldAlert,
+  ArrowRight, MapPin, Maximize2, ShieldCheck, ShieldAlert,
   CalendarClock, User, FileText, MessageCircle,
 } from 'lucide-react';
 import '../../landing.css';
 import '../terrains.css';
+import SiteHeader from '../../components/SiteHeader';
 import { getDataProvider } from '@/lib/data/provider';
 import type { DocumentType, PublicLand } from '@/lib/data/types';
 import { formatFcfa, formatEur, formatDate, formatVisitDate, formatTime } from '@/lib/utils';
@@ -70,18 +71,7 @@ export default async function TerrainDetailPage({ params }: Props) {
     <div className="landing-root">
 
       {/* ── Nav ─────────────────────────────────────────────────── */}
-      <nav className="terrains-nav">
-        <Link className="brand" href="/">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Litug" />
-        </Link>
-        <div className="terrains-nav-right">
-          <Link className="btn btn-ghost" href="/nos-terrains">
-            <ArrowLeft size={16} /> Tous les terrains
-          </Link>
-          <Link className="btn btn-primary" href="/login">Se connecter</Link>
-        </div>
-      </nav>
+      <SiteHeader cta={{ label: 'Parler à Sara', href: '/#contact' }} />
 
       <main className="td-page">
         <div className="wrap">

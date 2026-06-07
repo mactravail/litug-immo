@@ -53,8 +53,12 @@ export default function TerrainGrid({ terrains }: { terrains: PublicLand[] }) {
         {/* Transparence notice */}
         <div className="terrains-notice">
           <SlidersHorizontal size={14} />
-          Sur chaque fiche : le type de document réel, affiché sans filtre.
-          Délibération affichée <span className="tn-red">🔴</span>, Titre Foncier affiché <span className="tn-green">🟢</span> — aucune fiche mensongère.
+          <span>
+            Sur chaque fiche, le type de document réel est affiché sans filtre —{' '}
+            <span className="tn-green">🟢&nbsp;Titre&nbsp;Foncier</span>,{' '}
+            <span className="tn-bail">🟡&nbsp;Bail</span> ou{' '}
+            <span className="tn-red">🔴&nbsp;Délibération</span>. Jamais d&apos;annonce trompeuse.
+          </span>
         </div>
 
         {/* Filters */}

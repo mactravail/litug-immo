@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { ArrowRight, ShieldCheck } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
+import SiteHeader from '@/app/components/SiteHeader';
 
 /**
  * Shell partagé pour les pages informationnelles (À propos, Carrières,
@@ -12,23 +13,7 @@ export default function InfoShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="landing-root">
       {/* ── Nav ────────────────────────────────────────────── */}
-      <nav className="info-nav">
-        <Link className="brand" href="/">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Litug" />
-        </Link>
-        <div className="info-nav-links">
-          <Link className="info-nav-link" href="/nos-terrains">Nos terrains</Link>
-          <Link className="info-nav-link" href="/produits">Produits</Link>
-          <Link className="info-nav-link" href="/blog">Blog</Link>
-        </div>
-        <div className="info-nav-right">
-          <Link className="btn btn-ghost" href="/login">Se connecter</Link>
-          <Link className="btn btn-primary" href="/#contact">
-            Commencer <ArrowRight size={15} className="arr" />
-          </Link>
-        </div>
-      </nav>
+      <SiteHeader cta={{ label: 'Commencer', href: '/#contact' }} />
 
       {children}
 

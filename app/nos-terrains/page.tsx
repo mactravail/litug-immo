@@ -4,6 +4,7 @@ import { ArrowRight, ShieldCheck, MessageCircle } from 'lucide-react';
 import '../landing.css';
 import './terrains.css';
 import TerrainGrid from './TerrainGrid';
+import SiteHeader from '../components/SiteHeader';
 import { getDataProvider } from '@/lib/data/provider';
 
 export const metadata: Metadata = {
@@ -24,18 +25,7 @@ export default async function TerrainsPage() {
     <div className="landing-root">
 
       {/* ── Nav ─────────────────────────────────────────────────── */}
-      <nav className="terrains-nav">
-        <Link className="brand" href="/">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Litug" />
-        </Link>
-        <div className="terrains-nav-right">
-          <Link className="btn btn-ghost" href="/login">Se connecter</Link>
-          <Link className="btn btn-primary" href="/#contact">
-            Parler à Sara <ArrowRight size={16} className="arr" />
-          </Link>
-        </div>
-      </nav>
+      <SiteHeader cta={{ label: 'Parler à Sara', href: '/#contact' }} />
 
       {/* ── Hero ────────────────────────────────────────────────── */}
       <header className="terrains-hero">
@@ -90,7 +80,7 @@ export default async function TerrainsPage() {
               Parler à Sara <ArrowRight size={16} className="arr" />
             </a>
             <Link href="/sara" className="btn btn-ghost btn-lg">
-              En savoir plus sur Sara
+              En savoir plus
             </Link>
           </div>
         </div>

@@ -146,8 +146,9 @@
   color: var(--green);
 }
 
-.tn-green { color: var(--green); font-weight: 700; }
-.tn-red   { color: #dc2626; font-weight: 700; }
+.tn-green { color: #15803d; font-weight: 700; white-space: nowrap; }
+.tn-bail  { color: #b45309; font-weight: 700; white-space: nowrap; }
+.tn-red   { color: #dc2626; font-weight: 700; white-space: nowrap; }
 
 /* ── Filters ──────────────────────────────────────────────── */
 
@@ -509,6 +510,15 @@
 
 @media (max-width: 700px) {
   .terrains-cta-inner { flex-direction: column; align-items: flex-start; }
+  .terrains-cta-btns  { flex-wrap: nowrap; width: 100%; gap: 10px; }
+  /* Deux boutons compacts qui se partagent la ligne sans déborder */
+  .terrains-cta-btns .btn {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 13px 12px;
+    font-size: 14px;
+    gap: 6px;
+  }
 }
 
 /* ── Footer ───────────────────────────────────────────────── */

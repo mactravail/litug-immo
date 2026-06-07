@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import '../landing.css';
 import './products.css';
+import SiteHeader from '../components/SiteHeader';
 
 export const metadata: Metadata = {
   title: 'Nos produits — Sara & Mustaf | Litug',
@@ -58,23 +59,7 @@ export default function ProduitsPage() {
     <div className="landing-root">
 
       {/* ── Nav ──────────────────────────────────────────────── */}
-      <nav className="prod-nav">
-        <Link className="brand" href="/">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Litug" />
-        </Link>
-        <div className="prod-nav-links">
-          <a href="#sara"   className="prod-nav-link">Sara</a>
-          <a href="#mustaf" className="prod-nav-link">Mustaf</a>
-          <a href="#choix"  className="prod-nav-link">Comparaison</a>
-        </div>
-        <div className="prod-nav-right">
-          <Link className="btn btn-ghost" href="/login">Se connecter</Link>
-          <Link className="btn btn-primary" href="/#contact">
-            Commencer <ArrowRight size={15} className="arr" />
-          </Link>
-        </div>
-      </nav>
+      <SiteHeader cta={{ label: 'Commencer', href: '/#contact' }} />
 
       {/* ── Hero ─────────────────────────────────────────────── */}
       <header className="prod-hero">

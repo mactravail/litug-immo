@@ -476,21 +476,37 @@ function WhatsAppChat({ lang, agentName = "Sara", status }: { lang: Lang; agentN
 /* ------------------------------------------------------------------ */
 function Nav({ t, lang, setLang }: { t: T; lang: Lang; setLang: (l: Lang) => void }) {
   const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+
   useEffect(() => {
     const on = () => setScrolled(window.scrollY > 12);
     on(); window.addEventListener("scroll", on, { passive: true });
     return () => window.removeEventListener("scroll", on);
   }, []);
 
+  // Lock body scroll + close on Escape when the mobile menu is open
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => { document.body.style.overflow = prev; window.removeEventListener("keydown", onKey); };
+  }, [open]);
+
+  const close = () => setOpen(false);
+
   return (
-    <nav className={`nav${scrolled ? " scrolled" : ""}`}>
+    <nav className={`nav${scrolled ? " scrolled" : ""}${open ? " menu-open" : ""}`}>
       <div className="wrap nav-inner">
-        <a className="brand" href="#top"><img src="/logo.png" alt="Litug" /></a>
+        <a className="brand" href="#top" onClick={close}><img src="/logo.png" alt="Litug" /></a>
+
         <div className="nav-links">
           <a className="nav-link" href="/nos-terrains">{t.nav.terrains}</a>
           <a className="nav-link" href="/blog">{t.nav.blog}</a>
           <a className="nav-link" href="/produits">{t.nav.produits}</a>
         </div>
+
         <div className="nav-right">
           <div className="lang-toggle" role="group" aria-label="Language">
             <button className={lang === "fr" ? "on" : ""} onClick={() => setLang("fr")}>FR</button>
@@ -502,7 +518,38 @@ function Nav({ t, lang, setLang }: { t: T; lang: Lang; setLang: (l: Lang) => voi
             <Icon name="arrow" size={16} className="arr" />
           </a>
         </div>
+
+        <button
+          className="nav-burger"
+          aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
+          aria-expanded={open}
+          onClick={() => setOpen((o) => !o)}
+        >
+          <span></span><span></span><span></span>
+        </button>
       </div>
+
+      {/* Mobile menu */}
+      <div className={`nav-mobile${open ? " open" : ""}`} role="dialog" aria-modal="true">
+        <div className="nav-mobile-links">
+          <a href="/nos-terrains" onClick={close}>{t.nav.terrains}</a>
+          <a href="/blog" onClick={close}>{t.nav.blog}</a>
+          <a href="/produits" onClick={close}>{t.nav.produits}</a>
+        </div>
+        <div className="nav-mobile-actions">
+          <Link className="btn btn-ghost btn-lg" href="/login" onClick={close}>{t.nav.login}</Link>
+          <a className="btn btn-primary btn-lg" href="#contact" onClick={close}>
+            {t.nav.cta}<Icon name="arrow" size={17} className="arr" />
+          </a>
+        </div>
+        <div className="nav-mobile-lang">
+          <div className="lang-toggle" role="group" aria-label="Language">
+            <button className={lang === "fr" ? "on" : ""} onClick={() => setLang("fr")}>FR</button>
+            <button className={lang === "en" ? "on" : ""} onClick={() => setLang("en")}>EN</button>
+          </div>
+        </div>
+      </div>
+      <div className={`nav-scrim${open ? " open" : ""}`} onClick={close}></div>
     </nav>
   );
 }

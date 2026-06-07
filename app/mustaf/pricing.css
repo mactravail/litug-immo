@@ -79,7 +79,7 @@
   margin-bottom: 32px;
 }
 
-.mustaf-hero h1 {
+.landing-root .mustaf-hero h1 {
   color: var(--text-on-ink);
   font-size: clamp(38px, 5.6vw, 68px);
   max-width: 18ch;
@@ -117,6 +117,39 @@
   border-color: var(--gold);
   color: var(--gold) !important;
   background: transparent;
+}
+
+/* ── Hero mobile (≤600px) ─────────────────────────────────── */
+@media (max-width: 600px) {
+  .mustaf-hero {
+    padding-top: 104px;
+  }
+  .mustaf-hero-badge {
+    font-size: 12px;
+    padding: 6px 12px 6px 10px;
+    margin-bottom: 24px;
+  }
+  .landing-root .mustaf-hero h1 {
+    font-size: clamp(32px, 9vw, 40px);
+    max-width: 16ch;
+  }
+  .mustaf-hero-sub {
+    font-size: 16px;
+    margin-top: 18px;
+  }
+  /* Boutons : pleine largeur, empilés, taille uniforme */
+  .mustaf-hero-ctas {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    width: 100%;
+    max-width: 340px;
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .mustaf-hero-ctas .btn {
+    width: 100%;
+  }
 }
 
 /* ── Pricing section ─────────────────────────────────────── */
@@ -531,7 +564,16 @@
 @media (max-width: 700px) {
   .mustaf-cta-inner {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+  }
+  .mustaf-cta-btns {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: 100%;
+    gap: 12px;
+  }
+  .mustaf-cta-btns .btn {
+    width: 100%;
   }
 }
 

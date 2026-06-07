@@ -580,9 +580,9 @@ function Hero({ t, lang }: { t: T; lang: Lang }) {
           </div>
           <div className="hero-proof">
             <div className="avatars">
-              <span style={{ background: "linear-gradient(135deg,#C9A24A,#973047)" }}></span>
-              <span style={{ background: "linear-gradient(135deg,#973047,#200B11)" }}></span>
-              <span style={{ background: "linear-gradient(135deg,#E4CE92,#C9A24A)" }}></span>
+              <img src="/avatars/avatar-homme-noir.jpg" alt="" width={32} height={32} loading="lazy" />
+              <img src="/avatars/avatar-femme-noire.jpg" alt="" width={32} height={32} loading="lazy" />
+              <img src="/avatars/avatar-homme-blanc.jpg" alt="" width={32} height={32} loading="lazy" />
             </div>
             <span>{t.hero.proof}</span>
           </div>
@@ -644,7 +644,8 @@ function Parcours({ t, lang }: { t: T; lang: Lang }) {
           <article className="pcard reveal">
             <div className="pcard-media">
               <span className="pcard-tag">{t.parcours.card1_tag}</span>
-              <Placeholder label={lang === "fr" ? "terrain / vente" : "land / sale"} hue={150} />
+              <img className="pcard-img" src="/parcours/terrain-vente.jpg" alt="" loading="lazy" />
+              <span className="pcard-label">{lang === "fr" ? "terrain / vente" : "land / sale"}</span>
             </div>
             <div className="pcard-body">
               <h3>{t.parcours.card1_title}</h3>
@@ -655,7 +656,8 @@ function Parcours({ t, lang }: { t: T; lang: Lang }) {
           <article className="pcard reveal">
             <div className="pcard-media">
               <span className="pcard-tag">{t.parcours.card2_tag}</span>
-              <Placeholder label={lang === "fr" ? "architecture / chantier" : "architecture / build"} hue={35} />
+              <img className="pcard-img" src="/parcours/architecture-chantier.jpg" alt="" loading="lazy" />
+              <span className="pcard-label">{lang === "fr" ? "architecture / chantier" : "architecture / build"}</span>
             </div>
             <div className="pcard-body">
               <h3>{t.parcours.card2_title}</h3>

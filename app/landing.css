@@ -252,8 +252,11 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 .hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 .hero-proof { display: flex; align-items: center; gap: 14px; margin-top: 36px; color: var(--text-on-ink-muted); font-size: 14px; }
 .hero-proof .avatars { display: flex; }
-.hero-proof .avatars span { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--ink); margin-left: -10px; }
-.hero-proof .avatars span:first-child { margin-left: 0; }
+.hero-proof .avatars span,
+.hero-proof .avatars img { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--ink); margin-left: -10px; }
+.hero-proof .avatars img { object-fit: cover; display: block; background: var(--ink-soft); }
+.hero-proof .avatars span:first-child,
+.hero-proof .avatars img:first-child { margin-left: 0; }
 
 /* Hero layout variants */
 .landing-root[data-hero="centered"] .hero-inner { grid-template-columns: 1fr; justify-items: center; text-align: center; }
@@ -329,7 +332,14 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 .parcours-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .pcard { position: relative; border-radius: var(--r-xl); overflow: hidden; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-card); transition: transform .3s ease, box-shadow .3s ease; display: flex; flex-direction: column; }
 .pcard:hover { transform: translateY(-6px); box-shadow: var(--shadow-float); }
-.pcard-media { height: 220px; position: relative; overflow: hidden; }
+.pcard-media { height: 220px; position: relative; overflow: hidden; background: var(--paper-2); }
+.pcard-img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s ease; }
+.pcard:hover .pcard-img { transform: scale(1.04); }
+.pcard-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px; letter-spacing: .02em;
+  color: var(--text); background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  padding: 6px 12px; border-radius: 8px; box-shadow: 0 6px 18px -8px rgba(34,19,22,.45); white-space: nowrap; }
 .pcard-body { padding: 28px 30px 30px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
 .pcard-tag { position: absolute; top: 16px; left: 16px; z-index: 2; background: color-mix(in srgb, var(--ink) 72%, transparent); color: var(--text-on-ink); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 6px 12px; border-radius: 999px; }
 .pcard h3 { font-size: 27px; }

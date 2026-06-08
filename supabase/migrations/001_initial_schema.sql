@@ -1,4 +1,4 @@
--- TerreVérifiée — Schéma initial
+-- Litug — Schéma initial
 -- Phase 3 : appliquer avec `supabase db push` après branchement
 
 -- Enums

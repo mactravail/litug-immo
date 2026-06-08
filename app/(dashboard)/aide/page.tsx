@@ -88,7 +88,7 @@ export default function AidePage() {
           </div>
         </section>
 
-        <p className="text-xs text-muted text-center">TerreVérifiée — Votre partenaire de confiance pour l'immobilier au Sénégal</p>
+        <p className="text-xs text-muted text-center">Litug — Votre partenaire de confiance pour l'immobilier au Sénégal</p>
       </div>
     </div>
   );

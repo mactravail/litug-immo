@@ -251,7 +251,8 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 .hero-sub { color: var(--text-on-ink-muted); font-size: clamp(17px, 1.7vw, 20px); margin-top: 22px; max-width: 46ch; }
 .hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 .hero-proof { display: flex; align-items: center; gap: 14px; margin-top: 36px; color: var(--text-on-ink-muted); font-size: 14px; }
-.hero-proof .avatars { display: flex; }
+.hero-proof .avatars { display: flex; flex-shrink: 0; }
+.hero-proof > span { flex: 1; min-width: 0; }
 .hero-proof .avatars span,
 .hero-proof .avatars img { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--ink); margin-left: -10px; }
 .hero-proof .avatars img { object-fit: cover; display: block; background: var(--ink-soft); }

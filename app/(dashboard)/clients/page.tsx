@@ -66,47 +66,47 @@ export default async function ClientsPage({ searchParams }: Props) {
           description="Les clients capturés par votre agent WhatsApp apparaîtront ici."
         />
       ) : (
-        <div className="bg-white rounded-2xl border border-stone-100 shadow-sm overflow-hidden">
+        <div className="bg-white rounded-2xl border border-stone-100 shadow-sm overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-stone-100 bg-stone-50/50">
-                <th className="text-left px-5 py-3 text-xs font-semibold text-muted uppercase tracking-wider">Client</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-muted uppercase tracking-wider hidden md:table-cell">Budget</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-muted uppercase tracking-wider hidden lg:table-cell">Zone souhaitée</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-muted uppercase tracking-wider hidden sm:table-cell">Source</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-muted uppercase tracking-wider">Statut</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-muted uppercase tracking-wider hidden lg:table-cell">Date</th>
+                <th className="text-left px-4 sm:px-5 py-3 text-xs font-semibold text-muted uppercase tracking-wider">Client</th>
+                <th className="text-left px-4 sm:px-5 py-3 text-xs font-semibold text-muted uppercase tracking-wider hidden md:table-cell">Budget</th>
+                <th className="text-left px-4 sm:px-5 py-3 text-xs font-semibold text-muted uppercase tracking-wider hidden lg:table-cell">Zone souhaitée</th>
+                <th className="text-left px-4 sm:px-5 py-3 text-xs font-semibold text-muted uppercase tracking-wider hidden sm:table-cell">Source</th>
+                <th className="text-left px-4 sm:px-5 py-3 text-xs font-semibold text-muted uppercase tracking-wider">Statut</th>
+                <th className="text-left px-4 sm:px-5 py-3 text-xs font-semibold text-muted uppercase tracking-wider hidden lg:table-cell">Date</th>
                 <th className="px-5 py-3"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-50">
               {leads.map(lead => (
                 <tr key={lead.id} className="hover:bg-stone-50/50 transition-colors">
-                  <td className="px-5 py-4">
+                  <td className="px-4 sm:px-5 py-4">
                     <Link href={`/clients/${lead.id}`} className="font-medium text-text hover:text-accent transition-colors">
                       {lead.name ?? 'Inconnu'}
                     </Link>
                     {lead.phone && <p className="text-xs text-muted mt-0.5">{lead.phone}</p>}
                   </td>
-                  <td className="px-5 py-4 text-muted hidden md:table-cell">
+                  <td className="px-4 sm:px-5 py-4 text-muted hidden md:table-cell">
                     {lead.budgetFcfa ? formatFcfa(lead.budgetFcfa) : '—'}
                   </td>
-                  <td className="px-5 py-4 text-muted hidden lg:table-cell">
+                  <td className="px-4 sm:px-5 py-4 text-muted hidden lg:table-cell">
                     {lead.desiredZone ?? '—'}
                   </td>
-                  <td className="px-5 py-4 hidden sm:table-cell">
+                  <td className="px-4 sm:px-5 py-4 hidden sm:table-cell">
                     <span className="inline-flex items-center gap-1.5 text-xs text-muted">
                       {lead.source === 'whatsapp' && <MessageCircle size={11} className="text-green-600" />}
                       {SOURCE_LABELS[lead.source]}
                     </span>
                   </td>
-                  <td className="px-5 py-4">
+                  <td className="px-4 sm:px-5 py-4">
                     <StatusBadge type="lead" status={lead.status} />
                   </td>
-                  <td className="px-5 py-4 text-muted text-xs hidden lg:table-cell">
+                  <td className="px-4 sm:px-5 py-4 text-muted text-xs hidden lg:table-cell">
                     {formatDate(lead.createdAt)}
                   </td>
-                  <td className="px-5 py-4">
+                  <td className="px-4 sm:px-5 py-4">
                     <Link href={`/clients/${lead.id}`} className="text-xs text-accent font-medium hover:underline">
                       Voir →
                     </Link>

@@ -11,10 +11,10 @@ interface Props {
 
 export function PageHeader({ title, breadcrumbs, action }: Props) {
   return (
-    <div className="flex items-start justify-between mb-8">
-      <div>
+    <div className="flex flex-col gap-3 mb-8 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+      <div className="min-w-0">
         {breadcrumbs && breadcrumbs.length > 0 && (
-          <nav className="flex items-center gap-1 text-xs text-muted mb-2">
+          <nav className="flex items-center flex-wrap gap-1 text-xs text-muted mb-2">
             {breadcrumbs.map((crumb, i) => (
               <span key={i} className="flex items-center gap-1">
                 {i > 0 && <ChevronRight size={11} />}
@@ -27,9 +27,9 @@ export function PageHeader({ title, breadcrumbs, action }: Props) {
             ))}
           </nav>
         )}
-        <h1 className="font-serif text-3xl font-semibold text-text">{title}</h1>
+        <h1 className="font-serif text-2xl sm:text-3xl font-semibold text-text break-words">{title}</h1>
       </div>
-      {action && <div className="ml-4 shrink-0">{action}</div>}
+      {action && <div className="shrink-0">{action}</div>}
     </div>
   );
 }

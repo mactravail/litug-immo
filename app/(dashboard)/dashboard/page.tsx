@@ -39,8 +39,8 @@ export default async function DashboardPage() {
     <div className="space-y-10">
       {/* En-tête + badge abonnement */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="font-serif text-3xl font-semibold text-text">
+        <div className="min-w-0">
+          <h1 className="font-serif text-2xl sm:text-3xl font-semibold text-text break-words">
             Bonjour, {seller?.businessName ?? 'Vendeur'}
           </h1>
           <p className="text-muted text-sm mt-1">Voici un aperçu de votre activité.</p>
@@ -146,7 +146,7 @@ export default async function DashboardPage() {
             Voir tout <ArrowRight size={13} />
           </Link>
         </div>
-        <div className="bg-white rounded-2xl border border-stone-100 shadow-sm overflow-hidden">
+        <div className="bg-white rounded-2xl border border-stone-100 shadow-sm overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-stone-50 bg-stone-50/50">

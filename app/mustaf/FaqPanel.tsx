@@ -5,24 +5,28 @@ import { HelpCircle, X, ChevronDown } from 'lucide-react';
 
 const FAQS = [
   {
-    q: "Mustaf est-il un simple chatbot AI ?",
-    a: "Non. Mustaf est un assistant construction complet. L'IA génère les concepts et maquettes, mais de vrais architectes sénégalais et italiens prennent le relais pour créer les plans et suivre le chantier.",
+    q: "Qui détient mon argent ?",
+    a: "Jamais Litug. Votre argent est bloqué chez un tiers de confiance (notaire ou banque partenaire), sur un compte séquestre dédié à votre seul projet. Nous orchestrons le chantier ; nous ne touchons jamais aux fonds.",
   },
   {
-    q: "Puis-je construire depuis la diaspora sans être au Sénégal ?",
-    a: "Oui, c'est exactement pour ça que Mustaf existe. Tu suis l'avancement à distance : rapports photo, vidéos chantier, appels réguliers avec notre géomètre sur place.",
+    q: "Et si je n'ai plus les moyens de continuer ?",
+    a: "Votre argent reste bloqué pour votre projet, à votre disposition. Et comme une phase ne démarre que lorsqu'elle est entièrement financée, vous ne vous retrouvez jamais avec un chantier lancé puis abandonné à moitié.",
   },
   {
-    q: "Comment fonctionne le paiement par étapes ?",
-    a: "Tu ne paies que ce qui est réalisé. Chaque étape (fondations, murs, toiture, finitions) est validée par notre géomètre avec photo avant le déblocage du montant suivant.",
+    q: "Et si le travail est mal fait ?",
+    a: "Avant chaque paiement, un inspecteur indépendant vérifie le travail — et même avant chaque coulage de béton, pour prouver aujourd'hui ce qui sera caché demain. Une retenue de garantie de 10 % est conservée sur chaque entreprise jusqu'à la vérification finale.",
   },
   {
-    q: "Quel style de maison peut concevoir Mustaf ?",
-    a: "Mustaf propose trois styles : africain traditionnel, moderne minimaliste, et européen. Tu peux aussi mixer les inspirations — l'architecte adapte selon ton terrain et ton budget.",
+    q: "Ma famille peut-elle cotiser avec moi ?",
+    a: "Oui. Plusieurs proches peuvent verser sur le même projet, et la participation de chacun est visible. Important : il s'agit d'un relevé de participation, pas d'un titre de propriété. La propriété est établie par acte notarié.",
   },
   {
-    q: "Quelle est la différence entre les plans Starter, Build et Complete ?",
-    a: "Starter = exploration d'idées et maquettes AI. Build = mise en relation avec un architecte et pré-plans réels. Complete = accompagnement terrain complet jusqu'à la livraison des clés.",
+    q: "Faut-il avoir déjà acheté le terrain ?",
+    a: "Oui — ou en acheter un via Litug. Dans tous les cas, on vérifie le titre du terrain avant de commencer à construire.",
+  },
+  {
+    q: "Combien ça coûte vraiment ?",
+    a: "Nos honoraires sont un pourcentage de votre budget (de ~8 % à ~16 % selon l'offre), étalé sur les phases. Utilisez le simulateur sur la page pour voir le montant exact pour votre budget, en FCFA et en euros. La Phase 0 (plan, permis, étude de sol) est un forfait fixe payé au départ.",
   },
 ];
 

@@ -8,14 +8,14 @@ import {
   Filter,
   Send,
   BarChart3,
-  Compass,
-  HardHat,
-  Key,
-  Lightbulb,
-  Home,
   Users,
   ShieldCheck,
   Zap,
+  Lock,
+  Layers,
+  ReceiptText,
+  UserCheck,
+  Smartphone,
 } from 'lucide-react';
 import '../landing.css';
 import './products.css';
@@ -37,12 +37,12 @@ const SARA_FEATURES = [
 ];
 
 const MUSTAF_FEATURES = [
-  { Icon: Lightbulb,    text: 'Génère des concepts et maquettes AI selon ton style' },
-  { Icon: Compass,      text: 'Connexion avec architectes sénégalais et italiens' },
-  { Icon: Home,         text: 'Plans, études techniques et pré-projet personnalisés' },
-  { Icon: HardHat,      text: 'Suivi de chantier avec rapport photo et vidéo' },
-  { Icon: Key,          text: 'Accompagnement complet jusqu\'à la livraison des clés' },
-  { Icon: ShieldCheck,  text: 'Paiement par étapes — tu paies uniquement ce qui est réalisé' },
+  { Icon: Lock,        text: 'Votre argent bloqué chez un tiers de confiance — jamais chez nous' },
+  { Icon: Layers,      text: 'Une phase ne démarre que lorsqu\'elle est entièrement financée' },
+  { Icon: ReceiptText, text: 'Chaque dépense détaillée avec sa facture — zéro marge sur les matériaux' },
+  { Icon: UserCheck,   text: 'Inspecteur indépendant : il vérifie avant chaque paiement' },
+  { Icon: Smartphone,  text: 'Photos géolocalisées et datées, suivies depuis votre téléphone' },
+  { Icon: Users,       text: 'Toute la famille peut cotiser — la participation de chacun est visible' },
 ];
 
 const SARA_CHAT = [
@@ -201,31 +201,31 @@ export default function ProduitsPage() {
                 <span>Plan → Étude → Chantier → Livraison</span>
               </div>
             </div>
-            {/* Concept cards flottantes */}
+            {/* Cartes confiance flottantes */}
             <div className="prod-float mustaf-f1">
-              <span className="pf-ic mustaf-ic"><Home size={14} /></span>
-              <div><b>Style africain</b><small>maquette générée</small></div>
+              <span className="pf-ic mustaf-ic"><Lock size={14} /></span>
+              <div><b>Argent séquestré</b><small>tiers de confiance</small></div>
             </div>
             <div className="prod-float mustaf-f2">
-              <span className="pf-ic mustaf-ic"><HardHat size={14} /></span>
-              <div><b>Chantier suivi</b><small>rapport hebdo</small></div>
+              <span className="pf-ic mustaf-ic"><UserCheck size={14} /></span>
+              <div><b>Inspecteur indépendant</b><small>vérifie avant paiement</small></div>
             </div>
           </div>
 
           {/* Texte */}
           <div className="prod-text">
             <div className="prod-product-badge mustaf-badge">
-              <Home size={13} />
-              Assistant construction · Propriétaires &amp; Diaspora
+              <ShieldCheck size={13} />
+              Tiers de confiance · Construction · Diaspora
             </div>
             <h2>
               <span className="prod-name-mustaf">Mustaf</span>
-              <br />Du terrain à la maison livrée
+              <br />Construire au pays, sans se faire voler
             </h2>
             <p className="prod-desc">
-              Mustaf est ton assistant construction. Il t'accompagne dès que tu possèdes un terrain :
-              génération de concepts, mise en relation avec des architectes, suivi de chantier
-              et accompagnement jusqu'aux clés en main.
+              Vous envoyez de l'argent au pays pour construire, et de loin, impossible de surveiller.
+              Mustaf gère votre chantier de A à Z et vous montre chaque franc dépensé et chaque étape,
+              en photo, depuis votre téléphone — l'argent reste bloqué chez un tiers de confiance.
             </p>
             <ul className="prod-features prod-features-mustaf">
               {MUSTAF_FEATURES.map(({ Icon, text }, i) => (
@@ -238,14 +238,14 @@ export default function ProduitsPage() {
               ))}
             </ul>
             <div className="prod-price-hint mustaf-price-hint">
-              À partir de <strong>19 000 FCFA</strong> / mois&ensp;·&ensp;≈ 29 €
+              Honoraires dès <strong>8 %</strong> du budget&ensp;·&ensp;Phase 0 forfait <strong>500 000 FCFA</strong> (≈ 762 €)
             </div>
             <div className="prod-ctas">
               <Link className="btn btn-primary btn-lg" href="/mustaf">
                 Démarrer avec Mustaf <ArrowRight size={17} className="arr" />
               </Link>
-              <a className="btn btn-ghost btn-lg" href="/mustaf#how-it-works">
-                Comment ça marche
+              <a className="btn btn-ghost btn-lg" href="/mustaf#offres">
+                Voir les offres
               </a>
             </div>
           </div>
@@ -299,7 +299,7 @@ export default function ProduitsPage() {
                 <span className="pcc-tag">Mustaf</span>
               </div>
               <h3>Tu veux construire ta maison</h3>
-              <p>Tu possèdes un terrain et tu veux le transformer en maison — mais tu ne sais pas par où commencer.</p>
+              <p>Tu possèdes un terrain et tu veux bâtir au pays — mais de loin, tu as peur que l&apos;argent s&apos;évapore et que le chantier s&apos;arrête à moitié.</p>
               <ul>
                 <li><Check size={14} /> Propriétaires de terrain</li>
                 <li><Check size={14} /> Diaspora sénégalaise</li>

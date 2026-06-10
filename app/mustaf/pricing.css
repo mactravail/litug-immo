@@ -795,3 +795,352 @@
     opacity: 1;
   }
 }
+
+/* ============================================================
+   Nouvelle page produit Mustaf — sections additionnelles
+   (problème · piliers · socle · Phase 0 · % · simulateur ·
+   transparence · cadrage prix). Palette Sahel uniquement.
+   ============================================================ */
+
+/* ── Le problème ───────────────────────────────────────────── */
+.mustaf-problem { background: var(--paper); }
+.mustaf-problem-inner {
+  max-width: 680px;
+  margin-inline: auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.mustaf-problem-text {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.6vw, 28px);
+  line-height: 1.45;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.mustaf-problem-tag {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--green);
+}
+
+/* ── Piliers de confiance ──────────────────────────────────── */
+.mustaf-pillars-sec { background: var(--paper-2); }
+.mustaf-pillars {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 18px;
+}
+.mustaf-pillar {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 26px 22px;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.mustaf-pillar:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-float);
+}
+.mustaf-pillar-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--green) 12%, transparent);
+  color: var(--green);
+  margin-bottom: 16px;
+}
+.mustaf-pillar-title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+}
+.mustaf-pillar-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ── Comment ça marche : variante 4 colonnes (desktop) ─────── */
+@media (min-width: 1041px) {
+  .mustaf-steps-grid.mustaf-steps-4 { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ── Socle commun ──────────────────────────────────────────── */
+.mustaf-socle {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 22px clamp(18px, 3vw, 30px);
+  box-shadow: var(--shadow-card);
+  margin-bottom: 18px;
+}
+.mustaf-socle-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+.mustaf-socle-title svg { color: var(--green); }
+.mustaf-socle-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 11px 24px;
+}
+.mustaf-socle-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.4;
+}
+@media (max-width: 640px) {
+  .mustaf-socle-list { grid-template-columns: 1fr; }
+}
+
+/* ── Forfait Phase 0 ───────────────────────────────────────── */
+.mustaf-phase0 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  background: color-mix(in srgb, var(--gold) 8%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--gold) 36%, transparent);
+  border-radius: var(--r-lg);
+  padding: 18px clamp(18px, 3vw, 28px);
+  margin-bottom: 40px;
+}
+.mustaf-phase0-label {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+.mustaf-phase0-note {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+.mustaf-phase0-price {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+}
+.mustaf-phase0-price span {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3vw, 28px);
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+.mustaf-phase0-price small { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+/* ── Prix en % : exemple + héritage ────────────────────────── */
+.mustaf-plan-example {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 12px;
+  line-height: 1.5;
+}
+.mustaf-plan-example strong { color: var(--text); font-weight: 700; }
+.mustaf-plan-card.featured .mustaf-plan-example,
+.mustaf-plan-card.featured .mustaf-plan-example strong { color: var(--text-on-ink); }
+.mustaf-plan-card.featured .mustaf-plan-example { color: var(--text-on-ink-muted); }
+
+.mustaf-plan-inherits {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--green);
+  margin-top: 24px;
+}
+.mustaf-plan-card.featured .mustaf-plan-inherits { color: var(--gold); }
+
+/* ── Simulateur d'honoraires ───────────────────────────────── */
+.mustaf-sim-wrap { margin-top: 48px; }
+.mustaf-sim {
+  background: var(--ink);
+  border-radius: var(--r-xl);
+  padding: clamp(24px, 4vw, 40px);
+  box-shadow: var(--shadow-float);
+}
+.mustaf-sim-head { text-align: center; margin-bottom: 26px; }
+.mustaf-sim-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+.mustaf-sim-budget {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 5vw, 44px);
+  font-weight: 700;
+  color: var(--text-on-ink);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+.mustaf-sim-budget-eur { font-size: 14px; color: var(--text-on-ink-muted); margin-top: 6px; }
+.mustaf-sim-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-on-ink-muted);
+  margin-bottom: 10px;
+}
+.mustaf-sim-range {
+  width: 100%;
+  accent-color: var(--gold);
+  height: 6px;
+  cursor: pointer;
+}
+.mustaf-sim-bounds {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: var(--text-on-ink-muted);
+  margin-top: 8px;
+}
+.mustaf-sim-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 28px;
+}
+@media (max-width: 560px) { .mustaf-sim-grid { grid-template-columns: 1fr; } }
+.mustaf-sim-cell {
+  background: color-mix(in srgb, var(--text-on-ink) 5%, transparent);
+  border: 1px solid var(--line-on-ink);
+  border-radius: var(--r-lg);
+  padding: 18px 16px;
+  text-align: center;
+}
+.mustaf-sim-cell.featured {
+  border-color: color-mix(in srgb, var(--gold) 45%, transparent);
+  background: color-mix(in srgb, var(--gold) 10%, transparent);
+}
+.mustaf-sim-tier { font-size: 13px; font-weight: 600; color: var(--text-on-ink-muted); }
+.mustaf-sim-pct { font-size: 12px; font-weight: 700; color: var(--gold); margin-top: 2px; }
+.mustaf-sim-fee {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 3vw, 26px);
+  font-weight: 700;
+  color: var(--text-on-ink);
+  letter-spacing: -0.02em;
+  margin-top: 8px;
+}
+.mustaf-sim-fee-eur { font-size: 12.5px; color: var(--text-on-ink-muted); margin-top: 3px; }
+.mustaf-sim-foot {
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--text-on-ink-muted);
+  margin-top: 22px;
+}
+
+/* ── Cadrage du prix ───────────────────────────────────────── */
+.mustaf-price-frame {
+  max-width: 620px;
+  margin: 40px auto 0;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: clamp(17px, 2vw, 21px);
+  line-height: 1.55;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+/* ── Bande transparence ────────────────────────────────────── */
+.mustaf-transparency { background: var(--ink); }
+.mustaf-transparency-inner {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: clamp(20px, 4vw, 56px);
+  flex-wrap: wrap;
+}
+.mustaf-transparency-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 280px;
+}
+.mustaf-transparency-item svg { color: var(--gold); flex-shrink: 0; }
+.mustaf-transparency-item p {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-on-ink);
+  line-height: 1.35;
+}
+
+/* ── Page "Démarrer mon projet" ────────────────────────────── */
+.demarrer-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(24px, 4vw, 48px);
+  align-items: center;
+}
+@media (max-width: 800px) {
+  .demarrer-wrap { grid-template-columns: 1fr; max-width: 480px; margin-inline: auto; }
+}
+.demarrer-steps { display: flex; flex-direction: column; gap: 16px; }
+.demarrer-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.5;
+}
+.demarrer-step-num {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--green) 14%, transparent);
+  color: var(--green);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  display: grid;
+  place-items: center;
+}
+.demarrer-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: clamp(24px, 3vw, 34px);
+  box-shadow: var(--shadow-card);
+}
+.demarrer-actions { display: flex; flex-direction: column; gap: 12px; margin-top: 22px; }
+.demarrer-actions .btn { width: 100%; }
+.demarrer-note {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}

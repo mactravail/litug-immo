@@ -1,0 +1,225 @@
+/* ============================================================
+   Mustaf — Paiement Phase 0
+   Hérite de la palette Sahel (landing.css + globals.css),
+   n'ajoute que les styles propres à la page de paiement.
+   ============================================================ */
+
+/* ── Nav ─────────────────────────────────────────────────── */
+.offer-nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 72px;
+  padding-inline: clamp(16px, 2.5vw, 32px);
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+}
+.offer-nav .brand img { height: 32px; width: auto; display: block; }
+
+.pay-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(24px, 4vw, 44px);
+  align-items: start;
+  margin-top: clamp(28px, 4vw, 44px);
+}
+@media (max-width: 880px) {
+  .pay-grid { grid-template-columns: 1fr; }
+  .pay-summary-col { order: -1; }
+}
+
+/* ── Carte générique ─────────────────────────────────────── */
+.pay-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg, 24px);
+  box-shadow: var(--shadow-card);
+  padding: clamp(22px, 3vw, 30px);
+}
+.pay-card h2 { font-family: var(--font-display); font-size: 20px; }
+
+/* ── Sélecteur de moyen de paiement ──────────────────────── */
+.pay-methods {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 20px 0 24px;
+}
+@media (max-width: 420px) { .pay-methods { grid-template-columns: 1fr; } }
+
+.pay-method {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md, 14px);
+  background: var(--paper);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.pay-method:hover { border-color: color-mix(in srgb, var(--green) 40%, var(--line)); }
+.pay-method.active {
+  border-color: var(--green);
+  color: var(--green);
+  background: color-mix(in srgb, var(--green) 7%, var(--surface));
+  box-shadow: inset 0 0 0 1px var(--green);
+}
+.pay-method-logos {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 20px;
+}
+.pay-method-label { line-height: 1; }
+
+/* Logos de marque */
+.pay-logo { width: auto; display: block; object-fit: contain; }
+
+/* ── Formulaire ──────────────────────────────────────────── */
+.pay-form { display: flex; flex-direction: column; gap: 16px; }
+.pay-form .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.pay-form .btn { width: 100%; margin-top: 6px; }
+
+.field { display: flex; flex-direction: column; gap: 7px; }
+.field label { font-size: 13px; font-weight: 600; color: var(--text); }
+.field input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md, 12px);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 15px;
+  font-family: var(--font-sans);
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+.field input::placeholder { color: var(--text-muted); opacity: 0.7; }
+.field input:focus {
+  outline: none;
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 16%, transparent);
+}
+
+/* Champ numéro de carte + marque détectée */
+.pay-card-input { position: relative; }
+.pay-card-input input { padding-right: 60px; letter-spacing: 0.04em; }
+.pay-brand {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Rangée "cartes acceptées" */
+.pay-accepted {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding-top: 4px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+.pay-accepted span { margin-right: 2px; }
+
+/* ── Bloc alternatif (PayPal / mobile) ───────────────────── */
+.pay-alt {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-md, 14px);
+  background: var(--paper);
+  color: var(--text);
+}
+.pay-alt svg { color: var(--green); flex-shrink: 0; }
+.pay-alt p { font-size: 14px; line-height: 1.5; color: var(--text-muted); }
+.pay-alt b { color: var(--text); }
+.pay-alt-logos { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+
+/* ── Note sécurité sous le bouton ────────────────────────── */
+.pay-secure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  margin-top: 2px;
+}
+.pay-secure svg { color: var(--green); }
+.pay-secure .pay-logo { display: inline-block; vertical-align: middle; }
+.pay-secure-eur { white-space: nowrap; }
+
+/* ── Récap commande ──────────────────────────────────────── */
+.pay-includes { list-style: none; padding: 0; margin: 20px 0 0; display: flex; flex-direction: column; gap: 14px; }
+.pay-includes li { display: flex; align-items: flex-start; gap: 12px; }
+.pay-includes-ic {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--green) 12%, transparent);
+  color: var(--green);
+}
+.pay-includes b { font-size: 14.5px; display: block; }
+.pay-includes small { display: block; color: var(--text-muted); font-size: 12.5px; margin-top: 2px; line-height: 1.4; }
+
+.pay-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 2px solid var(--ink);
+}
+.pay-total .lbl { font-weight: 700; font-size: 15px; }
+.pay-total .val { text-align: right; }
+.pay-total .val .big { font-family: var(--font-display); font-weight: 600; font-size: 26px; color: var(--text); letter-spacing: -0.02em; }
+.pay-total .val small { display: block; color: var(--text-muted); font-size: 13px; margin-top: 2px; }
+.pay-recurring { margin-top: 14px; color: var(--text-muted); font-size: 13px; line-height: 1.55; }
+
+/* ── Bandeau confiance ───────────────────────────────────── */
+.pay-trust { margin-top: 18px; }
+.pay-trust p {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+.pay-trust svg { color: var(--green); flex-shrink: 0; margin-top: 2px; }
+
+/* ── Succès ──────────────────────────────────────────────── */
+.pay-success { text-align: center; padding: 8px 4px; }
+.pay-success .ic {
+  width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 18px;
+  background: color-mix(in srgb, var(--green) 14%, transparent); color: var(--green);
+  display: grid; place-items: center;
+}
+.pay-success h2 { font-family: var(--font-display); font-size: 24px; }
+.pay-success p { color: var(--text-muted); margin-top: 10px; font-size: 15px; line-height: 1.6; }
+.pay-success .ref {
+  margin-top: 18px; display: inline-block; padding: 10px 16px; border-radius: 12px;
+  background: var(--paper-2); border: 1px solid var(--line); font-size: 14px;
+}
+.pay-success .ref b { font-family: var(--font-display); }

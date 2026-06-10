@@ -8,9 +8,6 @@ import './landing.css';
 /* TYPES                                                               */
 /* ------------------------------------------------------------------ */
 type Lang = 'fr' | 'en';
-type Palette = 'sahel' | 'onyx' | 'ivory';
-type Font = 'grotesk' | 'sora' | 'dmsans';
-type HeroLayout = 'split' | 'centered';
 
 /* ------------------------------------------------------------------ */
 /* DATA                                                                */
@@ -37,7 +34,7 @@ const I18N = {
       card1_cta: "Découvrir Sara",
       card2_tag: "Propriétaires",
       card2_title: "Je veux construire",
-      card2_desc: "Passe du plan à la construction avec notre réseau d'experts.",
+      card2_desc: "Vous avez un terrain ? Construisez au pays en toute confiance : argent protégé, paiement par phase, suivi photo depuis votre téléphone.",
       card2_cta: "Découvrir Mustaf",
     },
     sara: {
@@ -55,20 +52,20 @@ const I18N = {
       cta: "Activer Sara",
     },
     mustaf: {
-      kicker: "Assistant construction",
+      kicker: "Tiers de confiance · Construction",
       name: "Mustaf",
-      badge: "Du terrain à la maison",
-      title: "Du terrain à la maison livrée",
-      desc: "Mustaf accompagne ceux qui possèdent déjà un terrain, du premier plan jusqu'aux clés en main.",
+      badge: "Construire en toute confiance",
+      title: "Construisez au pays, en toute sérénité",
+      desc: "Pour ceux qui possèdent déjà un terrain, Mustaf gère le chantier de A à Z. Votre argent reste bloqué chez un tiers de confiance, les travaux n'avancent que phase par phase, et vous voyez chaque franc et chaque photo depuis votre téléphone.",
       services: [
-        "Création du plan",
-        "Architecture & design",
-        "Étude technique",
-        "Suivi de chantier",
-        "Réseau d'architectes sénégalais & italiens",
-        "Accompagnement jusqu'à la livraison",
+        "Argent bloqué chez un tiers de confiance, jamais chez nous",
+        "Une phase ne démarre que lorsqu'elle est financée",
+        "Zéro marge sur les matériaux, factures à l'appui",
+        "Inspecteur indépendant avant chaque paiement",
+        "Photos du chantier datées et géolocalisées",
+        "Toute la famille peut cotiser, participation visible",
       ],
-      cta: "Commencer mon projet",
+      cta: "Voir les offres",
     },
     impact: {
       kicker: "Notre impact",
@@ -151,7 +148,7 @@ const I18N = {
       card1_cta: "Meet Sara",
       card2_tag: "Owners",
       card2_title: "I want to build",
-      card2_desc: "Go from blueprint to build with our network of experts.",
+      card2_desc: "Got land? Build back home with confidence: protected funds, pay-by-phase, photo tracking from your phone.",
       card2_cta: "Meet Mustaf",
     },
     sara: {
@@ -169,20 +166,20 @@ const I18N = {
       cta: "Activate Sara",
     },
     mustaf: {
-      kicker: "Construction assistant",
+      kicker: "Construction · Trusted third party",
       name: "Mustaf",
-      badge: "From land to home",
-      title: "From land to a finished home",
-      desc: "Mustaf supports those who already own land, from the first plan to the keys in hand.",
+      badge: "Build with confidence",
+      title: "Build back home, with peace of mind",
+      desc: "For those who already own land, Mustaf manages the whole build. Your money stays locked with a trusted third party, work only advances phase by phase, and you see every franc and every photo from your phone.",
       services: [
-        "Plan creation",
-        "Architecture & design",
-        "Technical study",
-        "Site supervision",
-        "Senegalese & Italian architect network",
-        "Support until delivery",
+        "Money locked with a trusted third party, never with us",
+        "A phase only starts once it's funded",
+        "Zero markup on materials, invoices included",
+        "Independent inspector before every payment",
+        "Dated, geolocated site photos",
+        "The whole family can contribute — participation shown",
       ],
-      cta: "Start my project",
+      cta: "See the plans",
     },
     impact: {
       kicker: "Our impact",
@@ -717,7 +714,7 @@ function Mustaf({ t, lang }: { t: T; lang: Lang }) {
               <li key={i}><span className="tick"><Icon name="check" size={14} stroke={2.5} /></span>{s}</li>
             ))}
           </ul>
-          <a className="btn btn-primary btn-lg" href="/mustaf">{t.mustaf.cta}<Icon name="arrow" size={17} className="arr" /></a>
+          <a className="btn btn-primary btn-lg" href="/mustaf#offres">{t.mustaf.cta}<Icon name="arrow" size={17} className="arr" /></a>
         </div>
         <div className="agent-visual reveal" style={{ justifySelf: "center", width: "100%", maxWidth: 380 }}>
           <div className="blueprint">
@@ -732,7 +729,7 @@ function Mustaf({ t, lang }: { t: T; lang: Lang }) {
             </div>
             <div className="bp-badge">
               <div className="stp"><i></i><i></i><i></i><i className="off"></i></div>
-              <span>{lang === "fr" ? "Plan → Étude → Chantier → Livraison" : "Plan → Study → Build → Delivery"}</span>
+              <span>{lang === "fr" ? "Financé → Construit → Vérifié → Débloqué" : "Funded → Built → Inspected → Released"}</span>
             </div>
           </div>
         </div>
@@ -1044,70 +1041,10 @@ function Footer({ t }: { t: T }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* TWEAKS PANEL (design exploration tool)                              */
-/* ------------------------------------------------------------------ */
-type TweakControl = { label: string; options: [string, string][]; value: string; set: (v: string) => void };
-
-function TweaksPanel({ palette, setPalette, font, setFont, hero, setHero, lang, setLang }: {
-  palette: Palette; setPalette: (p: Palette) => void;
-  font: Font;       setFont:    (f: Font) => void;
-  hero: HeroLayout; setHero:    (h: HeroLayout) => void;
-  lang: Lang;       setLang:    (l: Lang) => void;
-}) {
-  const [open, setOpen] = useState(false);
-
-  const controls: TweakControl[] = [
-    { label: "Palette",   options: [["sahel","Sahel"],["onyx","Onyx"],["ivory","Ivory"]],                value: palette, set: (v) => setPalette(v as Palette) },
-    { label: "Police",    options: [["grotesk","Grotesk"],["sora","Sora"],["dmsans","DM Sans"]],          value: font,    set: (v) => setFont(v as Font) },
-    { label: "Hero",      options: [["split","Split"],["centered","Centré"]],                             value: hero,    set: (v) => setHero(v as HeroLayout) },
-    { label: "Langue",    options: [["fr","FR"],["en","EN"]],                                             value: lang,    set: (v) => setLang(v as Lang) },
-  ];
-
-  return (
-    <>
-      <button
-        onClick={() => setOpen((o) => !o)}
-        aria-label="Tweaks"
-        style={{ position:"fixed", bottom:20, right:20, zIndex:9999, width:40, height:40,
-          borderRadius:"50%", background:"var(--green)", color:"#fff", border:"none",
-          cursor:"pointer", fontSize:18, display:"flex", alignItems:"center", justifyContent:"center",
-          boxShadow:"0 4px 20px rgba(0,0,0,.3)" }}
-      >⚙</button>
-      {open && (
-        <div style={{ position:"fixed", bottom:68, right:20, zIndex:9998, width:260,
-          background:"rgba(250,249,247,.94)", backdropFilter:"blur(16px)", borderRadius:14,
-          border:"1px solid rgba(255,255,255,.5)", boxShadow:"0 12px 40px rgba(0,0,0,.18)",
-          padding:"16px", fontFamily:"system-ui, sans-serif", fontSize:12, color:"#29261b" }}>
-          <div style={{ fontWeight:600, fontSize:13, marginBottom:14 }}>Tweaks</div>
-          {controls.map(({ label, options, value, set }) => (
-            <div key={label} style={{ marginBottom:12 }}>
-              <div style={{ color:"#6b6460", marginBottom:6, fontSize:11, letterSpacing:".05em", textTransform:"uppercase" }}>{label}</div>
-              <div style={{ display:"flex", gap:5 }}>
-                {options.map(([v, l]) => (
-                  <button key={v} onClick={() => set(v)} style={{ flex:1, padding:"6px 0", borderRadius:8, border:"none",
-                    background: value === v ? "#7A2233" : "rgba(0,0,0,.07)",
-                    color: value === v ? "#fff" : "#29261b",
-                    fontWeight:600, fontSize:11.5, cursor:"pointer", transition:".15s" }}>
-                    {l}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </>
-  );
-}
-
-/* ------------------------------------------------------------------ */
 /* PAGE                                                                */
 /* ------------------------------------------------------------------ */
 export default function LandingPage() {
   const [lang, setLangState] = useState<Lang>("fr");
-  const [palette, setPalette] = useState<Palette>("sahel");
-  const [font, setFont] = useState<Font>("grotesk");
-  const [hero, setHero] = useState<HeroLayout>("split");
 
   useEffect(() => {
     const stored = localStorage.getItem("litug_lang") as Lang | null;
@@ -1119,7 +1056,7 @@ export default function LandingPage() {
   const t = I18N[lang];
 
   return (
-    <div className="landing-root" data-palette={palette} data-font={font} data-hero={hero}>
+    <div className="landing-root" data-palette="sahel" data-font="grotesk" data-hero="split">
       <Nav t={t} lang={lang} setLang={setLang} />
       <main>
         <Hero t={t} lang={lang} />
@@ -1132,12 +1069,6 @@ export default function LandingPage() {
         <Contact t={t} lang={lang} />
       </main>
       <Footer t={t} />
-      <TweaksPanel
-        palette={palette} setPalette={setPalette}
-        font={font} setFont={setFont}
-        hero={hero} setHero={setHero}
-        lang={lang} setLang={setLang}
-      />
     </div>
   );
 }

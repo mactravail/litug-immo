@@ -40,6 +40,7 @@ export async function proxy(request: NextRequest) {
     pathname.startsWith('/blog') ||
     pathname.startsWith('/sara') ||
     pathname.startsWith('/mustaf') ||
+    pathname.startsWith('/projet') ||   // espace client Mustaf (mock-first, sans auth pour l'instant)
     pathname.startsWith('/produits') ||
     pathname.startsWith('/a-propos') ||
     pathname.startsWith('/carrieres') ||

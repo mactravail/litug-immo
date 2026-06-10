@@ -1,133 +1,64 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
-  Check,
-  ArrowRight,
-  Lightbulb,
-  Compass,
-  HardHat,
-  Key,
-  MessageSquare,
-  Star,
-  Building2,
-  ShieldCheck,
+  ArrowRight, Check, ShieldCheck, Lock, Layers, ReceiptText, UserCheck, Users,
+  FileCheck2, Wallet, HardHat, Smartphone, Star, Building2, Eye,
 } from 'lucide-react';
 import '../landing.css';
 import './pricing.css';
 import SiteHeader from '../components/SiteHeader';
 import FaqPanel from './FaqPanel';
+import FeesSimulator from './FeesSimulator';
+import { TIERS, COMMON_FEATURES, PHASE_ZERO_FEE, SIM_DEFAULT } from './offers';
+import { formatFcfa, formatEur } from '@/lib/utils';
 
 export const metadata: Metadata = {
-  title: 'Mustaf — Du terrain à la maison | Litug',
+  title: 'Mustaf — Construisez au pays en toute sérénité | Litug',
   description:
-    "Mustaf accompagne les propriétaires de terrain de la première idée jusqu'à la livraison. Concepts AI, architectes, suivi de chantier.",
+    "Mustaf gère votre chantier au Sénégal et vous montre chaque franc dépensé et chaque étape, en photo, depuis votre téléphone. Argent bloqué chez un tiers de confiance, inspecteur indépendant, paiement par phase.",
 };
 
-const PLANS = [
+const PILLARS = [
   {
-    name: 'Mustaf Starter',
-    tagline: 'Visualise ton futur avant de construire.',
-    price: '19 000',
-    priceNote: '≈ 29€ / mois',
-    cta: 'Commencer',
-    ctaHref: '/#contact',
-    featured: false,
-    badge: null as string | null,
-    features: [
-      'Assistant AI Mustaf',
-      'Questions personnalisées sur le projet',
-      'Génération de concepts de maisons',
-      'Maquettes AI',
-      'Styles : africain, moderne, européen',
-      'Estimation basique du projet',
-    ],
-    ideal: 'Pour explorer des idées avant de s\'engager.',
+    Icon: Lock,
+    title: 'Votre argent n’est jamais chez nous',
+    desc: 'Il est bloqué chez un tiers de confiance (notaire ou banque partenaire), sur un compte dédié à votre seul projet. Litug ne le touche jamais.',
   },
   {
-    name: 'Mustaf Build',
-    tagline: 'Passe de l\'idée au vrai projet.',
-    price: '49 000',
-    priceNote: '≈ 75€ / mois',
-    cta: 'Construire mon projet',
-    ctaHref: '/#contact',
-    featured: true,
-    badge: 'Le plus populaire',
-    features: [
-      'Tout ce qui est dans Starter',
-      'Mise en relation architectes',
-      'Pré-plans personnalisés',
-      'Conseils construction',
-      'Support projet dédié',
-      'Réseau d\'architectes sénégalais et italiens',
-      'Estimation précise du projet',
-    ],
-    ideal: 'Pour ceux qui veulent réellement construire.',
+    Icon: Layers,
+    title: 'On ne commence jamais ce qu’on ne peut pas finir',
+    desc: 'Une étape ne démarre que lorsqu’elle est entièrement financée. Fini les chantiers abandonnés à moitié.',
   },
   {
-    name: 'Mustaf Complete',
-    tagline: 'Du terrain à la maison terminée.',
-    price: null as string | null,
-    priceLabel: 'Sur devis',
-    priceNote: 'Accompagnement sur mesure',
-    cta: 'Parler à un expert',
-    ctaHref: '/#contact',
-    featured: false,
-    badge: 'Diaspora & grands projets',
-    features: [
-      'Tout ce qui est dans Build',
-      'Accompagnement chantier complet',
-      'Ingénieurs & techniciens',
-      'Visites chantier à distance',
-      'Vidéos et appels réguliers',
-      'Accompagnement jusqu\'à la livraison',
-      'Accès partenaires mobilier',
-      'Carrelage, luminaires, meubles',
-    ],
-    ideal: 'Pour la diaspora et les grands projets clés en main.',
+    Icon: ReceiptText,
+    title: 'Vous voyez chaque franc',
+    desc: 'Ciment, fer, sable, main-d’œuvre, notre commission : chaque dépense est détaillée, avec sa facture. Zéro marge sur les matériaux — toute l’économie vous revient.',
+  },
+  {
+    Icon: UserCheck,
+    title: 'Un inspecteur indépendant vérifie tout',
+    desc: 'Avant chaque paiement, et avant chaque coulage de béton. Celui qui dépense l’argent n’est jamais celui qui valide le travail.',
+  },
+  {
+    Icon: Users,
+    title: 'Toute la famille peut participer',
+    desc: 'Plusieurs proches peuvent cotiser sur le même projet ; chaque versement est visible et la participation de chacun est affichée.',
   },
 ];
 
 const STEPS = [
-  {
-    num: '01',
-    Icon: MessageSquare,
-    title: 'Décris ton terrain et ton projet',
-    desc: 'Mustaf t\'écoute : zone, superficie, style souhaité, budget. Tout commence par une conversation.',
-  },
-  {
-    num: '02',
-    Icon: Lightbulb,
-    title: 'Mustaf génère idées et concepts',
-    desc: 'L\'assistant AI crée des maquettes visuelles et des concepts 3D adaptés à ton terrain et à tes goûts.',
-  },
-  {
-    num: '03',
-    Icon: Compass,
-    title: 'Les architectes créent le projet',
-    desc: 'Notre réseau d\'architectes sénégalais et italiens transforme les concepts en plans réels et études techniques.',
-  },
-  {
-    num: '04',
-    Icon: HardHat,
-    title: 'Construction et accompagnement',
-    desc: 'Le chantier démarre avec un suivi rigoureux : visites régulières, appels, rapports photo par notre géomètre.',
-  },
-  {
-    num: '05',
-    Icon: Key,
-    title: 'Maison terminée',
-    desc: 'Tu reçois les clés de ta maison. Construite selon tes choix, dans les délais et sans mauvaises surprises.',
-  },
+  { num: '01', Icon: FileCheck2, title: 'On prépare votre projet (Phase 0)', desc: 'Plan d’architecte, dossier de permis, étude de sol. Un forfait fixe payé une fois au départ.' },
+  { num: '02', Icon: Wallet,     title: 'Vous épargnez à votre rythme', desc: 'Comme une tontine, quand vous voulez, sur votre compte séquestre dédié chez le tiers de confiance.' },
+  { num: '03', Icon: HardHat,    title: 'On construit, étape par étape', desc: 'Chaque phase démarre une fois financée ; on achète les matériaux au prix de gros et on coordonne les artisans.' },
+  { num: '04', Icon: Smartphone, title: 'Vous suivez tout depuis votre téléphone', desc: 'Photos géolocalisées et datées, dépenses détaillées, avancement — en temps réel.' },
 ];
 
-export default function MustafPricingPage() {
+export default function MustafProductPage() {
   return (
     <div className="landing-root">
+      <SiteHeader cta={{ label: 'Démarrer mon projet', href: '/mustaf/demarrer' }} />
 
-      {/* ── Nav ─────────────────────────────────────────────────── */}
-      <SiteHeader cta={{ label: 'Parler à Mustaf', href: '/#contact' }} />
-
-      {/* ── Hero ────────────────────────────────────────────────── */}
+      {/* ── Hero ──────────────────────────────────────────────── */}
       <header className="mustaf-hero">
         <div className="hero-bg">
           <div className="hero-grid-tex"></div>
@@ -136,102 +67,61 @@ export default function MustafPricingPage() {
         </div>
         <div className="wrap mustaf-hero-inner">
           <div className="mustaf-hero-badge">
-            <Building2 size={14} />
-            Assistant construction · Architecture · Suivi de chantier
+            <ShieldCheck size={14} />
+            Tiers de confiance · Construction · Diaspora
           </div>
           <h1>
-            Construire une maison<br />
-            ne devrait pas être{' '}
-            <span className="mustaf-accent">compliqué.</span>
+            Construisez votre maison au pays,<br />
+            <span className="mustaf-accent">en toute sérénité.</span>
           </h1>
           <p className="mustaf-hero-sub">
-            Mustaf transforme ton terrain en projet concret — de la première idée aux clés en main.
+            Mustaf gère votre chantier de A à Z et vous montre chaque franc dépensé et chaque étape,
+            en photo, depuis votre téléphone — où que vous soyez.
           </p>
           <div className="mustaf-hero-ctas">
-            <a className="btn btn-gold btn-lg" href="#pricing">
-              Voir les plans <ArrowRight size={17} className="arr" />
-            </a>
-            <a className="btn btn-ghost btn-lg" href="#how-it-works">
-              Comment ça marche
-            </a>
+            <Link className="btn btn-primary btn-lg" href="/mustaf/demarrer">
+              Démarrer mon projet <ArrowRight size={17} className="arr" />
+            </Link>
+            <a className="btn btn-ghost btn-lg" href="#offres">Voir les offres</a>
           </div>
         </div>
       </header>
 
-      {/* ── Pricing ─────────────────────────────────────────────── */}
-      <section className="section mustaf-pricing-sec" id="pricing">
+      {/* ── Le problème ───────────────────────────────────────── */}
+      <section className="section mustaf-problem">
+        <div className="wrap mustaf-problem-inner">
+          <span className="eyebrow">La vraie peur</span>
+          <p className="mustaf-problem-text">
+            Vous envoyez de l’argent au pays pour construire, et de loin, impossible de surveiller.
+            L’argent s’évapore, les matériaux disparaissent, le chantier s’arrête à moitié.
+          </p>
+          <p className="mustaf-problem-tag">Mustaf est né pour ça.</p>
+        </div>
+      </section>
+
+      {/* ── Piliers de confiance ──────────────────────────────── */}
+      <section className="section mustaf-pillars-sec">
         <div className="wrap">
           <div className="mustaf-pricing-head">
-            <span className="eyebrow">Abonnement Mustaf</span>
-            <h2 className="section-title">Un plan adapté à chaque étape</h2>
+            <span className="eyebrow">Comment Mustaf vous protège</span>
+            <h2 className="section-title">Le vol devient presque impossible</h2>
             <p className="section-sub">
-              Que tu veuilles explorer des idées ou construire clés en main, Mustaf t&apos;accompagne.
+              Pas une promesse magique : des mécanismes concrets, vérifiables, visibles depuis votre téléphone.
             </p>
           </div>
-
-          <div className="mustaf-pricing-grid" id="mustaf-plans">
-            {PLANS.map((plan, i) => (
-              <article
-                key={i}
-                className={`mustaf-plan-card${plan.featured ? ' featured' : ''}`}
-              >
-                {plan.badge && (
-                  <div className="mustaf-plan-badge">{plan.badge}</div>
-                )}
-
-                <div className="mustaf-plan-header">
-                  <h3 className="mustaf-plan-name">{plan.name}</h3>
-                  <p className="mustaf-plan-tagline">{plan.tagline}</p>
-                </div>
-
-                <div className="mustaf-plan-price">
-                  {plan.price ? (
-                    <div className="price-row">
-                      <span className="price-num">{plan.price}</span>
-                      <span className="price-unit">FCFA<br />/mois</span>
-                    </div>
-                  ) : (
-                    <div className="price-row">
-                      <span className="price-custom">{(plan as typeof plan & { priceLabel: string }).priceLabel}</span>
-                    </div>
-                  )}
-                  <div className="price-note-small">{plan.priceNote}</div>
-                </div>
-
-                <a
-                  href={plan.ctaHref}
-                  className={`btn btn-lg${plan.featured ? ' btn-gold' : ' btn-primary'}`}
-                >
-                  {plan.cta} <ArrowRight size={16} className="arr" />
-                </a>
-
-                <ul className="mustaf-plan-features">
-                  {plan.features.map((f, j) => (
-                    <li key={j}>
-                      <span className="plan-tick">
-                        <Check size={12} strokeWidth={2.8} />
-                      </span>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="mustaf-plan-ideal">
-                  <Star size={12} />
-                  {plan.ideal}
-                </div>
+          <div className="mustaf-pillars">
+            {PILLARS.map(({ Icon, title, desc }, i) => (
+              <article key={i} className="mustaf-pillar">
+                <div className="mustaf-pillar-icon"><Icon size={20} /></div>
+                <h3 className="mustaf-pillar-title">{title}</h3>
+                <p className="mustaf-pillar-desc">{desc}</p>
               </article>
             ))}
-          </div>
-
-          {/* FAQ trigger — centré sous les cartes */}
-          <div className="mustaf-faq-row">
-            <FaqPanel />
           </div>
         </div>
       </section>
 
-      {/* ── How it works ────────────────────────────────────────── */}
+      {/* ── Comment ça marche ─────────────────────────────────── */}
       <section className="section on-ink mustaf-how" id="how-it-works">
         <div className="hero-bg">
           <div className="glow g1" style={{ opacity: 0.22 }}></div>
@@ -239,21 +129,16 @@ export default function MustafPricingPage() {
         </div>
         <div className="wrap">
           <div className="mustaf-how-head">
-            <span className="eyebrow">Processus</span>
-            <h2 className="section-title">Comment fonctionne Mustaf ?</h2>
-            <p className="section-sub">
-              Cinq étapes claires, du premier message aux clés en main.
-            </p>
+            <span className="eyebrow">Le parcours</span>
+            <h2 className="section-title">Comment ça marche ?</h2>
+            <p className="section-sub">Quatre étapes claires, du premier plan aux clés en main.</p>
           </div>
-
-          <div className="mustaf-steps-grid">
+          <div className="mustaf-steps-grid mustaf-steps-4">
             {STEPS.map(({ num, Icon, title, desc }, i) => (
               <div key={i} className="mustaf-step">
                 <div className="step-top">
                   <span className="step-num">{num}</span>
-                  <div className="step-icon-wrap">
-                    <Icon size={20} />
-                  </div>
+                  <div className="step-icon-wrap"><Icon size={20} /></div>
                 </div>
                 <h4 className="step-title">{title}</h4>
                 <p className="step-desc">{desc}</p>
@@ -263,38 +148,146 @@ export default function MustafPricingPage() {
         </div>
       </section>
 
-      {/* ── CTA band ────────────────────────────────────────────── */}
-      <section className="section mustaf-cta-band">
-        <div className="wrap mustaf-cta-inner">
-          <div className="mustaf-cta-text">
-            <h2>Prêt à construire ta maison ?</h2>
-            <p>Rejoins les propriétaires qui ont transformé leur terrain avec Mustaf.</p>
+      {/* ── Les 3 offres ──────────────────────────────────────── */}
+      <section className="section mustaf-pricing-sec" id="offres">
+        <div className="wrap">
+          <div className="mustaf-pricing-head">
+            <span className="eyebrow">Abonnement Mustaf</span>
+            <h2 className="section-title">Choisissez votre niveau de sérénité</h2>
+            <p className="section-sub">
+              Nos honoraires sont un pourcentage de votre budget, étalé sur les phases — pas un forfait payé d’avance.
+            </p>
           </div>
-          <div className="mustaf-cta-btns">
-            <a className="btn btn-primary btn-lg" href="#pricing">
-              Voir les plans <ArrowRight size={17} className="arr" />
-            </a>
-            <Link className="btn btn-ghost btn-lg" href="/#contact">
-              Parler à l&apos;équipe
-            </Link>
+
+          {/* Socle commun */}
+          <div className="mustaf-socle">
+            <p className="mustaf-socle-title">
+              <ShieldCheck size={16} /> Toutes les offres incluent
+            </p>
+            <ul className="mustaf-socle-list">
+              {COMMON_FEATURES.map((f, i) => (
+                <li key={i}><span className="plan-tick"><Check size={12} strokeWidth={2.8} /></span>{f}</li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Forfait Phase 0 */}
+          <div className="mustaf-phase0">
+            <div>
+              <p className="mustaf-phase0-label">Phase 0 — plan d’architecte + permis + étude de sol</p>
+              <p className="mustaf-phase0-note">Forfait fixe, payé une fois au départ, séparé du pourcentage.</p>
+            </div>
+            <div className="mustaf-phase0-price">
+              <span>{formatFcfa(PHASE_ZERO_FEE)}</span>
+              <small>≈ {formatEur(PHASE_ZERO_FEE)}</small>
+            </div>
+          </div>
+
+          {/* Cartes offres */}
+          <div className="mustaf-pricing-grid" id="mustaf-plans">
+            {TIERS.map((tier) => {
+              const example = Math.round((SIM_DEFAULT * tier.pct) / 100);
+              return (
+                <article key={tier.id} className={`mustaf-plan-card${tier.featured ? ' featured' : ''}`}>
+                  {tier.badge && <div className="mustaf-plan-badge">{tier.badge}</div>}
+
+                  <div className="mustaf-plan-header">
+                    <h3 className="mustaf-plan-name">{tier.name}</h3>
+                    <p className="mustaf-plan-tagline">{tier.forWhom}</p>
+                  </div>
+
+                  <div className="mustaf-plan-price">
+                    <div className="price-row">
+                      <span className="price-num">{tier.pct} %</span>
+                      <span className="price-unit">du budget<br />de construction</span>
+                    </div>
+                    <div className="mustaf-plan-example">
+                      Ex. : sur {formatFcfa(SIM_DEFAULT)} → <strong>{formatFcfa(example)}</strong> d’honoraires
+                    </div>
+                  </div>
+
+                  <Link
+                    href="/mustaf/demarrer"
+                    className={`btn btn-lg${tier.featured ? ' btn-gold' : ' btn-primary'}`}
+                  >
+                    Démarrer mon projet <ArrowRight size={16} className="arr" />
+                  </Link>
+
+                  {tier.inherits && <p className="mustaf-plan-inherits">{tier.inherits}</p>}
+                  <ul className="mustaf-plan-features">
+                    {tier.features.map((f, j) => (
+                      <li key={j}><span className="plan-tick"><Check size={12} strokeWidth={2.8} /></span>{f}</li>
+                    ))}
+                  </ul>
+
+                  <div className="mustaf-plan-ideal">
+                    <Star size={12} />
+                    {tier.forWhom}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+
+          {/* Simulateur */}
+          <div className="mustaf-sim-wrap">
+            <FeesSimulator />
+          </div>
+
+          {/* Cadrage du prix */}
+          <p className="mustaf-price-frame">
+            Vous engagez plusieurs millions dans votre maison. Nos honoraires garantissent que chaque franc
+            y va vraiment — et que vous le voyez, à chaque étape.
+          </p>
+
+          {/* FAQ */}
+          <div className="mustaf-faq-row">
+            <FaqPanel />
           </div>
         </div>
       </section>
 
-      {/* ── Footer ──────────────────────────────────────────────── */}
+      {/* ── Bande transparence ────────────────────────────────── */}
+      <section className="section on-ink mustaf-transparency">
+        <div className="wrap mustaf-transparency-inner">
+          <div className="mustaf-transparency-item">
+            <Lock size={20} /><p>Votre argent n’est jamais sur nos comptes.</p>
+          </div>
+          <div className="mustaf-transparency-item">
+            <Building2 size={20} /><p>Zéro marge sur les matériaux.</p>
+          </div>
+          <div className="mustaf-transparency-item">
+            <Eye size={20} /><p>Chaque dépense, chaque photo, datée et tracée.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA final ─────────────────────────────────────────── */}
+      <section className="section mustaf-cta-band">
+        <div className="wrap mustaf-cta-inner">
+          <div className="mustaf-cta-text">
+            <h2>Prêt à construire votre maison ?</h2>
+            <p>Rejoignez les familles de la diaspora qui bâtissent au pays, en toute confiance.</p>
+          </div>
+          <div className="mustaf-cta-btns">
+            <Link className="btn btn-primary btn-lg" href="/mustaf/demarrer">
+              Démarrer mon projet <ArrowRight size={17} className="arr" />
+            </Link>
+            <Link className="btn btn-ghost btn-lg" href="/#contact">Parler à l’équipe</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Footer ────────────────────────────────────────────── */}
       <footer className="offer-foot">
         <p>
-          <ShieldCheck
-            size={15}
-            style={{ display: 'inline', verticalAlign: '-2px', marginRight: 6, color: 'var(--green)' }}
-          />
-          Architectes certifiés · Géomètre agréé · Paiement par étapes de chantier
+          <ShieldCheck size={15} style={{ display: 'inline', verticalAlign: '-2px', marginRight: 6, color: 'var(--green)' }} />
+          Argent bloqué chez un tiers de confiance · Inspecteur indépendant · Paiement par phase
         </p>
         <p style={{ marginTop: 10 }}>
-          <Link href="/">← Retour à l&apos;accueil</Link>
+          <Link href="/">← Retour à l’accueil</Link>
         </p>
       </footer>
-
     </div>
   );
 }

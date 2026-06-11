@@ -1,5 +1,33 @@
 /* ============ Page paiement Sara (Wave) — styles ============ */
 
+/* ---- Nav / en-tête / pied (repris de offer.css, page autonome) ---- */
+.offer-nav {
+  position: sticky; top: 0; z-index: 40;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; height: 72px; padding-inline: clamp(16px, 2.5vw, 32px);
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+}
+.offer-nav .brand img { height: 32px; width: auto; display: block; }
+.offer-nav .btn { white-space: nowrap; }
+
+.offer-hero { text-align: center; padding-top: clamp(40px, 6vw, 76px); }
+.offer-hero .eyebrow { justify-content: center; }
+.offer-hero h1 { font-family: var(--font-display); font-size: clamp(28px, 5vw, 52px); letter-spacing: -.02em; margin-top: 16px; }
+.offer-hero h1 .accent { color: var(--green); }
+.offer-hero p { color: var(--text-muted); font-size: clamp(15px, 1.7vw, 19px); max-width: 48ch; margin: 16px auto 0; }
+
+.offer-foot { text-align: center; padding: 48px 0 64px; color: var(--text-muted); font-size: 14px; }
+.offer-foot a { color: var(--green); font-weight: 600; }
+
+@media (max-width: 420px) {
+  .offer-nav { height: 64px; }
+  .offer-nav .brand img { height: 28px; }
+  .offer-nav .btn { padding: 9px 13px; font-size: 13px; }
+}
+
 .checkout-grid {
   display: grid; grid-template-columns: 1.05fr .95fr;
   gap: clamp(24px, 4vw, 44px); align-items: start;
@@ -22,7 +50,7 @@
 .co-form { display: flex; flex-direction: column; gap: 16px; margin-top: 22px; }
 .co-form .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 @media (max-width: 480px) { .co-form .two { grid-template-columns: 1fr; } }
-.co-form .btn { width: 100%; margin-top: 6px; }
+.co-form .btn { width: 100%; margin-top: 6px; white-space: normal; text-align: center; padding-inline: 16px; }
 .co-tx { padding-top: 18px; margin-top: 4px; border-top: 1px dashed var(--line); }
 
 /* ---- Récap commande ---- */

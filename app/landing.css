@@ -81,6 +81,8 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   line-height: 1.04;
   letter-spacing: -0.02em;
   color: var(--text);
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 .landing-root .on-ink h1, .landing-root .on-ink h2,
 .landing-root .on-ink h3, .landing-root .on-ink h4 { color: var(--text-on-ink); }
@@ -247,7 +249,7 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   color: var(--text-on-ink); font-size: 13px; font-weight: 600; letter-spacing: .01em; }
 .hero-badge .pulse { width: 8px; height: 8px; border-radius: 50%; background: #34D399; animation: pulse 2s infinite; }
 @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(52,211,153,.55);} 70%{ box-shadow: 0 0 0 9px rgba(52,211,153,0);} 100%{ box-shadow: 0 0 0 0 rgba(52,211,153,0);} }
-.hero h1 { color: var(--text-on-ink); font-size: clamp(38px, 5.6vw, 70px); margin-top: 22px; }
+.hero h1 { color: var(--text-on-ink); font-size: clamp(29px, 7.4vw, 70px); margin-top: 22px; }
 .hero h1 .accent { color: var(--gold); }
 .hero-sub { color: var(--text-on-ink-muted); font-size: clamp(17px, 1.7vw, 20px); margin-top: 22px; max-width: 46ch; }
 .hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
@@ -270,6 +272,23 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 @media (max-width: 860px) {
   .hero-inner { grid-template-columns: 1fr; }
   .hero-visual { margin-top: 16px; justify-self: center; }
+}
+
+@media (max-width: 600px) {
+  .hero { padding-top: 104px; }
+  .hero h1 { margin-top: 18px; }
+  .hero-sub { font-size: 16px; margin-top: 18px; max-width: none; }
+  .hero-badge { font-size: 12px; }
+  .hero-checks { gap: 9px 18px; margin-top: 22px; }
+  .hero-checks li { font-size: 13.5px; }
+  .hero-ctas { margin-top: 26px; }
+  .hero-ctas .btn { width: 100%; white-space: normal; text-align: center; padding-inline: 18px; }
+  .hero-proof { margin-top: 28px; }
+}
+
+@media (max-width: 380px) {
+  .hero { padding-top: 96px; }
+  .hero-badge { padding: 6px 11px 6px 8px; }
 }
 
 /* ================================================================== */

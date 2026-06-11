@@ -16,9 +16,9 @@ const I18N = {
   fr: {
     nav: { terrains: "Nos terrains", comment: "Comment ça marche", garanties: "Nos garanties", tarifs: "Tarifs", login: "Se connecter", cta: "Réserver un entretien" },
     hero: {
-      badge: "Vol? arnaque? · Basta",
-      title_1: "Achetez votre terrain et construisez votre maison au Sénégal",
-      title_2: "sans perdre votre argent, votre temps ou votre tranquillité d'esprit.",
+      badge: "Vol. Arnaque. Gaspillage · Plus jamais",
+      title_1: "Achetez votre terrain.",
+      title_2: "Construisez sereinement.",
       sub: "De l'achat du terrain vérifié jusqu'à la remise des clés, Litug vous accompagne avec un suivi financier transparent et un contrôle total de votre projet — depuis l'étranger.",
       cta_primary: "Je veux acheter ou construire en sécurité",
       cta_secondary: "Voir une démonstration",

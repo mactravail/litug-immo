@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, TrendingUp, Store, HardHat, TriangleAlert, ScrollText, LogOut,
-  Users, ClipboardList, ClipboardCheck, Construction, UserCog,
+  Users, ClipboardList, ClipboardCheck, Construction, UserCog, ShieldCheck,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { logout } from '@/app/(auth)/login/actions';
@@ -29,6 +29,12 @@ const GROUPS: { title: string; items: { href: string; label: string; icon: typeo
       { href: '/admin/redditions',  label: 'Redditions',       icon: ClipboardCheck },
       { href: '/admin/problemes',   label: 'Problèmes',        icon: Construction },
       { href: '/admin/equipe',      label: 'Rôles & rotation', icon: UserCog },
+    ],
+  },
+  {
+    title: 'Compte',
+    items: [
+      { href: '/admin/securite',    label: 'Sécurité',         icon: ShieldCheck },
     ],
   },
 ];

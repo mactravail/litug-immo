@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ListTodo, ClipboardCheck, Wrench, Wallet } from 'lucide-react';
+import { ListTodo, ClipboardCheck, Wrench, Wallet, ShieldCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const NAV = [
@@ -10,6 +10,7 @@ const NAV = [
   { href: '/equipe/portefeuille', label: 'Argent',    icon: Wallet },
   { href: '/equipe/redditions',  label: 'Redditions', icon: ClipboardCheck },
   { href: '/equipe/action',      label: 'Métier',     icon: Wrench },
+  { href: '/equipe/securite',    label: 'Sécurité',   icon: ShieldCheck },
 ];
 
 export function EmployeMobileNav() {

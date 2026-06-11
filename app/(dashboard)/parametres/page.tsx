@@ -1,8 +1,9 @@
-import { ShieldCheck, Bell, CreditCard } from 'lucide-react';
+import { ShieldCheck, Bell, CreditCard, KeyRound } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { getDataProvider } from '@/lib/data/provider';
 import { getAuthenticatedSellerId } from '@/lib/supabase-server';
 import { formatDate } from '@/lib/utils';
+import { ChangePasswordForm } from '@/components/account/ChangePasswordForm';
 import { ProfileForm } from './ProfileForm';
 import { CancelSubscriptionButton } from './CancelSubscriptionButton';
 
@@ -59,6 +60,16 @@ export default async function ParametresPage() {
           <div className="pt-2 border-t border-stone-100">
             <CancelSubscriptionButton />
           </div>
+        </section>
+
+        {/* Sécurité */}
+        <section className="bg-white rounded-2xl border border-stone-100 shadow-sm p-6 space-y-4">
+          <div className="flex items-center gap-2">
+            <KeyRound size={18} className="text-muted" />
+            <h2 className="font-serif text-lg font-semibold text-text">Mot de passe</h2>
+          </div>
+          <p className="text-sm text-muted">On vous demande votre mot de passe actuel avant tout changement.</p>
+          <ChangePasswordForm />
         </section>
 
         {/* Notifications */}

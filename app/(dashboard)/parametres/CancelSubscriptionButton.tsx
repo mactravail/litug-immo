@@ -31,7 +31,7 @@ export function CancelSubscriptionButton() {
           <div>
             <p className="text-sm font-semibold text-red-800">Confirmer la résiliation</p>
             <p className="text-xs text-red-700 mt-1">
-              Votre accès au dashboard et à l'agent WhatsApp sera désactivé à la fin de la période en cours.
+              Votre accès au dashboard et à l’agent WhatsApp sera désactivé à la fin de la période en cours.
               Cette action est irréversible.
             </p>
           </div>

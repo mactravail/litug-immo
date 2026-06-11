@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ListTodo, ClipboardCheck, Wrench, Wallet, LogOut } from 'lucide-react';
+import { ListTodo, ClipboardCheck, Wrench, Wallet, LogOut, ShieldCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { logout } from '@/app/(auth)/login/actions';
 import { TEAM_ROLE_LABEL } from '@/lib/admin/labels';
@@ -65,6 +65,17 @@ export function EmployeSidebar({ workerName, role, workers, currentId }: Props) 
         </div>
 
         <WorkerSwitcher workers={workers} currentId={currentId} />
+
+        <Link
+          href="/equipe/securite"
+          className={cn(
+            'flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors',
+            pathname.startsWith('/equipe/securite') ? 'bg-accent-light text-accent' : 'text-muted hover:bg-stone-50 hover:text-text',
+          )}
+        >
+          <ShieldCheck size={16} />
+          Sécurité
+        </Link>
 
         <form action={logout}>
           <button

@@ -50,7 +50,14 @@
 
 .mustaf-hero {
   position: relative;
-  background: var(--ink);
+  background:
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--ink) 72%, transparent),
+      color-mix(in srgb, var(--ink) 82%, transparent)
+    ),
+    url('/mustaf-hero.jpg') center / cover no-repeat;
+  background-color: var(--ink);
   overflow: hidden;
   padding-top: 132px;
   padding-bottom: clamp(72px, 10vw, 120px);

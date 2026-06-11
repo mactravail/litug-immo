@@ -1,5 +1,6 @@
 import { Sidebar } from '@/components/layout/Sidebar';
 import { MobileNav } from '@/components/layout/MobileNav';
+import { SubscriptionBanner } from '@/components/layout/SubscriptionBanner';
 import { GlobalSearch } from '@/components/ui/GlobalSearch';
 import { getDataProvider } from '@/lib/data/provider';
 import { getAuthenticatedSellerId } from '@/lib/supabase-server';
@@ -43,6 +44,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <header className="sticky top-0 z-40 bg-bg/80 backdrop-blur-sm border-b border-stone-100 px-4 sm:px-6 py-3">
           <GlobalSearch items={searchItems} />
         </header>
+        <SubscriptionBanner status={seller?.subscriptionStatus ?? 'trial'} />
         <main className="flex-1">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
             {children}

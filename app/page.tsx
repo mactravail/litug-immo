@@ -14,49 +14,77 @@ type Lang = 'fr' | 'en';
 /* ------------------------------------------------------------------ */
 const I18N = {
   fr: {
-    nav: { terrains: "Nos terrains", blog: "Blog", produits: "Produits", login: "Se connecter", cta: "Nous contacter" },
+    nav: { terrains: "Nos terrains", comment: "Comment ça marche", garanties: "Nos garanties", tarifs: "Tarifs", login: "Se connecter", cta: "Réserver un entretien" },
     hero: {
-      badge: "Propulsé par l'IA · Sénégal",
-      title_1: "Sara, ton partenaire immobilier",
-      title_2: "disponible 24/7",
-      sub: "L'agent IA WhatsApp qui répond automatiquement à tes clients, qualifie leurs besoins et transforme plus de conversations en ventes.",
-      cta_primary: "Commencer maintenant",
-      cta_secondary: "En savoir plus",
+      badge: "Vol? arnaque? · Basta",
+      title_1: "Achetez votre terrain et construisez votre maison au Sénégal",
+      title_2: "sans perdre votre argent, votre temps ou votre tranquillité d'esprit.",
+      sub: "De l'achat du terrain vérifié jusqu'à la remise des clés, Litug vous accompagne avec un suivi financier transparent et un contrôle total de votre projet — depuis l'étranger.",
+      cta_primary: "Je veux acheter ou construire en sécurité",
+      cta_secondary: "Voir une démonstration",
       proof: "Déjà utilisé par des vendeurs, architectes et professionnels de l'immobilier",
+      checks: ["Budget maîtrisé", "Dépenses vérifiables", "Suivi en temps réel", "Tiers de confiance"],
     },
     marquee: { label: "Des professionnels nous font déjà confiance" },
+    probleme: {
+      kicker: "Le problème",
+      title: "Vous avez peur que votre argent disparaisse avant que votre projet n'aboutisse ?",
+      intro: "Vous n'êtes pas seul. Chaque année, des milliers de Sénégalais vivant à l'étranger :",
+      points: [
+        "Achètent un terrain qui se révèle déjà vendu, faux ou inexistant",
+        "Envoient de l'argent sans savoir comment il est utilisé",
+        "Découvrent des dépassements de budget imprévus",
+        "Reçoivent peu ou pas d'informations sur l'avancement du chantier",
+        "Perdent des années à cause d'une mauvaise gestion",
+      ],
+      outro: "Acheter et construire à distance ne devrait pas être une source de stress.",
+    },
+    agitation: {
+      kicker: "Le vrai coût",
+      title: "Le vrai coût d'une arnaque ou d'une mauvaise gestion ne se limite pas à l'argent.",
+      intro: "C'est aussi :",
+      points: [
+        "Un titre foncier contesté des années plus tard",
+        "Des retards de plusieurs mois sur le chantier",
+        "Des conflits familiaux autour de l'argent envoyé",
+        "Des matériaux de mauvaise qualité, des travaux à refaire",
+        "Des rêves reportés, encore et encore",
+      ],
+      outro: "Pendant que vous travaillez dur à l'étranger, votre projet mérite un suivi professionnel.",
+    },
     parcours: {
-      kicker: "Choisis ton parcours",
-      title: "Une expérience construite selon tes besoins",
-      card1_tag: "Vendeurs",
-      card1_title: "Je vends des terrains",
-      card1_desc: "Automatise tes messages WhatsApp, réponds instantanément et convertis plus de prospects.",
+      kicker: "La solution · Deux produits, une même promesse",
+      title: "La confiance, du terrain à la maison finie",
+      sub: "Que vous achetiez un terrain ou que vous construisiez, Litug vous donne une visibilité totale sur votre argent, vos documents et l'avancement de votre projet.",
+      card1_tag: "Acheter un terrain",
+      card1_title: "Sara — votre agent terrain IA",
+      card1_desc: "Trouvez et achetez un terrain vérifié sans intermédiaire douteux. Sara qualifie, informe et ne vous propose que des terrains au statut clair.",
       card1_cta: "Découvrir Sara",
-      card2_tag: "Propriétaires",
-      card2_title: "Je veux construire",
-      card2_desc: "Vous avez un terrain ? Construisez au pays en toute confiance : argent protégé, paiement par phase, suivi photo depuis votre téléphone.",
+      card2_tag: "Construire sa maison",
+      card2_title: "Mustaf — construire en confiance",
+      card2_desc: "Vous avez un terrain ? Construisez au pays sereinement : argent protégé chez un tiers, paiement par phase, suivi photo depuis votre tablette.",
       card2_cta: "Découvrir Mustaf",
     },
     sara: {
-      kicker: "Agent terrain IA",
+      kicker: "Produit 1 · Acheter un terrain",
       badge: "Disponible 24h/24",
-      title: "Ton commercial qui ne dort jamais",
-      desc: "Sara est un agent IA WhatsApp qui prend le relais sur chaque conversation entrante.",
+      title: "Sara, votre commercial qui ne dort jamais",
+      desc: "Sara est un agent IA WhatsApp qui répond instantanément, qualifie chaque acheteur et ne met en avant que des terrains au statut vérifié — fini les arnaques et les terrains fantômes.",
       features: [
         "Répond automatiquement, 24/7",
-        "Qualifie chaque client entrant",
-        "Demande budget, localisation, superficie et type de terrain",
+        "Qualifie chaque client : budget, zone, superficie",
+        "N'envoie que des terrains au statut clair (TF, Bail, Délibération)",
         "Envoie photos et fiches d'information",
-        "Ne transfère que les prospects qualifiés",
+        "Ne transfère que les prospects sérieux à un humain",
       ],
       cta: "Activer Sara",
     },
     mustaf: {
-      kicker: "Tiers de confiance · Construction",
+      kicker: "Produit 2 · Construire sa maison",
       name: "Mustaf",
       badge: "Construire en toute confiance",
-      title: "Construisez au pays, en toute sérénité",
-      desc: "Pour ceux qui possèdent déjà un terrain, Mustaf gère le chantier de A à Z. Votre argent reste bloqué chez un tiers de confiance, les travaux n'avancent que phase par phase, et vous voyez chaque franc et chaque photo depuis votre téléphone.",
+      title: "Gardez le contrôle de votre chantier, depuis n'importe où dans le monde",
+      desc: "Pour ceux qui possèdent déjà un terrain, Mustaf gère le chantier de A à Z. Votre argent reste bloqué chez un tiers de confiance, les travaux n'avancent que phase par phase, et vous voyez chaque franc et chaque photo depuis votre tablette.",
       services: [
         "Argent bloqué chez un tiers de confiance, jamais chez nous",
         "Une phase ne démarre que lorsqu'elle est financée",
@@ -67,15 +95,62 @@ const I18N = {
       ],
       cta: "Voir les offres",
     },
+    comment: {
+      kicker: "Comment ça marche",
+      title: "Un processus simple et sécurisé",
+      steps: [
+        { n: "1", title: "Terrain vérifié", items: ["Vérification du titre à la Conservation Foncière", "Bornage et statut clair (TF, Bail…)", "Achat sécurisé via notaire séquestre"] },
+        { n: "2", title: "Préparation du projet", items: ["Étude du terrain", "Plan architectural + permis de construire", "Budget prévisionnel détaillé"] },
+        { n: "3", title: "Votre espace personnel", items: ["Accès à votre tableau de bord", "Toute la famille peut participer au financement"] },
+        { n: "4", title: "Financement progressif", items: ["Les fonds sont collectés étape par étape", "Fondation · Élévation · Toiture · Finitions"] },
+        { n: "5", title: "Exécution contrôlée", items: ["Inspecteur indépendant avant chaque paiement", "Chaque dépense enregistrée, chaque facture disponible"] },
+        { n: "6", title: "Livraison", items: ["Une retenue de garantie reste bloquée jusqu'à la livraison", "Remise des clés en toute sérénité"] },
+      ],
+    },
+    dash: {
+      kicker: "Le tableau de bord Mustaf",
+      title: "Comme si vous étiez présent sur le chantier",
+      sub: "Depuis votre tablette ou votre téléphone, vous suivez chaque euro investi en temps réel.",
+      points: [
+        "Budget total, utilisé et restant",
+        "Factures et dépenses ligne par ligne",
+        "Photos du chantier datées et géolocalisées",
+        "Échéances et prochaines phases à financer",
+        "Contributions de chaque membre de la famille",
+        "Un bouton pour signaler une anomalie",
+      ],
+    },
     impact: {
       kicker: "Notre impact",
       title: "Des résultats qui parlent",
       stats: [
         { value: 80, prefix: "+", suffix: "%", label: "de temps économisé grâce à Sara" },
-        { value: 3,  prefix: "",  suffix: "x", label: "plus de prospects qualifiés" },
-        { value: 24, prefix: "",  suffix: "/7", label: "de disponibilité permanente" },
-        { value: 70, prefix: "−", suffix: "%", label: "de faux prospects et d'arnaques" },
+        { value: 70, prefix: "−", suffix: "%", label: "de faux prospects et d'arnaques évités" },
+        { value: 100, prefix: "", suffix: "%", label: "des dépenses Mustaf tracées et justifiées" },
+        { value: 0, prefix: "", suffix: "%", label: "de marge sur les matériaux, factures visibles" },
       ],
+    },
+    preuves: {
+      kicker: "Nos garanties",
+      title: "Pourquoi les diasporas choisissent Litug",
+      points: [
+        "Transparence totale, du terrain à la maison",
+        "Aucun paiement opaque",
+        "Historique complet des dépenses",
+        "Accompagnement humain",
+        "Contrôle financier permanent",
+        "Documents centralisés et sécurisés",
+        "Tiers de confiance pour l'argent",
+        "Inspecteur indépendant à chaque étape",
+      ],
+    },
+    compare: {
+      kicker: "Avant / Après",
+      title: "Le changement est radical",
+      before_label: "Sans Litug",
+      after_label: "Avec Litug",
+      before: ["Terrains au statut flou", "Appels incessants", "Informations contradictoires", "Factures manquantes", "Dépenses imprévues", "Stress permanent"],
+      after: ["Terrains vérifiés", "Visibilité complète 24/7", "Une seule source de vérité", "Factures accessibles", "Budget maîtrisé", "Tranquillité d'esprit"],
     },
     listings: {
       kicker: "Terrains & projets",
@@ -85,6 +160,24 @@ const I18N = {
       cta: "Voir plus",
       before: "Avant",
       after: "Après",
+    },
+    faq: {
+      kicker: "FAQ",
+      title: "Les questions que vous vous posez",
+      items: [
+        { q: "Puis-je utiliser Litug si j'ai déjà mon terrain ?", a: "Oui. Vous passez directement à Mustaf pour la construction, sans repayer l'achat du terrain." },
+        { q: "Puis-je utiliser Mustaf si j'ai déjà mes plans ?", a: "Oui. Vous ne paierez pas les prestations que vous possédez déjà." },
+        { q: "Ma famille peut-elle participer au financement ?", a: "Oui. Chaque membre peut contribuer directement au projet, et chaque versement est attribué et visible. (Il s'agit d'un relevé de contributions, pas d'un titre de propriété.)" },
+        { q: "Comment suivre les dépenses ?", a: "Toutes les dépenses sont visibles dans votre tableau de bord, facture à l'appui, en temps réel." },
+        { q: "Mon argent est-il en sécurité ?", a: "Oui. Il reste bloqué chez un tiers de confiance (notaire séquestre / banque partenaire) et n'est libéré qu'après vérification indépendante des travaux. Jamais chez nous." },
+        { q: "Comment savoir qu'un terrain n'est pas une arnaque ?", a: "Un terrain n'est marqué « Vérifié » qu'après un contrôle réel par notaire/géomètre à la Conservation Foncière. Le statut (TF, Bail, Délibération) est toujours affiché, jamais caché." },
+      ],
+    },
+    ctaFinal: {
+      title: "Votre maison mérite plus qu'une promesse.",
+      sub: "Achetez et construisez au Sénégal avec une visibilité totale sur chaque euro investi.",
+      cta1: "Réserver mon entretien gratuit",
+      cta2: "Parler à un conseiller",
     },
     contact: {
       kicker: "Contact",
@@ -101,7 +194,7 @@ const I18N = {
       map_label: "Sénégal · Dakar & régions",
     },
     footer: {
-      tagline: "Construire le futur immobilier du Sénégal.",
+      tagline: "Acheter et construire au Sénégal en toute confiance.",
       col1: "Produits",
       col1_links: [
         { label: "Sara — Agent IA", href: "/sara" },
@@ -128,49 +221,77 @@ const I18N = {
     },
   },
   en: {
-    nav: { terrains: "Our land", blog: "Blog", produits: "Products", login: "Log in", cta: "Contact us" },
+    nav: { terrains: "Our land", comment: "How it works", garanties: "Our guarantees", tarifs: "Pricing", login: "Log in", cta: "Book a call" },
     hero: {
-      badge: "AI-powered · Senegal",
-      title_1: "Sara, your real-estate partner",
-      title_2: "available 24/7, all year round",
-      sub: "The WhatsApp AI agent that automatically replies to your clients, qualifies their needs, and turns more conversations into sales.",
-      cta_primary: "Start now",
-      cta_secondary: "Learn more",
+      badge: "Vol? arnaque? · Basta",
+      title_1: "Buy your land and build your home in Senegal",
+      title_2: "without losing your money, your time or your peace of mind.",
+      sub: "From a verified plot to the handover of the keys, Litug supports you with transparent financial tracking and full control of your project — from abroad.",
+      cta_primary: "I want to buy or build safely",
+      cta_secondary: "See a demo",
       proof: "Already used by sellers, architects and real-estate professionals",
+      checks: ["Budget under control", "Verifiable expenses", "Real-time tracking", "Trusted third party"],
     },
     marquee: { label: "Trusted by professionals across the country" },
+    probleme: {
+      kicker: "The problem",
+      title: "Afraid your money will vanish before your project is finished?",
+      intro: "You're not alone. Every year, thousands of Senegalese living abroad:",
+      points: [
+        "Buy land that turns out to be already sold, fake or non-existent",
+        "Send money without knowing how it's used",
+        "Discover unexpected budget overruns",
+        "Get little or no information on the site's progress",
+        "Lose years to poor management",
+      ],
+      outro: "Buying and building from afar shouldn't be a source of stress.",
+    },
+    agitation: {
+      kicker: "The real cost",
+      title: "The real cost of a scam or poor management isn't just money.",
+      intro: "It's also:",
+      points: [
+        "A land title disputed years later",
+        "Months of delays on the build",
+        "Family conflicts over the money sent",
+        "Poor-quality materials, work to redo",
+        "Dreams postponed, again and again",
+      ],
+      outro: "While you work hard abroad, your project deserves professional oversight.",
+    },
     parcours: {
-      kicker: "Choose your path",
-      title: "An experience built around your needs",
-      card1_tag: "Sellers",
-      card1_title: "I sell land",
-      card1_desc: "Automate your WhatsApp messages, reply instantly, and convert more leads.",
+      kicker: "The solution · Two products, one promise",
+      title: "Trust, from the land to the finished home",
+      sub: "Whether you're buying land or building, Litug gives you full visibility over your money, your documents and your project's progress.",
+      card1_tag: "Buy land",
+      card1_title: "Sara — your AI land agent",
+      card1_desc: "Find and buy verified land with no shady middleman. Sara qualifies, informs, and only offers you plots with a clear status.",
       card1_cta: "Meet Sara",
-      card2_tag: "Owners",
-      card2_title: "I want to build",
-      card2_desc: "Got land? Build back home with confidence: protected funds, pay-by-phase, photo tracking from your phone.",
+      card2_tag: "Build a home",
+      card2_title: "Mustaf — build with confidence",
+      card2_desc: "Got land? Build back home with peace of mind: protected funds, pay-by-phase, photo tracking from your tablet.",
       card2_cta: "Meet Mustaf",
     },
     sara: {
-      kicker: "AI land agent",
+      kicker: "Product 1 · Buy land",
       badge: "Available 24/7",
-      title: "A salesperson that never sleeps",
-      desc: "Sara is a WhatsApp AI agent that takes over every incoming conversation.",
+      title: "Sara, the salesperson that never sleeps",
+      desc: "Sara is a WhatsApp AI agent that replies instantly, qualifies every buyer, and only surfaces verified plots — no more scams or phantom land.",
       features: [
         "Replies automatically, 24/7",
-        "Qualifies every incoming client",
-        "Asks for budget, location, area and land type",
+        "Qualifies every client: budget, area, size",
+        "Only sends land with a clear status (TF, Bail, Délibération)",
         "Sends photos and info sheets",
-        "Only forwards qualified leads",
+        "Only forwards serious leads to a human",
       ],
       cta: "Activate Sara",
     },
     mustaf: {
-      kicker: "Construction · Trusted third party",
+      kicker: "Product 2 · Build a home",
       name: "Mustaf",
       badge: "Build with confidence",
-      title: "Build back home, with peace of mind",
-      desc: "For those who already own land, Mustaf manages the whole build. Your money stays locked with a trusted third party, work only advances phase by phase, and you see every franc and every photo from your phone.",
+      title: "Keep control of your build, from anywhere in the world",
+      desc: "For those who already own land, Mustaf manages the whole build. Your money stays locked with a trusted third party, work only advances phase by phase, and you see every franc and every photo from your tablet.",
       services: [
         "Money locked with a trusted third party, never with us",
         "A phase only starts once it's funded",
@@ -181,15 +302,62 @@ const I18N = {
       ],
       cta: "See the plans",
     },
+    comment: {
+      kicker: "How it works",
+      title: "A simple, secure process",
+      steps: [
+        { n: "1", title: "Verified land", items: ["Title check at the Conservation Foncière", "Boundaries and clear status (TF, Bail…)", "Secure purchase via notary escrow"] },
+        { n: "2", title: "Project prep", items: ["Land survey", "Architectural plan + building permit", "Detailed budget forecast"] },
+        { n: "3", title: "Your personal space", items: ["Access to your dashboard", "The whole family can join the financing"] },
+        { n: "4", title: "Progressive funding", items: ["Funds collected step by step", "Foundation · Walls · Roof · Finishing"] },
+        { n: "5", title: "Controlled execution", items: ["Independent inspector before every payment", "Every expense logged, every invoice available"] },
+        { n: "6", title: "Handover", items: ["A retention stays locked until handover", "Keys handed over with peace of mind"] },
+      ],
+    },
+    dash: {
+      kicker: "The Mustaf dashboard",
+      title: "As if you were on site",
+      sub: "From your tablet or phone, track every euro invested in real time.",
+      points: [
+        "Total, used and remaining budget",
+        "Invoices and expenses line by line",
+        "Dated, geolocated site photos",
+        "Deadlines and next phases to fund",
+        "Each family member's contributions",
+        "One button to flag an anomaly",
+      ],
+    },
     impact: {
       kicker: "Our impact",
       title: "Results that speak",
       stats: [
         { value: 80, prefix: "+", suffix: "%", label: "time saved thanks to Sara" },
-        { value: 3,  prefix: "",  suffix: "x", label: "more qualified leads" },
-        { value: 24, prefix: "",  suffix: "/7", label: "permanent availability" },
         { value: 70, prefix: "−", suffix: "%", label: "fewer fake leads and scams" },
+        { value: 100, prefix: "", suffix: "%", label: "of Mustaf expenses tracked and justified" },
+        { value: 0, prefix: "", suffix: "%", label: "markup on materials, invoices visible" },
       ],
+    },
+    preuves: {
+      kicker: "Our guarantees",
+      title: "Why the diaspora chooses Litug",
+      points: [
+        "Full transparency, from land to home",
+        "No opaque payments",
+        "Complete expense history",
+        "Human support",
+        "Permanent financial control",
+        "Centralized, secure documents",
+        "Trusted third party for the money",
+        "Independent inspector at every step",
+      ],
+    },
+    compare: {
+      kicker: "Before / After",
+      title: "The change is radical",
+      before_label: "Without Litug",
+      after_label: "With Litug",
+      before: ["Land with unclear status", "Endless phone calls", "Contradictory information", "Missing invoices", "Unexpected expenses", "Constant stress"],
+      after: ["Verified land", "Full visibility 24/7", "A single source of truth", "Invoices accessible", "Budget under control", "Peace of mind"],
     },
     listings: {
       kicker: "Land & projects",
@@ -199,6 +367,24 @@ const I18N = {
       cta: "See more",
       before: "Before",
       after: "After",
+    },
+    faq: {
+      kicker: "FAQ",
+      title: "The questions you're asking",
+      items: [
+        { q: "Can I use Litug if I already own my land?", a: "Yes. You go straight to Mustaf for the build, without paying again for the land." },
+        { q: "Can I use Mustaf if I already have my plans?", a: "Yes. You won't pay for services you already have." },
+        { q: "Can my family help finance the project?", a: "Yes. Each member can contribute directly, and every deposit is attributed and visible. (It's a record of contributions, not a property title.)" },
+        { q: "How do I track expenses?", a: "All expenses are visible in your dashboard, with invoices, in real time." },
+        { q: "Is my money safe?", a: "Yes. It stays locked with a trusted third party (notary escrow / partner bank) and is only released after independent verification of the work. Never with us." },
+        { q: "How do I know a plot isn't a scam?", a: "A plot is only marked “Verified” after a real check by a notary/surveyor at the Conservation Foncière. The status (TF, Bail, Délibération) is always shown, never hidden." },
+      ],
+    },
+    ctaFinal: {
+      title: "Your home deserves more than a promise.",
+      sub: "Buy and build in Senegal with full visibility over every euro invested.",
+      cta1: "Book my free call",
+      cta2: "Talk to an advisor",
     },
     contact: {
       kicker: "Contact",
@@ -215,7 +401,7 @@ const I18N = {
       map_label: "Senegal · Dakar & regions",
     },
     footer: {
-      tagline: "Building the future of Senegalese real estate.",
+      tagline: "Buy and build in Senegal with confidence.",
       col1: "Products",
       col1_links: [
         { label: "Sara — AI Agent", href: "/sara" },
@@ -285,6 +471,7 @@ const CHAT: Record<Lang, { from: 'them' | 'sara'; text: string; t: string }[]> =
 const ICONS: Record<string, string> = {
   arrow:   "M5 12h14M13 6l6 6-6 6",
   check:   "M20 6L9 17l-5-5",
+  x:       "M18 6L6 18M6 6l12 12",
   bolt:    "M13 2L3 14h7l-1 8 10-12h-7l1-8z",
   clock:   "M12 7v5l3 2M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
   shield:  "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z",
@@ -296,6 +483,11 @@ const ICONS: Record<string, string> = {
   sparkle: "M12 2l1.8 5.6L19 9l-5.2 1.4L12 16l-1.8-5.6L5 9l5.2-1.4z",
   layers:  "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5",
   users:   "M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75",
+  wallet:  "M21 12V7H5a2 2 0 010-4h14v4 M3 5v14a2 2 0 002 2h16v-5 M18 12a2 2 0 000 4h3v-4z",
+  file:    "M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z M14 2v6h6 M9 13h6 M9 17h6",
+  camera:  "M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z M12 17a4 4 0 100-8 4 4 0 000 8z",
+  alert:   "M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z M12 9v4 M12 17h.01",
+  lock:    "M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2z M7 11V7a5 5 0 0110 0v4",
 };
 
 function Icon({ name, size = 18, stroke = 2, className }: { name: string; size?: number; stroke?: number; className?: string }) {
@@ -469,6 +661,88 @@ function WhatsAppChat({ lang, agentName = "Sara", status }: { lang: Lang; agentN
 }
 
 /* ------------------------------------------------------------------ */
+/* iPad — Mustaf client dashboard mock                                 */
+/* ------------------------------------------------------------------ */
+function IpadDashboard({ lang }: { lang: Lang }) {
+  const fr = lang === "fr";
+  return (
+    <div className="ipad">
+      <div className="ipad-cam"></div>
+      <div className="ipad-screen">
+        <div className="dash">
+          {/* topbar */}
+          <div className="dash-top">
+            <div className="dash-brand"><span className="logo-dot"></span>Mustaf</div>
+            <div className="dash-tier"><Icon name="shield" size={12} />{fr ? "Formule Sérénité" : "Sérénité plan"}</div>
+          </div>
+
+          {/* header */}
+          <div className="dash-head">
+            <div>
+              <h4>{fr ? "Mon projet" : "My project"}</h4>
+              <p><Icon name="pin" size={12} />{fr ? "Cité Keur Gorgui, Dakar" : "Cité Keur Gorgui, Dakar"}</p>
+            </div>
+            <span className="dash-ref">TER-DKR-001</span>
+          </div>
+
+          {/* stat tiles */}
+          <div className="dash-stats">
+            <div className="dtile">
+              <div className="dtile-ic blue"><Icon name="trending" size={14} /></div>
+              <b>12 %</b>
+              <small>{fr ? "Avancement" : "Progress"}</small>
+            </div>
+            <div className="dtile">
+              <div className="dtile-ic green"><Icon name="wallet" size={14} /></div>
+              <b>500 000 <i>FCFA</i></b>
+              <small>{fr ? "Solde épargne" : "Savings"}</small>
+            </div>
+            <div className="dtile">
+              <div className="dtile-ic gold"><Icon name="layers" size={14} /></div>
+              <b>{fr ? "Murs" : "Walls"}</b>
+              <small>{fr ? "Phase en cours" : "Current phase"}</small>
+            </div>
+          </div>
+
+          {/* funding */}
+          <div className="dcard">
+            <div className="dcard-row">
+              <span className="dcard-k">{fr ? "Prochaine phase — Murs (élévation)" : "Next phase — Walls"}</span>
+              <span className="dcard-v">500k / 4,5M</span>
+            </div>
+            <div className="dbar"><div className="dbar-fill" style={{ width: "11%" }}></div></div>
+            <div className="dcard-note"><Icon name="lock" size={11} />{fr ? "Démarre quand la phase est financée" : "Starts once the phase is funded"}</div>
+          </div>
+
+          {/* expenses + photo */}
+          <div className="dash-cols">
+            <div className="dcard sm">
+              <div className="dcard-h"><Icon name="file" size={13} />{fr ? "Dépenses tracées" : "Tracked expenses"}</div>
+              <ul className="dexp">
+                <li><span>{fr ? "Ciment (120 sacs)" : "Cement (120 bags)"}</span><b>470k</b></li>
+                <li><span>{fr ? "Fer à béton" : "Rebar"}</span><b>510k</b></li>
+                <li><span>{fr ? "Main-d'œuvre" : "Labor"}</span><b>380k</b></li>
+              </ul>
+              <div className="dchip ok"><Icon name="check" size={11} />{fr ? "Factures jointes" : "Invoices attached"}</div>
+            </div>
+            <div className="dcard sm photo">
+              <div className="dphoto">
+                <Icon name="camera" size={20} />
+                <span className="dgeo"><Icon name="pin" size={10} />14.69°N · 28 mai</span>
+              </div>
+              <div className="dcard-h tight"><Icon name="camera" size={13} />{fr ? "Photo datée & géolocalisée" : "Dated & geolocated photo"}</div>
+            </div>
+          </div>
+
+          {/* trust note */}
+          <div className="dnote"><Icon name="shield" size={13} />{fr ? "Argent chez le notaire séquestre — libéré après inspection." : "Money held in notary escrow — released after inspection."}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /* NAV                                                                 */
 /* ------------------------------------------------------------------ */
 function Nav({ t, lang, setLang }: { t: T; lang: Lang; setLang: (l: Lang) => void }) {
@@ -496,12 +770,13 @@ function Nav({ t, lang, setLang }: { t: T; lang: Lang; setLang: (l: Lang) => voi
   return (
     <nav className={`nav${scrolled ? " scrolled" : ""}${open ? " menu-open" : ""}`}>
       <div className="wrap nav-inner">
-        <a className="brand" href="#top" onClick={close}><img src="/logo.png" alt="Litug" /></a>
+        <a className="brand" href="#top" onClick={close}><img src={scrolled || open ? "/logo.png" : "/logo-white.png"} alt="Litug" /></a>
 
         <div className="nav-links">
+          <a className="nav-link" href="#comment">{t.nav.comment}</a>
+          <a className="nav-link" href="#preuves">{t.nav.garanties}</a>
           <a className="nav-link" href="/nos-terrains">{t.nav.terrains}</a>
-          <a className="nav-link" href="/blog">{t.nav.blog}</a>
-          <a className="nav-link" href="/produits">{t.nav.produits}</a>
+          <a className="nav-link" href="/produits">{t.nav.tarifs}</a>
         </div>
 
         <div className="nav-right">
@@ -529,9 +804,10 @@ function Nav({ t, lang, setLang }: { t: T; lang: Lang; setLang: (l: Lang) => voi
       {/* Mobile menu */}
       <div className={`nav-mobile${open ? " open" : ""}`} role="dialog" aria-modal="true">
         <div className="nav-mobile-links">
+          <a href="#comment" onClick={close}>{t.nav.comment}</a>
+          <a href="#preuves" onClick={close}>{t.nav.garanties}</a>
           <a href="/nos-terrains" onClick={close}>{t.nav.terrains}</a>
-          <a href="/blog" onClick={close}>{t.nav.blog}</a>
-          <a href="/produits" onClick={close}>{t.nav.produits}</a>
+          <a href="/produits" onClick={close}>{t.nav.tarifs}</a>
         </div>
         <div className="nav-mobile-actions">
           <Link className="btn btn-ghost btn-lg" href="/login" onClick={close}>{t.nav.login}</Link>
@@ -571,6 +847,11 @@ function Hero({ t, lang }: { t: T; lang: Lang }) {
             {t.hero.title_2}
           </h1>
           <p className="hero-sub">{t.hero.sub}</p>
+          <ul className="hero-checks">
+            {t.hero.checks.map((c, i) => (
+              <li key={i}><Icon name="check" size={14} stroke={2.5} />{c}</li>
+            ))}
+          </ul>
           <div className="hero-ctas">
             <a className="btn btn-gold btn-lg" href="#contact">{t.hero.cta_primary}<Icon name="arrow" size={17} className="arr" /></a>
             <a className="btn btn-ghost btn-lg" href="#sara">{t.hero.cta_secondary}</a>
@@ -626,7 +907,42 @@ function Marquee({ t }: { t: T }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* PARCOURS                                                            */
+/* PROBLEME + AGITATION                                                */
+/* ------------------------------------------------------------------ */
+function Probleme({ t }: { t: T }) {
+  const ref = useReveal();
+  return (
+    <section className="section pain" id="probleme" ref={ref}>
+      <div className="wrap pain-inner">
+        <div className="pain-block reveal">
+          <span className="eyebrow">{t.probleme.kicker}</span>
+          <h2 className="section-title">{t.probleme.title}</h2>
+          <p className="section-sub">{t.probleme.intro}</p>
+          <ul className="pain-list">
+            {t.probleme.points.map((p, i) => (
+              <li key={i}><span className="cross"><Icon name="x" size={13} stroke={2.5} /></span>{p}</li>
+            ))}
+          </ul>
+          <p className="pain-outro">{t.probleme.outro}</p>
+        </div>
+        <div className="pain-block alt reveal">
+          <span className="eyebrow">{t.agitation.kicker}</span>
+          <h2 className="section-title">{t.agitation.title}</h2>
+          <p className="section-sub">{t.agitation.intro}</p>
+          <ul className="pain-list">
+            {t.agitation.points.map((p, i) => (
+              <li key={i}><span className="cross"><Icon name="x" size={13} stroke={2.5} /></span>{p}</li>
+            ))}
+          </ul>
+          <p className="pain-outro">{t.agitation.outro}</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* PARCOURS (solution — two products)                                  */
 /* ------------------------------------------------------------------ */
 function Parcours({ t, lang }: { t: T; lang: Lang }) {
   const ref = useReveal();
@@ -636,6 +952,7 @@ function Parcours({ t, lang }: { t: T; lang: Lang }) {
         <div className="parcours-head reveal">
           <span className="eyebrow">{t.parcours.kicker}</span>
           <h2 className="section-title">{t.parcours.title}</h2>
+          <p className="section-sub" style={{ textAlign: "center" }}>{t.parcours.sub}</p>
         </div>
         <div className="parcours-grid">
           <article className="pcard reveal">
@@ -659,7 +976,7 @@ function Parcours({ t, lang }: { t: T; lang: Lang }) {
             <div className="pcard-body">
               <h3>{t.parcours.card2_title}</h3>
               <p>{t.parcours.card2_desc}</p>
-              <a className="btn btn-primary" href="/mustaf">{t.parcours.card2_cta}<Icon name="arrow" size={16} className="arr" /></a>
+              <a className="btn btn-primary" href="#mustaf">{t.parcours.card2_cta}<Icon name="arrow" size={16} className="arr" /></a>
             </div>
           </article>
         </div>
@@ -697,7 +1014,7 @@ function Sara({ t, lang }: { t: T; lang: Lang }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* MUSTAF                                                              */
+/* MUSTAF (iPad dashboard)                                             */
 /* ------------------------------------------------------------------ */
 function Mustaf({ t, lang }: { t: T; lang: Lang }) {
   const ref = useReveal();
@@ -716,22 +1033,82 @@ function Mustaf({ t, lang }: { t: T; lang: Lang }) {
           </ul>
           <a className="btn btn-primary btn-lg" href="/mustaf#offres">{t.mustaf.cta}<Icon name="arrow" size={17} className="arr" /></a>
         </div>
-        <div className="agent-visual reveal" style={{ justifySelf: "center", width: "100%", maxWidth: 380 }}>
-          <div className="blueprint">
-            <div className="grid-lines"></div>
-            <div className="plan">
-              <div className="room lbl" data-l={lang === "fr" ? "SÉJOUR"  : "LIVING"}  style={{ left: 0,   top: 0,    width: "58%", height: "52%" }}></div>
-              <div className="room lbl" data-l={lang === "fr" ? "CUISINE" : "KITCHEN"} style={{ right: 0,  top: 0,    width: "38%", height: "30%" }}></div>
-              <div className="room lbl" data-l={lang === "fr" ? "CH. 1"   : "BR 1"}    style={{ left: 0,   bottom: 0, width: "44%", height: "42%" }}></div>
-              <div className="room lbl" data-l={lang === "fr" ? "CH. 2"   : "BR 2"}    style={{ right: 0,  bottom: 0, width: "52%", height: "62%" }}></div>
-              <div className="dim" style={{ top: "-22px", left: "0" }}>12.4 m</div>
-              <div className="dim" style={{ right: "-8px", top: "44%", transform: "rotate(90deg)" }}>9.8 m</div>
-            </div>
-            <div className="bp-badge">
-              <div className="stp"><i></i><i></i><i></i><i className="off"></i></div>
-              <span>{lang === "fr" ? "Financé → Construit → Vérifié → Débloqué" : "Funded → Built → Inspected → Released"}</span>
+        <div className="agent-visual ipad-wrap reveal">
+          <IpadDashboard lang={lang} />
+          <div className="hero-float f1">
+            <span className="ic"><Icon name="shield" size={17} /></span>
+            <div>
+              <b>{lang === "fr" ? "Argent protégé" : "Money protected"}</b>
+              <small>{lang === "fr" ? "tiers de confiance" : "trusted third party"}</small>
             </div>
           </div>
+          <div className="hero-float f2">
+            <span className="ic"><Icon name="camera" size={17} /></span>
+            <div>
+              <b>{lang === "fr" ? "Photo géolocalisée" : "Geolocated photo"}</b>
+              <small>{lang === "fr" ? "datée · horodatée" : "dated · timestamped"}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* COMMENT ÇA MARCHE                                                   */
+/* ------------------------------------------------------------------ */
+function Comment({ t }: { t: T }) {
+  const ref = useReveal();
+  return (
+    <section className="section steps" id="comment" ref={ref}>
+      <div className="wrap">
+        <div className="parcours-head reveal">
+          <span className="eyebrow">{t.comment.kicker}</span>
+          <h2 className="section-title">{t.comment.title}</h2>
+        </div>
+        <div className="steps-grid">
+          {t.comment.steps.map((s, i) => (
+            <article className="stepcard reveal" key={i}>
+              <div className="step-n">{s.n}</div>
+              <h3>{s.title}</h3>
+              <ul>
+                {s.items.map((it, j) => (
+                  <li key={j}><Icon name="check" size={13} stroke={2.5} />{it}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* DASHBOARD (iPad showcase)                                           */
+/* ------------------------------------------------------------------ */
+function Dashboard({ t, lang }: { t: T; lang: Lang }) {
+  const ref = useReveal();
+  return (
+    <section className="section dashsec on-ink" id="dashboard" ref={ref}>
+      <div className="hero-bg">
+        <div className="glow g1" style={{ opacity: 0.28 }}></div>
+        <div className="glow g2"></div>
+      </div>
+      <div className="wrap dashsec-inner">
+        <div className="reveal">
+          <span className="eyebrow">{t.dash.kicker}</span>
+          <h2 className="section-title">{t.dash.title}</h2>
+          <p className="section-sub">{t.dash.sub}</p>
+          <ul className="agent-list dash-points">
+            {t.dash.points.map((p, i) => (
+              <li key={i}><span className="tick"><Icon name="check" size={14} stroke={2.5} /></span>{p}</li>
+            ))}
+          </ul>
+        </div>
+        <div className="ipad-wrap big reveal">
+          <IpadDashboard lang={lang} />
         </div>
       </div>
     </section>
@@ -743,7 +1120,7 @@ function Mustaf({ t, lang }: { t: T; lang: Lang }) {
 /* ------------------------------------------------------------------ */
 function Impact({ t }: { t: T }) {
   const ref = useReveal();
-  const icons = ["clock", "trending", "bolt", "shield"] as const;
+  const icons = ["clock", "shield", "file", "wallet"] as const;
   return (
     <section className="section impact on-ink" id="impact" ref={ref}>
       <div className="hero-bg">
@@ -763,6 +1140,45 @@ function Impact({ t }: { t: T }) {
               <div className="lbl">{s.label}</div>
             </div>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* PREUVES + COMPARAISON                                               */
+/* ------------------------------------------------------------------ */
+function Preuves({ t }: { t: T }) {
+  const ref = useReveal();
+  return (
+    <section className="section preuves" id="preuves" ref={ref}>
+      <div className="wrap">
+        <div className="parcours-head reveal">
+          <span className="eyebrow">{t.preuves.kicker}</span>
+          <h2 className="section-title">{t.preuves.title}</h2>
+        </div>
+        <div className="preuves-grid">
+          {t.preuves.points.map((p, i) => (
+            <div className="preuve reveal" key={i}>
+              <span className="tick"><Icon name="check" size={14} stroke={2.5} /></span>{p}
+            </div>
+          ))}
+        </div>
+
+        <div className="compare reveal">
+          <div className="compare-col before">
+            <h4><Icon name="x" size={16} stroke={2.5} />{t.compare.before_label}</h4>
+            <ul>
+              {t.compare.before.map((b, i) => <li key={i}><Icon name="x" size={13} stroke={2.5} />{b}</li>)}
+            </ul>
+          </div>
+          <div className="compare-col after">
+            <h4><Icon name="check" size={16} stroke={2.5} />{t.compare.after_label}</h4>
+            <ul>
+              {t.compare.after.map((a, i) => <li key={i}><Icon name="check" size={13} stroke={2.5} />{a}</li>)}
+            </ul>
+          </div>
         </div>
       </div>
     </section>
@@ -892,6 +1308,59 @@ function Listings({ t, lang }: { t: T; lang: Lang }) {
 }
 
 /* ------------------------------------------------------------------ */
+/* FAQ                                                                 */
+/* ------------------------------------------------------------------ */
+function Faq({ t }: { t: T }) {
+  const ref = useReveal();
+  const [open, setOpen] = useState<number | null>(0);
+  return (
+    <section className="section faq" id="faq" ref={ref}>
+      <div className="wrap faq-inner">
+        <div className="reveal">
+          <span className="eyebrow">{t.faq.kicker}</span>
+          <h2 className="section-title">{t.faq.title}</h2>
+        </div>
+        <div className="faq-list reveal">
+          {t.faq.items.map((it, i) => (
+            <div className={`faq-item${open === i ? " open" : ""}`} key={i}>
+              <button className="faq-q" onClick={() => setOpen(open === i ? null : i)} aria-expanded={open === i}>
+                <span>{it.q}</span>
+                <span className="faq-plus"><i></i><i></i></span>
+              </button>
+              <div className="faq-a"><p>{it.a}</p></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* CTA FINAL                                                           */
+/* ------------------------------------------------------------------ */
+function CtaFinal({ t }: { t: T }) {
+  const ref = useReveal();
+  return (
+    <section className="section cta-final on-ink" ref={ref}>
+      <div className="hero-bg">
+        <div className="hero-grid-tex"></div>
+        <div className="glow g1"></div>
+        <div className="glow g2"></div>
+      </div>
+      <div className="wrap cta-final-inner reveal">
+        <h2 className="section-title">{t.ctaFinal.title}</h2>
+        <p className="section-sub" style={{ marginInline: "auto" }}>{t.ctaFinal.sub}</p>
+        <div className="cta-final-btns">
+          <a className="btn btn-gold btn-lg" href="#contact">{t.ctaFinal.cta1}<Icon name="arrow" size={17} className="arr" /></a>
+          <a className="btn btn-ghost btn-lg" href="#contact">{t.ctaFinal.cta2}</a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /* CONTACT                                                             */
 /* ------------------------------------------------------------------ */
 function Contact({ t, lang }: { t: T; lang: Lang }) {
@@ -1009,7 +1478,7 @@ function Footer({ t }: { t: T }) {
       <div className="wrap">
         <div className="footer-top">
           <div>
-            <a className="brand" href="#top"><img src="/logo.png" alt="Litug" /></a>
+            <a className="brand" href="#top"><img src="/logo-white.png" alt="Litug" /></a>
             <p className="footer-tag">{t.footer.tagline}</p>
             <div className="footer-news">
               <input type="email" placeholder={t.footer.newsletter_sub} />
@@ -1061,11 +1530,17 @@ export default function LandingPage() {
       <main>
         <Hero t={t} lang={lang} />
         <Marquee t={t} />
+        <Probleme t={t} />
         <Parcours t={t} lang={lang} />
         <Sara t={t} lang={lang} />
         <Mustaf t={t} lang={lang} />
+        <Comment t={t} />
+        <Dashboard t={t} lang={lang} />
         <Impact t={t} />
+        <Preuves t={t} />
         <Listings t={t} lang={lang} />
+        <Faq t={t} />
+        <CtaFinal t={t} />
         <Contact t={t} lang={lang} />
       </main>
       <Footer t={t} />

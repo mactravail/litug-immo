@@ -51,10 +51,23 @@
 /* ── Hero ─────────────────────────────────────────────────── */
 
 .prod-hero {
-  background: var(--paper);
+  position: relative;
+  background:
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--ink) 70%, transparent),
+      color-mix(in srgb, var(--ink) 82%, transparent)
+    ),
+    url('/produits-hero.jpg') center / cover no-repeat;
+  background-color: var(--ink);
   border-bottom: 1px solid var(--line);
   padding-block: clamp(64px, 10vw, 120px);
 }
+
+.landing-root .prod-hero-inner .eyebrow { color: var(--text-on-ink-muted); }
+.landing-root .prod-hero-inner h1 { color: var(--text-on-ink); }
+.landing-root .prod-hero .prod-accent { color: var(--text-on-ink-muted); }
+.landing-root .prod-hero .prod-hero-sub { color: var(--text-on-ink-muted); }
 
 .prod-hero-inner {
   display: flex;
@@ -107,8 +120,8 @@
 }
 
 .sara-pill {
-  background: var(--ink);
-  color: var(--text-on-ink) !important;
+  background: var(--text-on-ink);
+  color: var(--ink) !important;
 }
 
 .sara-pill::before {
@@ -121,9 +134,9 @@
 }
 
 .mustaf-pill {
-  background: color-mix(in srgb, var(--gold) 14%, transparent);
-  color: color-mix(in srgb, var(--gold) 80%, #3d2a00);
-  border: 1px solid color-mix(in srgb, var(--gold) 30%, transparent);
+  background: color-mix(in srgb, var(--text-on-ink) 12%, transparent);
+  color: #ffffff !important;
+  border: 1px solid color-mix(in srgb, var(--text-on-ink) 35%, transparent);
 }
 
 .mustaf-pill::before {
@@ -131,7 +144,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--gold);
+  background: var(--text-on-ink);
 }
 
 /* ── Product sections — shared ───────────────────────────── */

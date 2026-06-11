@@ -33,6 +33,9 @@ export default async function MonProjetPage() {
             <MapPin size={14} className="text-accent" />
             {project.landTitle}
           </p>
+          <p className="text-xs text-muted mt-1">
+            Identifiant du terrain : <span className="font-mono font-semibold text-accent">{project.landRef}</span>
+          </p>
         </div>
         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gold-light text-ink text-xs font-semibold border border-gold/30">
           <BadgeCheck size={14} className="text-gold" />

@@ -1,28 +1,32 @@
 @import "tailwindcss";
 
 /* ============================================================
-   Litug — palette "Sahel" : source de vérité unique pour
+   Litug — palette "Monochrome" : source de vérité unique pour
    TOUT le projet (landing + dashboard + auth).
-   Accent TRUST = bordeaux / vin (ex-vert, ex-teal).
+   Identité grayscale (noir / gris / blanc), inspirée architecture
+   + rhode. Accent TRUST = noir (ex-bordeaux). Les couleurs de
+   STATUT (badges titres fonciers, rouge anomalie) restent
+   sémantiques et NE font pas partie de cette palette.
    ============================================================ */
 
 :root {
-  /* Sahel palette */
-  --ink: #200B11;
-  --ink-soft: #33121A;
-  --paper: #F7F2E9;
-  --paper-2: #EFE7D6;
-  --surface: #FFFFFF;
-  --green: #7A2233;
-  --green-bright: #973047;
-  --gold: #C9A24A;
-  --gold-soft: #E4CE92;
-  --text: #221316;
-  --text-muted: #6E5B5E;
-  --text-on-ink: #F1E7E9;
-  --text-on-ink-muted: #B29CA1;
-  --line: rgba(34, 19, 22, 0.10);
-  --line-on-ink: rgba(241, 231, 233, 0.12);
+  /* Monochrome palette — 6 gris : #000 #3a3a3a #737373 #d9d9d9 #dfdfdf #fff */
+  --ink: #000000;
+  --ink-soft: #3a3a3a;
+  --paper: #ffffff;
+  --paper-2: #dfdfdf;
+  --surface: #ffffff;
+  /* Accent TRUST = noir (nom --green conservé pour compat) */
+  --green: #000000;
+  --green-bright: #3a3a3a;
+  --gold: #737373;          /* ex-accent premium → gris moyen (nom conservé) */
+  --gold-soft: #d9d9d9;
+  --text: #3a3a3a;
+  --text-muted: #737373;
+  --text-on-ink: #ffffff;
+  --text-on-ink-muted: #d9d9d9;
+  --line: #d9d9d9;
+  --line-on-ink: rgba(255, 255, 255, 0.14);
 
   /* Backwards-compatible aliases used by the dashboard/auth */
   --background: var(--paper);
@@ -31,35 +35,35 @@
 
 @theme {
   /* Brand surfaces & text */
-  --color-bg: #F7F2E9;            /* --paper */
-  --color-paper-2: #EFE7D6;
-  --color-surface: #FFFFFF;
-  --color-ink: #200B11;
-  --color-ink-soft: #33121A;
-  --color-text: #221316;
-  --color-muted: #6E5B5E;
-  --color-line: rgba(34, 19, 22, 0.10);
+  --color-bg: #ffffff;           /* --paper */
+  --color-paper-2: #dfdfdf;
+  --color-surface: #ffffff;
+  --color-ink: #000000;
+  --color-ink-soft: #3a3a3a;
+  --color-text: #3a3a3a;
+  --color-muted: #737373;
+  --color-line: #d9d9d9;
 
-  /* Trust accent — bordeaux / vin */
-  --color-accent: #7A2233;
-  --color-accent-bright: #973047;
-  --color-accent-light: #F1E2E5;
+  /* Trust accent — noir */
+  --color-accent: #000000;
+  --color-accent-bright: #3a3a3a;
+  --color-accent-light: #dfdfdf;
 
-  /* Premium gold */
-  --color-gold: #C9A24A;
-  --color-gold-soft: #E4CE92;
-  --color-gold-light: #F4EBCF;
+  /* Ex-gold → gris neutre (nom conservé pour compat) */
+  --color-gold: #737373;
+  --color-gold-soft: #d9d9d9;
+  --color-gold-light: #dfdfdf;
 
   /* On-ink text */
-  --color-on-ink: #F1E7E9;
-  --color-on-ink-muted: #B29CA1;
+  --color-on-ink: #ffffff;
+  --color-on-ink-muted: #d9d9d9;
 
-  /* Fonts — Space Grotesk (display) + Manrope (body) */
-  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-space-grotesk), var(--font-manrope), system-ui, sans-serif;
+  /* Fonts — Bricolage Grotesque (titres marketing) / Archivo (UI) / Inter (corps) */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   /* Alias : les titres du dashboard/auth utilisent `font-serif` → on les
-     bascule sur la police d'affichage Sahel (Space Grotesk). */
-  --font-serif: var(--font-space-grotesk), var(--font-manrope), system-ui, sans-serif;
+     bascule sur la police d'UI large (Archivo, un SANS malgré le nom). */
+  --font-serif: var(--font-archivo), var(--font-inter), system-ui, sans-serif;
 }
 
 body {

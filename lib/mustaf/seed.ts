@@ -23,6 +23,7 @@ const PROCUREMENT_ID = 'user-proc-sega';
 export const SEED_PROJECT: ConstructionProject = {
   id: PROJECT_ID,
   landId: 'land-1',
+  landRef: 'TER-DKR-001',
   landTitle: 'Terrain TF — Cité Keur Gorgui, Dakar',
   ownerId: OWNER_ID,
   ownerName: 'Modou Fall',

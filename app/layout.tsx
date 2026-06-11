@@ -1,17 +1,28 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Manrope } from "next/font/google";
+import { Bricolage_Grotesque, Archivo, Inter } from "next/font/google";
 import "./globals.css";
 
-// Palette Sahel : Space Grotesk (titres) + Manrope (corps). Mobile-first,
-// payload de fonts réduit (>80% des visiteurs sur téléphone).
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+// Identité grayscale : trio de polices, gratuites/libres de droits.
+//  - Bricolage Grotesque → grands titres marketing (classe font-display)
+//  - Archivo             → titres & libellés d'UI   (classe font-serif)
+//  - Inter               → corps de texte partout    (font-sans, défaut)
+// Mobile-first : poids restreints pour limiter le payload (>80% sur téléphone).
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
+  weight: ["500", "600", "700", "800"],
   subsets: ["latin"],
   display: "swap",
 });
 
-const manrope = Manrope({
-  variable: "--font-manrope",
+const archivo = Archivo({
+  variable: "--font-archivo",
+  weight: ["600", "700", "800"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
 });
@@ -32,7 +43,7 @@ export default function RootLayout({
       lang="fr"
       data-scroll-behavior="smooth"
       suppressHydrationWarning
-      className={`${spaceGrotesk.variable} ${manrope.variable} h-full`}
+      className={`${bricolage.variable} ${archivo.variable} ${inter.variable} h-full`}
     >
       <body className="min-h-full bg-bg text-text antialiased">{children}</body>
     </html>

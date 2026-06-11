@@ -32,6 +32,9 @@ export type DocumentCategory = 'plan' | 'permis' | 'devis' | 'contrat';
 export interface ConstructionProject {
   id: string;
   landId: string;
+  /** Human-readable terrain reference — the SAME id shown to the owner and on
+   *  every task, so land plots and their works are never confused. */
+  landRef: string;
   landTitle: string;      // denormalized for display
   ownerId: string;
   ownerName: string;

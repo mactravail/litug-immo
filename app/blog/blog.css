@@ -36,7 +36,14 @@
 
 .blog-hero {
   position: relative;
-  background: var(--ink);
+  background:
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--ink) 70%, transparent),
+      color-mix(in srgb, var(--ink) 82%, transparent)
+    ),
+    url('/blog-hero.jpg') center / cover no-repeat;
+  background-color: var(--ink);
   overflow: hidden;
   padding-top: 108px;
   padding-bottom: clamp(60px, 9vw, 108px);
@@ -65,8 +72,8 @@
   margin-bottom: 28px;
 }
 
-.blog-hero h1 {
-  color: var(--text-on-ink);
+.landing-root .blog-hero h1 {
+  color: #ffffff;
   font-size: clamp(38px, 5.6vw, 68px);
   max-width: 18ch;
   line-height: 1.04;

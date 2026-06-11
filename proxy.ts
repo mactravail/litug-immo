@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { homeRouteFor, TEAM_ROLES } from '@/lib/auth/home-route';
 
 export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -28,6 +29,30 @@ export async function proxy(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
+
+  // Rôle porté par app_metadata.user_role (raw_app_meta_data, migration 006).
+  // Absent = vendeur. Les dashboards admin/équipe restent mock-first : seule
+  // la porte d'entrée est réelle. Garde désactivable avec ADMIN_AUTH_ENABLED≠true (démo).
+  const role = (user?.app_metadata as Record<string, unknown> | undefined)?.user_role;
+
+  // Espace Admin (/admin) — réservé au rôle `admin`.
+  if (pathname.startsWith('/admin')) {
+    if (process.env.ADMIN_AUTH_ENABLED !== 'true') return supabaseResponse;  // démo ouverte
+    if (!user) return NextResponse.redirect(new URL('/login', request.url));
+    if (role !== 'admin') return NextResponse.redirect(new URL(homeRouteFor(role), request.url));
+    return supabaseResponse;
+  }
+
+  // Espace Équipe (/equipe) — réservé aux rôles d'équipe (procurement, site_agent,
+  // inspector, controller).
+  if (pathname.startsWith('/equipe')) {
+    if (process.env.ADMIN_AUTH_ENABLED !== 'true') return supabaseResponse;  // démo ouverte
+    if (!user) return NextResponse.redirect(new URL('/login', request.url));
+    if (!TEAM_ROLES.includes(role as (typeof TEAM_ROLES)[number])) {
+      return NextResponse.redirect(new URL(homeRouteFor(role), request.url));
+    }
+    return supabaseResponse;
+  }
 
   const isPublicRoute =
     pathname === '/' ||
@@ -60,8 +85,10 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
+  // Déjà connecté sur /login ou /register → renvoyer vers SON espace
+  // (admin → /admin, équipe → /equipe, vendeur → /dashboard).
   if (user && (pathname === '/login' || pathname === '/register')) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+    return NextResponse.redirect(new URL(homeRouteFor(role), request.url));
   }
 
   return supabaseResponse;

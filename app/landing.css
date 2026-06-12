@@ -234,7 +234,24 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 /* HERO */
 /* ================================================================== */
 .hero { position: relative; background: var(--ink); overflow: hidden; padding-top: 132px; padding-bottom: clamp(60px, 8vw, 110px); }
-.hero-bg { position: absolute; inset: 0; pointer-events: none; }
+/* Base partagée (hero, impact, dashsec, cta-final) — SANS image : l'image est posée
+   explicitement par section pour qu'aucune photo ne « fuite » là où on ne la veut pas. */
+.hero-bg { position: absolute; inset: 0; pointer-events: none; background-size: cover; background-position: center; background-attachment: fixed; }
+/* Hero uniquement : photo defar.jpg + voile sombre dégradé pour garder le texte lisible
+   par-dessus les zones claires de l'image (le voile passe sous les halos décoratifs). */
+.hero > .hero-bg {
+  background-image:
+    linear-gradient(180deg, rgba(0,0,0,0.62), rgba(0,0,0,0.48) 42%, rgba(0,0,0,0.80)),
+    url(/defar.jpg);
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
+}
+/* Renfort de lisibilité côté texte (gauche) sur les plages très claires de la photo. */
+.hero > .hero-bg::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgba(0,0,0,0.45), rgba(0,0,0,0.15) 46%, transparent 72%);
+}
 .hero-bg .glow { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .5; }
 .hero-bg .g1 { width: 540px; height: 540px; top: -180px; right: -120px; background: radial-gradient(circle, color-mix(in srgb, var(--green-bright) 70%, transparent), transparent 65%); }
 .hero-bg .g2 { width: 420px; height: 420px; bottom: -160px; left: -100px; background: radial-gradient(circle, color-mix(in srgb, var(--gold) 40%, transparent), transparent 65%); opacity: .35; }
@@ -249,9 +266,10 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   color: var(--text-on-ink); font-size: 13px; font-weight: 600; letter-spacing: .01em; }
 .hero-badge .pulse { width: 8px; height: 8px; border-radius: 50%; background: #34D399; animation: pulse 2s infinite; }
 @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(52,211,153,.55);} 70%{ box-shadow: 0 0 0 9px rgba(52,211,153,0);} 100%{ box-shadow: 0 0 0 0 rgba(52,211,153,0);} }
-.hero h1 { color: var(--text-on-ink); font-size: clamp(29px, 7.4vw, 70px); margin-top: 22px; }
+.hero h1 { color: var(--text-on-ink); font-size: clamp(29px, 7.4vw, 70px); margin-top: 22px; text-shadow: 0 2px 14px rgba(0,0,0,0.55); }
 .hero h1 .accent { color: var(--gold); }
-.hero-sub { color: var(--text-on-ink-muted); font-size: clamp(17px, 1.7vw, 20px); margin-top: 22px; max-width: 46ch; }
+.hero-sub { color: var(--text-on-ink-muted); font-size: clamp(17px, 1.7vw, 20px); margin-top: 22px; max-width: 46ch; text-shadow: 0 1px 10px rgba(0,0,0,0.5); }
+.hero-checks li, .hero-proof { text-shadow: 0 1px 8px rgba(0,0,0,0.5); }
 .hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 .hero-proof { display: flex; align-items: center; gap: 14px; margin-top: 36px; color: var(--text-on-ink-muted); font-size: 14px; }
 .hero-proof .avatars { display: flex; flex-shrink: 0; }
@@ -423,6 +441,8 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 .lcard { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-card); transition: transform .25s, box-shadow .25s; }
 .lcard:hover { transform: translateY(-5px); box-shadow: var(--shadow-float); }
 .lcard-media { height: 150px; position: relative; }
+/* Photos « Exemple de maison » : remplissent toute la case (recadrage au besoin) */
+.lcard-media.house-media { height: 200px; background: var(--paper-2); }
 .lcard-tag { position: absolute; top: 12px; left: 12px; background: var(--surface); font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 999px; color: var(--green); letter-spacing: .03em; z-index: 1; }
 .lcard-sold { position: absolute; top: 12px; right: 12px; z-index: 1; background: rgba(14,22,17,.72); color: var(--text-on-ink); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; letter-spacing: .05em; text-transform: uppercase; }
 .lcard-body { padding: 16px 18px 18px; }
@@ -666,10 +686,10 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 /* CTA FINAL                                                          */
 /* ================================================================== */
 .cta-final { background: var(--ink); position: relative; overflow: hidden; text-align: center; }
-.cta-final .hero-bg { position: absolute; inset: 0; }
+.cta-final .hero-bg { position: absolute; inset: 0; background-image: url(/call.jpg); }
 .cta-final-inner { position: relative; display: flex; flex-direction: column; align-items: center; }
-.cta-final .section-title { color: var(--text-on-ink); max-width: 20ch; text-align: center; font-size: clamp(30px, 4.6vw, 54px); }
-.cta-final .section-sub { color: var(--text-on-ink-muted); text-align: center; }
+.cta-final .section-title { color: var(--ink) !important; max-width: 20ch; text-align: center; font-size: clamp(30px, 4.6vw, 54px); }
+.cta-final .section-sub { color: var(--text); text-align: center; }
 .cta-final-btns { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 34px; }
 
 /* ================================================================== */

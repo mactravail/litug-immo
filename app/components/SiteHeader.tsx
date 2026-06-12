@@ -9,7 +9,7 @@ import { ArrowRight } from 'lucide-react';
 
 const LINKS = [
   { label: 'Terrains', href: '/nos-terrains' },
-  { label: 'Sara — IA', href: '/sara' },
+  { label: 'Vendeur', href: '/sara' },
   { label: 'Construction', href: '/mustaf' },
   { label: 'Tarifs', href: '/produits' },
   { label: 'Blog', href: '/blog' },

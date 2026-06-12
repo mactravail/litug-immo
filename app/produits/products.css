@@ -392,8 +392,17 @@
 .prod-visual-mustaf { align-items: flex-start; }
 .prod-visual-mustaf .blueprint {
   width: 100%;
-  max-width: 380px;
-  aspect-ratio: 4/5;
+  max-width: 420px;
+  aspect-ratio: 1000 / 762; /* ratio de la photo plan.jpg — aucun rognage */
+}
+/* Photo du plan, remplit le cadre arrondi du blueprint */
+.blueprint .bp-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 /* ── Comparison section ──────────────────────────────────── */

@@ -22,7 +22,7 @@ import './products.css';
 import SiteHeader from '../components/SiteHeader';
 
 export const metadata: Metadata = {
-  title: 'Nos produits — Sara & Mustaf | Litug',
+  title: 'Nos services — Sara & Mustaf | Litug',
   description:
     "Sara automatise tes ventes immobilières sur WhatsApp. Mustaf accompagne la construction de ta maison. Deux outils, un seul objectif.",
 };
@@ -64,7 +64,7 @@ export default function ProduitsPage() {
       {/* ── Hero ─────────────────────────────────────────────── */}
       <header className="prod-hero">
         <div className="wrap prod-hero-inner">
-          <span className="eyebrow">Nos produits</span>
+          <span className="eyebrow">Nos services</span>
           <h1>
             Deux outils.<br />
             <span className="prod-accent">Un seul objectif.</span>
@@ -186,16 +186,14 @@ export default function ProduitsPage() {
 
           {/* Visual — blueprint */}
           <div className="prod-visual prod-visual-mustaf">
-            <div className="blueprint">
-              <div className="grid-lines"></div>
-              <div className="plan">
-                <div className="room lbl" data-l="SÉJOUR"  style={{ left: 0,    top: 0,    width: '58%', height: '52%' }}></div>
-                <div className="room lbl" data-l="CUISINE" style={{ right: 0,   top: 0,    width: '38%', height: '30%' }}></div>
-                <div className="room lbl" data-l="CH. 1"   style={{ left: 0,    bottom: 0, width: '44%', height: '42%' }}></div>
-                <div className="room lbl" data-l="CH. 2"   style={{ right: 0,   bottom: 0, width: '52%', height: '62%' }}></div>
-                <div className="dim" style={{ top: '-22px', left: '0' }}>12.4 m</div>
-                <div className="dim" style={{ right: '-8px', top: '44%', transform: 'rotate(90deg)' }}>9.8 m</div>
-              </div>
+            <div className="blueprint blueprint-photo">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/plan.jpg"
+                alt="Plan de maison — exemple de projet Mustaf"
+                className="bp-photo"
+                loading="lazy"
+              />
               <div className="bp-badge">
                 <div className="stp"><i></i><i></i><i></i><i className="off"></i></div>
                 <span>Plan → Étude → Chantier → Livraison</span>
@@ -261,10 +259,10 @@ export default function ProduitsPage() {
         </div>
         <div className="wrap">
           <div className="prod-choice-head">
-            <span className="eyebrow">Quel produit vous convient ?</span>
+            <span className="eyebrow">Quel service vous convient ?</span>
             <h2 className="section-title">Choisissez votre parcours</h2>
             <p className="section-sub">
-              Les deux produits sont complémentaires. Certains clients utilisent les deux.
+              Les deux services sont complémentaires. Certains clients utilisent les deux.
             </p>
           </div>
           <div className="prod-choice-grid">
@@ -318,7 +316,7 @@ export default function ProduitsPage() {
       <section className="prod-final-cta section">
         <div className="wrap prod-final-inner">
           <h2>Pas encore sûr par où commencer ?</h2>
-          <p>Parlez-nous de votre projet — notre équipe vous oriente vers le bon produit en moins de 24h.</p>
+          <p>Parlez-nous de votre projet — notre équipe vous oriente vers le bon service en moins de 24h.</p>
           <Link className="btn btn-primary btn-lg" href="/#contact">
             Parler à l&apos;équipe <ArrowRight size={17} className="arr" />
           </Link>

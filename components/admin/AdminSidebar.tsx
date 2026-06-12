@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, TrendingUp, Store, HardHat, TriangleAlert, ScrollText, LogOut,
-  Users, ClipboardList, ClipboardCheck, Construction, UserCog, ShieldCheck, Inbox, Receipt, Target,
+  Users, ClipboardList, ClipboardCheck, Construction, UserCog, ShieldCheck, Inbox, Receipt, Target, Home,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { logout } from '@/app/(auth)/login/actions';
@@ -19,6 +19,7 @@ const GROUPS: { title: string; items: { href: string; label: string; icon: typeo
       { href: '/admin/factures',    label: 'Factures',        icon: Receipt },
       { href: '/admin/vendeurs',    label: 'Vendeurs (Sara)', icon: Store },
       { href: '/admin/mustaf',      label: 'Projets Mustaf',  icon: HardHat },
+      { href: '/admin/maisons',     label: 'Exemples maisons', icon: Home },
       { href: '/admin/anomalies',   label: 'Anomalies',       icon: TriangleAlert },
       { href: '/admin/audit',       label: 'Journal d’audit', icon: ScrollText },
     ],
@@ -46,14 +47,14 @@ export function AdminSidebar({ adminName, pendingCount = 0 }: { adminName: strin
   const pathname = usePathname();
 
   return (
-    <aside className="hidden lg:flex flex-col w-64 min-h-screen bg-white border-r border-stone-100 px-4 py-6 shrink-0">
+    <aside className="hidden lg:flex flex-col w-64 h-screen bg-white border-r border-stone-100 px-4 py-6 shrink-0">
       <div className="px-3 mb-8">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/logo.png" alt="Litug" className="h-12 w-auto" />
         <p className="text-[11px] text-muted mt-1">Back-office · Administration</p>
       </div>
 
-      <nav className="flex-1 space-y-6">
+      <nav className="flex-1 space-y-6 overflow-y-auto">
         {GROUPS.map(group => (
           <div key={group.title} className="space-y-1">
             <p className="px-3 mb-1 text-[10px] font-semibold uppercase tracking-wider text-muted/70">{group.title}</p>

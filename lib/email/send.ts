@@ -211,3 +211,22 @@ export function sendContactMessage(opts: {
     replyTo: opts.email,
   });
 }
+
+/* --------------------------------------------------------------------------
+ * 5. Inscription newsletter (footer) — prévient le fondateur du nouvel abonné.
+ *    Reply-To = email de l'abonné (répondre directement fonctionne).
+ * ------------------------------------------------------------------------ */
+export function sendNewsletterSubscriber(opts: { email: string }): Promise<SendResult> {
+  const html = layout(
+    'Nouvel abonné newsletter 📨',
+    `<p style="${P}">Une personne vient de s'inscrire à la newsletter depuis le pied de page du site :</p>
+     <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;background:#dfdfdf;border-radius:10px;margin:0 0 16px;">
+       <tr><td style="padding:14px 18px;font-size:15px;color:#3a3a3a;">
+         <strong>Email :</strong> ${escapeHtml(opts.email)}
+       </td></tr>
+     </table>`,
+  );
+  return send(CONTACT_EMAIL, `Nouvel abonné Litug — ${opts.email}`, html, {
+    replyTo: opts.email,
+  });
+}

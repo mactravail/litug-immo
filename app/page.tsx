@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { SENEGAL_PATHS } from './senegal-map';
 import './landing.css';
 
 /* ------------------------------------------------------------------ */
@@ -62,11 +63,11 @@ const I18N = {
       card1_cta: "Découvrir Sara",
       card2_tag: "Construire sa maison",
       card2_title: "Mustaf — construire en confiance",
-      card2_desc: "Vous avez un terrain ? Construisez au pays sereinement : argent protégé chez un tiers, paiement par phase, suivi photo depuis votre tablette.",
+      card2_desc: "Vous avez un terrain ? Construisez au pays sereinement : argent protégé à la banque, paiement par phase, suivi photo depuis votre tablette. Nous travaillons avec des architectes italiens qui peuvent donner un look différent à votre maison.",
       card2_cta: "Découvrir Mustaf",
     },
     sara: {
-      kicker: "Produit 1 · Vendre vos terrains",
+      kicker: "Vendre vos terrains",
       badge: "Disponible 24h/24",
       title: "Sara, votre commerciale qui ne dort jamais",
       desc: "Agent immobilier ou propriétaire de plusieurs terrains ? Sara est votre assistante IA sur WhatsApp : elle répond à chaque prospect, le qualifie (budget, zone, superficie) et ne vous transmet que les acheteurs sérieux — pendant que vous concluez.",
@@ -80,13 +81,13 @@ const I18N = {
       cta: "Activer Sara",
     },
     mustaf: {
-      kicker: "Produit 2 · Construire sa maison",
+      kicker: "Construire sa maison",
       name: "Mustaf",
       badge: "Construire en toute confiance",
       title: "Gardez le contrôle de votre chantier, depuis n'importe où dans le monde",
-      desc: "Pour ceux qui possèdent déjà un terrain, Mustaf gère le chantier de A à Z. Votre argent reste bloqué chez un tiers de confiance, les travaux n'avancent que phase par phase, et vous voyez chaque franc et chaque photo depuis votre tablette.",
+      desc: "Vous avez un terrain ? Mustaf gère votre chantier de A à Z — avec nos architectes italiens pour un look différent. Votre argent reste bloqué à la banque, les travaux n'avancent que phase par phase, et vous voyez chaque franc et chaque photo depuis votre tablette. Même si vous avez déjà commencé, vous pouvez continuer avec nous.",
       services: [
-        "Argent bloqué chez un tiers de confiance, jamais chez nous",
+        "Argent bloqué à la banque, jamais chez nous",
         "Une phase ne démarre que lorsqu'elle est financée",
         "Zéro marge sur les matériaux, factures à l'appui",
         "Inspecteur indépendant avant chaque paiement",
@@ -156,7 +157,7 @@ const I18N = {
       kicker: "Terrains & projets",
       title: "Explore ce qui est déjà disponible",
       tab1: "Terrains disponibles",
-      tab2: "Maisons construites",
+      tab2: "Exemple de maison",
       cta: "Voir plus",
       before: "Avant",
       after: "Après",
@@ -174,10 +175,9 @@ const I18N = {
       ],
     },
     ctaFinal: {
-      title: "Votre maison mérite plus qu'une promesse.",
-      sub: "Achetez et construisez au Sénégal avec une visibilité totale sur chaque euro investi.",
+      title: "L'immobilier mérite plus qu'une promesse.",
+      sub: "Vendre des terrains ou construire ne doit être ni compliqué ni inaccessible. Avec Sara et Mustaf, c'est transparent, rapide et à votre portée.",
       cta1: "Réserver mon entretien gratuit",
-      cta2: "Parler à un conseiller",
     },
     contact: {
       kicker: "Contact",
@@ -218,6 +218,10 @@ const I18N = {
       rights: "© 2026 Litug. Tous droits réservés.",
       newsletter_sub: "Nouveaux terrains et actualités, une fois par mois.",
       subscribe: "S'abonner",
+      subscribing: "Envoi…",
+      subscribed: "Merci ! Inscription bien reçue.",
+      sub_error: "Échec de l'inscription. Réessayez.",
+      sub_invalid: "Entrez une adresse email valide.",
     },
   },
   en: {
@@ -269,11 +273,11 @@ const I18N = {
       card1_cta: "Meet Sara",
       card2_tag: "Build a home",
       card2_title: "Mustaf — build with confidence",
-      card2_desc: "Got land? Build back home with peace of mind: protected funds, pay-by-phase, photo tracking from your tablet.",
+      card2_desc: "Got land? Build back home with peace of mind: funds protected at the bank, pay-by-phase, photo tracking from your tablet. We work with Italian architects who can give your home a different look.",
       card2_cta: "Meet Mustaf",
     },
     sara: {
-      kicker: "Product 1 · Sell your land",
+      kicker: "Sell your land",
       badge: "Available 24/7",
       title: "Sara, the salesperson that never sleeps",
       desc: "A real-estate agent or own several plots? Sara is your WhatsApp AI assistant: she answers every prospect, qualifies them (budget, area, size) and only forwards the serious buyers — while you close the deal.",
@@ -287,13 +291,13 @@ const I18N = {
       cta: "Activate Sara",
     },
     mustaf: {
-      kicker: "Product 2 · Build a home",
+      kicker: "Build a home",
       name: "Mustaf",
       badge: "Build with confidence",
       title: "Keep control of your build, from anywhere in the world",
-      desc: "For those who already own land, Mustaf manages the whole build. Your money stays locked with a trusted third party, work only advances phase by phase, and you see every franc and every photo from your tablet.",
+      desc: "Own land? Mustaf manages your whole build — with our Italian architects for a distinctive look. Your money stays locked at the bank, work only advances phase by phase, and you see every franc and every photo from your tablet. Even if you've already started, you can continue with us.",
       services: [
-        "Money locked with a trusted third party, never with us",
+        "Money locked at the bank, never with us",
         "A phase only starts once it's funded",
         "Zero markup on materials, invoices included",
         "Independent inspector before every payment",
@@ -363,7 +367,7 @@ const I18N = {
       kicker: "Land & projects",
       title: "Explore what's already available",
       tab1: "Available land",
-      tab2: "Built homes",
+      tab2: "House examples",
       cta: "See more",
       before: "Before",
       after: "After",
@@ -381,10 +385,9 @@ const I18N = {
       ],
     },
     ctaFinal: {
-      title: "Your home deserves more than a promise.",
-      sub: "Buy and build in Senegal with full visibility over every euro invested.",
+      title: "Real estate deserves more than a promise.",
+      sub: "Selling land or building shouldn't be complicated or out of reach. With Sara and Mustaf, it's transparent, fast, and within your grasp.",
       cta1: "Book my free call",
-      cta2: "Talk to an advisor",
     },
     contact: {
       kicker: "Contact",
@@ -425,6 +428,10 @@ const I18N = {
       rights: "© 2026 Litug. All rights reserved.",
       newsletter_sub: "New land and news, once a month.",
       subscribe: "Subscribe",
+      subscribing: "Sending…",
+      subscribed: "Thanks! You're subscribed.",
+      sub_error: "Subscription failed. Try again.",
+      sub_invalid: "Enter a valid email address.",
     },
   },
 };
@@ -845,7 +852,7 @@ function Hero({ t, lang }: { t: T; lang: Lang }) {
         <div className="hero-text reveal">
           <span className="hero-badge"><span className="pulse"></span>{t.hero.badge}</span>
           <h1>
-            <span className="accent">{t.hero.title_1}</span><br />
+            <span className="accent">{t.hero.title_1}</span>{' '}
             {t.hero.title_2}
           </h1>
           <p className="hero-sub">{t.hero.sub}</p>
@@ -1203,6 +1210,13 @@ type ApiTerrain = {
   photo: string | null;
 };
 
+type ApiHouse = {
+  id: string;
+  title: string | null;
+  surface: string | null;
+  photo: string;
+};
+
 const DOC_LABEL_FR: Record<ApiTerrain['documentType'], string> = {
   tf: 'Titre Foncier',
   bail: 'Bail',
@@ -1214,6 +1228,7 @@ function Listings({ t, lang }: { t: T; lang: Lang }) {
   const ref = useReveal();
   const [tab, setTab] = useState<"lands" | "houses">("lands");
   const [terrains, setTerrains] = useState<ApiTerrain[] | null>(null);
+  const [houses, setHouses] = useState<ApiHouse[] | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -1221,6 +1236,10 @@ function Listings({ t, lang }: { t: T; lang: Lang }) {
       .then((r) => r.json())
       .then((d) => { if (active) setTerrains(Array.isArray(d.terrains) ? d.terrains : []); })
       .catch(() => { if (active) setTerrains([]); });
+    fetch("/api/public/house-examples")
+      .then((r) => r.json())
+      .then((d) => { if (active) setHouses(Array.isArray(d.houses) ? d.houses : []); })
+      .catch(() => { if (active) setHouses([]); });
     return () => { active = false; };
   }, []);
 
@@ -1279,26 +1298,44 @@ function Listings({ t, lang }: { t: T; lang: Lang }) {
             </div>
           )
         ) : (
-          <div className="lgrid">
-            {HOUSES.map((h) => (
-              <article className="lcard reveal" key={h.id}>
-                <div className="hcard-media">
-                  <div className="half"><Placeholder label="" hue={(h.hue + 30) % 360} /><span>{t.listings.before}</span></div>
-                  <div className="half"><Placeholder label="" hue={h.hue} /><span>{t.listings.after}</span></div>
-                </div>
-                <div className="lcard-body">
-                  <div className="place"><Icon name="home" size={15} stroke={1.8} />{h.name[lang]}</div>
-                  <div className="area">{h.area}</div>
-                  <div className="price" style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                    <span className="chip" style={{ padding: "5px 11px" }}>
-                      <Icon name="layers" size={13} />
-                      {lang === "fr" ? "Plans + rendu 3D" : "Plans + 3D render"}
-                    </span>
+          (houses && houses.length > 0) ? (
+            <div className="lgrid">
+              {houses.map((h) => (
+                <article className="lcard" key={h.id}>
+                  <div className="lcard-media house-media">
+                    <span className="lcard-tag"><Icon name="home" size={13} stroke={1.8} />{lang === "fr" ? "Réalisation" : "Build"}</span>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={h.photo} alt={h.title ?? (lang === "fr" ? "Exemple de maison" : "House example")} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
                   </div>
-                </div>
-              </article>
-            ))}
-          </div>
+                  <div className="lcard-body">
+                    <div className="place"><Icon name="home" size={15} stroke={1.8} />{h.title || (lang === "fr" ? "Maison" : "House")}</div>
+                    {h.surface && <div className="area">{h.surface}</div>}
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="lgrid">
+              {HOUSES.map((h) => (
+                <article className="lcard" key={h.id} style={houses ? { opacity: 0.55 } : undefined}>
+                  <div className="hcard-media">
+                    <div className="half"><Placeholder label="" hue={(h.hue + 30) % 360} /><span>{t.listings.before}</span></div>
+                    <div className="half"><Placeholder label="" hue={h.hue} /><span>{t.listings.after}</span></div>
+                  </div>
+                  <div className="lcard-body">
+                    <div className="place"><Icon name="home" size={15} stroke={1.8} />{h.name[lang]}</div>
+                    <div className="area">{h.area}</div>
+                    <div className="price" style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                      <span className="chip" style={{ padding: "5px 11px" }}>
+                        <Icon name="layers" size={13} />
+                        {lang === "fr" ? "Plans + rendu 3D" : "Plans + 3D render"}
+                      </span>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )
         )}
 
         <div style={{ textAlign: "center", marginTop: 40 }} className="reveal">
@@ -1355,7 +1392,6 @@ function CtaFinal({ t }: { t: T }) {
         <p className="section-sub" style={{ marginInline: "auto" }}>{t.ctaFinal.sub}</p>
         <div className="cta-final-btns">
           <a className="btn btn-gold btn-lg" href="#contact">{t.ctaFinal.cta1}<Icon name="arrow" size={17} className="arr" /></a>
-          <a className="btn btn-ghost btn-lg" href="#contact">{t.ctaFinal.cta2}</a>
         </div>
       </div>
     </section>
@@ -1406,11 +1442,12 @@ function Contact({ t, lang }: { t: T; lang: Lang }) {
     }
   }
 
+  // Positions réelles (lon/lat → viewBox 1024, projection équirectangulaire sur la silhouette)
   const pins = [
-    { c: "Dakar",       x: "26%", y: "34%" },
-    { c: "Thiès",       x: "40%", y: "42%" },
-    { c: "Saly",        x: "33%", y: "56%" },
-    { c: "Saint-Louis", x: "30%", y: "10%" },
+    { c: "Saint-Louis", x: 172, y: 221 },
+    { c: "Dakar",       x: 16,  y: 475 },
+    { c: "Thiès",       x: 100, y: 456 },
+    { c: "Saly",        x: 89,  y: 521 },
   ];
 
   return (
@@ -1453,15 +1490,25 @@ function Contact({ t, lang }: { t: T; lang: Lang }) {
         <div className="reveal">
           <div className="map-card">
             <div className="grid-lines"></div>
-            <svg viewBox="0 0 200 160" fill="none" aria-hidden="true">
-              <path d="M28 40 L96 24 L150 30 L168 60 L150 86 L156 112 L120 132 L92 120 L70 132 L40 112 L34 78 Z"
-                fill="rgba(201,162,74,0.10)" stroke="rgba(201,162,74,0.55)" strokeWidth="1.5" strokeLinejoin="round" />
-              <path d="M96 96 L120 92 L120 108 L100 110 Z"
-                fill="rgba(46,125,91,0.25)" stroke="rgba(46,125,91,0.5)" strokeWidth="1" />
+            <svg viewBox="0 90 1024 850" fill="none" aria-hidden="true">
+              {/* Silhouette réelle du Sénégal (tracé géographique, enclave de la Gambie incluse) */}
+              <g transform="translate(0,1024) scale(0.1,-0.1)"
+                fill="rgba(201,162,74,0.12)" stroke="rgba(201,162,74,0.55)"
+                strokeWidth="35" strokeLinejoin="round">
+                {SENEGAL_PATHS.map((d, i) => (
+                  <path key={i} d={d} />
+                ))}
+              </g>
+              {/* Villes (coordonnées réelles projetées) */}
+              {pins.map((p, i) => (
+                <g key={i}>
+                  <circle cx={p.x} cy={p.y} r="22" fill="var(--gold)" opacity="0.28" />
+                  <circle cx={p.x} cy={p.y} r="11" fill="var(--gold)" />
+                  <text x={p.x + 30} y={p.y + 11} fill="#fff" fontSize="30" fontWeight="600"
+                    fontFamily="var(--font-body), sans-serif">{p.c}</text>
+                </g>
+              ))}
             </svg>
-            {pins.map((p, i) => (
-              <div key={i} className="map-pin" data-c={p.c} style={{ left: p.x, top: p.y }}></div>
-            ))}
             <div className="map-label">
               {lang === "fr" ? "Sénégal" : "Senegal"}
               <small>{t.contact.map_label}</small>
@@ -1478,6 +1525,47 @@ function Contact({ t, lang }: { t: T; lang: Lang }) {
 /* ------------------------------------------------------------------ */
 function Footer({ t }: { t: T }) {
   const socials = ["chat", "users", "send", "sparkle"] as const;
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "done" | "error" | "invalid">("idle");
+  const resetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Nettoyage du minuteur si le composant est démonté avant la fin des 3 s.
+  useEffect(() => () => { if (resetTimer.current) clearTimeout(resetTimer.current); }, []);
+
+  async function handleSubscribe(e: React.FormEvent) {
+    e.preventDefault();
+    const value = email.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      setStatus("invalid");
+      return;
+    }
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: value }),
+      });
+      if (res.ok) {
+        setStatus("done");
+        setEmail("");
+        // Le message de remerciement s'efface après 3 s ; le bouton redevient normal.
+        if (resetTimer.current) clearTimeout(resetTimer.current);
+        resetTimer.current = setTimeout(() => setStatus("idle"), 3000);
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  const subMsg =
+    status === "done" ? t.footer.subscribed
+    : status === "error" ? t.footer.sub_error
+    : status === "invalid" ? t.footer.sub_invalid
+    : null;
+
   return (
     <footer className="footer on-ink" id="blog">
       <div className="wrap">
@@ -1485,10 +1573,23 @@ function Footer({ t }: { t: T }) {
           <div>
             <a className="brand" href="#top"><img src="/logo-white.png" alt="Litug" /></a>
             <p className="footer-tag">{t.footer.tagline}</p>
-            <div className="footer-news">
-              <input type="email" placeholder={t.footer.newsletter_sub} />
-              <button className="btn btn-gold">{t.footer.subscribe}</button>
-            </div>
+            <form className="footer-news" onSubmit={handleSubscribe}>
+              <input
+                type="email"
+                placeholder={t.footer.newsletter_sub}
+                value={email}
+                onChange={(e) => { setEmail(e.target.value); if (status !== "idle" && status !== "sending") setStatus("idle"); }}
+                aria-label={t.footer.newsletter_sub}
+              />
+              <button className="btn btn-gold" type="submit" disabled={status === "sending"}>
+                {status === "sending" ? t.footer.subscribing : t.footer.subscribe}
+              </button>
+            </form>
+            {subMsg && (
+              <p role="status" style={{ marginTop: 8, fontSize: 13, color: status === "done" ? "var(--text-on-ink-muted)" : "#ff8a80" }}>
+                {subMsg}
+              </p>
+            )}
           </div>
           <div className="footer-col">
             <h5>{t.footer.col1}</h5>

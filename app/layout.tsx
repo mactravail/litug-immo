@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Archivo, Inter } from "next/font/google";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 // Identité grayscale : trio de polices, gratuites/libres de droits.
@@ -27,10 +28,61 @@ const inter = Inter({
   display: "swap",
 });
 
+const SITE_DESCRIPTION =
+  "Achetez un terrain vérifié au Sénégal et construisez votre maison depuis l'étranger, sans arnaque. " +
+  "Titres fonciers contrôlés chez le notaire, argent sécurisé par un tiers de confiance, chantier suivi étape par étape.";
+
 export const metadata: Metadata = {
-  title: "Litug — Sara, ton partenaire immobilier 24/7",
-  description:
-    "La plateforme sénégalaise propulsée par l'IA. Sara, l'agent WhatsApp qui vend tes terrains, et Mustaf, l'assistant qui construit ta maison.",
+  metadataBase: new URL(SITE_URL),
+  title: "Litug — Terrains vérifiés & construction suivie au Sénégal",
+  description: SITE_DESCRIPTION,
+  applicationName: "Litug",
+  keywords: [
+    "terrain Sénégal",
+    "acheter terrain Dakar",
+    "titre foncier Sénégal",
+    "construire maison Sénégal diaspora",
+    "arnaque foncière Sénégal",
+    "immobilier Sénégal diaspora",
+  ],
+  alternates: { canonical: "./" },
+  robots: { index: true, follow: true },
+  openGraph: {
+    type: "website",
+    locale: "fr_SN",
+    url: "./",
+    siteName: "Litug",
+    title: "Litug — Terrains vérifiés & construction suivie au Sénégal",
+    description: SITE_DESCRIPTION,
+    images: [
+      {
+        url: "/blog-hero.jpg",
+        width: 1920,
+        height: 1280,
+        alt: "Litug — acheter un terrain vérifié et construire au Sénégal",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Litug — Terrains vérifiés & construction suivie au Sénégal",
+    description: SITE_DESCRIPTION,
+    images: ["/blog-hero.jpg"],
+  },
+};
+
+// Données structurées (schema.org) — aident Google à comprendre qui est Litug
+// et à afficher un résultat enrichi (nom, logo, zone desservie).
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Litug",
+  url: SITE_URL,
+  logo: `${SITE_URL}/logo.png`,
+  description: SITE_DESCRIPTION,
+  areaServed: "SN",
+  email: "contact@litug.com",
+  knowsLanguage: ["fr"],
 };
 
 export default function RootLayout({
@@ -45,7 +97,13 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${bricolage.variable} ${archivo.variable} ${inter.variable} h-full`}
     >
-      <body className="min-h-full bg-bg text-text antialiased">{children}</body>
+      <body className="min-h-full bg-bg text-text antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

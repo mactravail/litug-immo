@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { AlertTriangle, ArrowRight } from 'lucide-react';
+import { AlertTriangle, ArrowRight, UserPlus } from 'lucide-react';
 import { getAdminProvider } from '@/lib/admin/provider';
 import { TEAM_ROLE_LABEL } from '@/lib/admin/labels';
 import { formatFcfa } from '@/lib/utils';
@@ -9,9 +9,17 @@ export default async function AdminEmployesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-2xl sm:text-3xl font-semibold text-text">Employés</h1>
-        <p className="text-muted text-sm mt-1">Travailleurs de terrain : tâches en cours, chantiers et avances à réconcilier.</p>
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="font-display text-2xl sm:text-3xl font-semibold text-text">Employés</h1>
+          <p className="text-muted text-sm mt-1">Travailleurs de terrain : tâches en cours, chantiers et avances à réconcilier.</p>
+        </div>
+        <Link
+          href="/admin/employes/nouveau"
+          className="inline-flex items-center gap-2 text-sm font-semibold bg-accent text-white px-4 py-2.5 rounded-xl hover:bg-accent-bright transition-colors shrink-0"
+        >
+          <UserPlus size={15} /> Créer un accès employé
+        </Link>
       </div>
 
       {/* Desktop table */}

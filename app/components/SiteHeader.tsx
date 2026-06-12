@@ -8,7 +8,7 @@ import { ArrowRight } from 'lucide-react';
    Used across every marketing page so the mobile experience is consistent. */
 
 const LINKS = [
-  { label: 'Nos terrains', href: '/nos-terrains' },
+  { label: 'Terrains', href: '/nos-terrains' },
   { label: 'Sara — IA', href: '/sara' },
   { label: 'Construction', href: '/mustaf' },
   { label: 'Tarifs', href: '/produits' },

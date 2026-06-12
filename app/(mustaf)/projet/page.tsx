@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { Wallet, TrendingUp, Layers, ArrowRight, MapPin, BadgeCheck } from 'lucide-react';
+import { Wallet, TrendingUp, Layers, ArrowRight, MapPin, BadgeCheck, Sparkles } from 'lucide-react';
 import { getMustafProvider } from '@/lib/mustaf/provider';
+import { getAccountOptional } from '@/lib/supabase-server';
 import { TIER_LABEL } from '@/lib/mustaf/labels';
 import { StatCard } from '@/components/ui/StatCard';
 import { PhaseBadge } from '@/components/mustaf/PhaseBadge';
@@ -12,7 +13,8 @@ import { formatFcfa, formatEur } from '@/lib/utils';
 
 export default async function MonProjetPage() {
   const mp = getMustafProvider();
-  const [project, escrow, progress, media, company] = await Promise.all([
+  const [account, project, escrow, progress, media, company] = await Promise.all([
+    getAccountOptional(),
     mp.getProject(),
     mp.getEscrowSummary(),
     mp.getProgress(),
@@ -22,9 +24,35 @@ export default async function MonProjetPage() {
 
   const latestMedia = media[0];
   const current = progress.currentPhase;
+  // Client réel connecté dont la demande n'est pas encore validée par l'équipe.
+  const pendingOwner = account?.accountType === 'owner' && account.pendingVerification;
 
   return (
     <div className="space-y-8">
+      {/* Message de bienvenue — demande en cours de prise en charge (sur mesure) */}
+      {pendingOwner && (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 sm:p-6">
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-xl bg-amber-100 shrink-0">
+              <Sparkles size={18} className="text-amber-700" />
+            </div>
+            <div className="min-w-0">
+              <h2 className="font-serif text-lg font-semibold text-amber-900">
+                Bienvenue, {account!.displayName} 👋
+              </h2>
+              <p className="text-sm text-amber-800 mt-1.5 leading-relaxed">
+                Merci pour votre confiance ! Notre équipe est en train de <b>prendre en compte votre
+                demande</b> pour vous préparer un accompagnement <b>sur mesure</b>, adapté à
+                l&apos;avancement de votre chantier.
+              </p>
+              <p className="text-sm text-amber-800 mt-2 leading-relaxed">
+                Vous serez recontacté très vite. En attendant, voici un aperçu de votre futur espace
+                de suivi.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       {/* En-tête projet */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div className="min-w-0">

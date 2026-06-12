@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Map, Users, ShieldCheck, Clock, TrendingUp, AlertCircle, ArrowRight, CreditCard, CalendarDays } from 'lucide-react';
 import { getDataProvider } from '@/lib/data/provider';
-import { getAuthenticatedSellerId } from '@/lib/supabase-server';
+import { getAuthenticatedSellerId, getSellerAccount } from '@/lib/supabase-server';
 import { StatCard } from '@/components/ui/StatCard';
 import { LandCard } from '@/components/ui/LandCard';
 import { StatusBadge } from '@/components/ui/StatusBadge';
@@ -15,6 +15,7 @@ const SUBSCRIPTION_CONFIG = {
 
 export default async function DashboardPage() {
   const sellerId = await getAuthenticatedSellerId();
+  const account = await getSellerAccount();
   const dp = getDataProvider();
   const [seller, stats, recentLands, recentLeads, allVisits] = await Promise.all([
     dp.getSeller(sellerId),
@@ -37,11 +38,36 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-10">
+      {/* Message de bienvenue — compte en attente de validation du paiement */}
+      {account.pendingVerification && (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 sm:p-6">
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-xl bg-amber-100 shrink-0">
+              <Clock size={18} className="text-amber-700" />
+            </div>
+            <div className="min-w-0">
+              <h2 className="font-serif text-lg font-semibold text-amber-900">
+                Bienvenue, {account.displayName} 👋
+              </h2>
+              <p className="text-sm text-amber-800 mt-1.5 leading-relaxed">
+                Merci pour ton inscription à Sara ! Ton compte est créé, mais notre équipe doit
+                d&apos;abord <b>vérifier ton paiement</b> avant de l&apos;activer. Pour l&apos;instant
+                tu ne peux <b>rien publier ni charger</b> (ni terrain, ni photo, ni document).
+              </p>
+              <p className="text-sm text-amber-800 mt-2 leading-relaxed">
+                La vérification dure <b>24&nbsp;h maximum</b>. Tu recevras l&apos;accès complet dès
+                qu&apos;elle sera terminée — merci de ta patience.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* En-tête + badge abonnement */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div className="min-w-0">
           <h1 className="font-serif text-2xl sm:text-3xl font-semibold text-text break-words">
-            Bonjour, {seller?.businessName ?? 'Vendeur'}
+            Bonjour, {account.displayName ?? seller?.businessName ?? 'Vendeur'}
           </h1>
           <p className="text-muted text-sm mt-1">Voici un aperçu de votre activité.</p>
         </div>

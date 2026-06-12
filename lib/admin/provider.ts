@@ -14,13 +14,15 @@ import type {
   TeamMember, AdminOverview, MustafProjectRow, SiteStats, MonthlyPoint,
   Task, TaskPriority, CashAdvance, AdvanceReceipt, FieldReport, Incident,
   IncidentStatus, EmployeeRow, AdvanceReconciliation, ReportReview, WorkSession,
+  Invoice, BillableParty, InvoiceRecipientType, ProspectEntry,
 } from './types';
 import {
   SEED_SUBSCRIPTIONS, SEED_TEAM, SEED_AUDIT, ADMIN_USER_ID, ADMIN_USER_NAME,
   SEED_TASKS, SEED_CASH_ADVANCES, SEED_ADVANCE_RECEIPTS, SEED_WORK_SESSIONS,
-  SEED_FIELD_REPORTS, SEED_INCIDENTS,
+  SEED_FIELD_REPORTS, SEED_INCIDENTS, SEED_INVOICES, SEED_PROSPECT_ENTRIES,
 } from './seed';
 import { sellerPlanPrice, VERIFICATION_FEE } from './pricing';
+import { TEAM_ROLE_LABEL, SUBSCRIPTION_STATUS_LABEL } from './labels';
 import { SEED_LANDS, SEED_LEADS, SEED_VISITS } from '@/lib/data/seed';
 import {
   SEED_EXPENSES, SEED_MEDIA, SEED_PHASES, SEED_FUND_RELEASES, SEED_INSPECTIONS,
@@ -35,6 +37,10 @@ import { SEED_ANOMALIES } from '@/lib/mustaf/seed';
 
 const newId = (prefix: string) =>
   `${prefix}-${(globalThis.crypto?.randomUUID?.() ?? Date.now().toString(36))}`;
+
+/** Un contact connu est-il un email exploitable pour pré-remplir une facture ? */
+const looksLikeEmail = (contact?: string): boolean =>
+  !!contact && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact);
 
 /** Append-only audit. Mock impl unshifts so reads are newest-first. */
 function appendAudit(entry: Omit<AuditLogEntry, 'id' | 'createdAt' | 'actorId' | 'actorName'> &
@@ -83,6 +89,10 @@ export interface AdminProvider {
   getSubscriptionBySubject(subjectId: string): Promise<Subscription | null>;
   setSubscriptionStatus(id: string, status: SubscriptionStatus): Promise<Subscription>;
   changeSubscriptionTier(id: string, tier: string): Promise<Subscription>;
+  // Invoices (services facturés)
+  listBillableParties(): Promise<BillableParty[]>;
+  listInvoices(): Promise<Invoice[]>;
+  recordInvoice(input: RecordInvoiceInput): Promise<Invoice>;
   // Mustaf project rows + field actions
   listMustafProjects(): Promise<MustafProjectRow[]>;
   addInvoice(projectId: string, input: AddInvoiceInput): Promise<Expense>;
@@ -111,6 +121,21 @@ export interface AdminProvider {
   listIncidents(filter?: { status?: IncidentStatus; projectId?: string }): Promise<Incident[]>;
   resolveIncident(id: string): Promise<Incident>;
   escalateIncident(id: string): Promise<Incident>;
+  // Prospection commerciale (lecture admin)
+  listProspectEntries(filter?: { prospectorId?: string; status?: ProspectEntry['status'] }): Promise<ProspectEntry[]>;
+}
+
+export interface RecordInvoiceInput {
+  recipientType: InvoiceRecipientType;
+  recipientName: string;
+  recipientEmail: string;
+  subjectId?: string;
+  description: string;
+  amount: number;             // FCFA
+  stripeInvoiceId?: string;
+  stripeNumber?: string | null;
+  hostedInvoiceUrl?: string | null;
+  invoicePdf?: string | null;
 }
 
 export interface CreateTaskInput {
@@ -322,6 +347,69 @@ const mockProvider: AdminProvider = {
     sub.tier = tier;
     appendAudit({ action: 'change_tier', targetType: 'subscription', targetId: id, targetLabel: sub.subjectName, metadata: { from, to: tier } });
     return sub;
+  },
+
+  async listBillableParties() {
+    const parties: BillableParty[] = [];
+
+    // Abonnés (vendeurs Sara + clients Mustaf) — révoqués exclus (soft-delete).
+    for (const sub of SEED_SUBSCRIPTIONS) {
+      if (sub.status === 'revoked') continue;
+      const isEmail = looksLikeEmail(sub.contact);
+      parties.push({
+        type: sub.subjectType === 'seller' ? 'seller' : 'mustaf',
+        refId: sub.id,
+        name: sub.subjectName,
+        detail: `${String(sub.tier)} · ${SUBSCRIPTION_STATUS_LABEL[sub.status]}`,
+        email: isEmail ? sub.contact : undefined,
+        // Vendeur : prix du palier connu. Mustaf : commission = % du projet → pas de montant fixe.
+        suggestedAmount: sub.subjectType === 'seller' ? sellerPlanPrice(String(sub.tier)) : undefined,
+      });
+    }
+
+    // Employés actifs (le fondateur/admin n'est pas facturé).
+    for (const m of SEED_TEAM) {
+      if (m.role === 'admin' || m.status !== 'active') continue;
+      parties.push({
+        type: 'employee',
+        refId: m.id,
+        name: m.displayName,
+        detail: TEAM_ROLE_LABEL[m.role],
+        email: looksLikeEmail(m.contact) ? m.contact : undefined,
+      });
+    }
+
+    return parties;
+  },
+
+  async listInvoices() {
+    return [...SEED_INVOICES].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  },
+
+  async recordInvoice(input) {
+    const invoice: Invoice = {
+      id: newId('inv'),
+      recipientType: input.recipientType,
+      recipientName: input.recipientName,
+      recipientEmail: input.recipientEmail,
+      subjectId: input.subjectId,
+      description: input.description,
+      amount: input.amount,
+      status: 'open',
+      stripeInvoiceId: input.stripeInvoiceId,
+      stripeNumber: input.stripeNumber ?? undefined,
+      hostedInvoiceUrl: input.hostedInvoiceUrl ?? undefined,
+      invoicePdf: input.invoicePdf ?? undefined,
+      createdBy: ADMIN_USER_ID,
+      createdAt: new Date().toISOString(),
+    };
+    SEED_INVOICES.push(invoice);
+    appendAudit({
+      action: 'issue_invoice', targetType: 'invoice', targetId: invoice.id,
+      targetLabel: `${invoice.recipientName} — ${invoice.description}`,
+      metadata: { amount: invoice.amount, recipientType: invoice.recipientType, stripeNumber: invoice.stripeNumber },
+    });
+    return invoice;
   },
 
   async listMustafProjects() {
@@ -604,6 +692,16 @@ const mockProvider: AdminProvider = {
     inc.priority = 'high';   // escalation bumps priority; status stays "to resolve"
     appendAudit({ action: 'escalate_incident', targetType: 'incident', targetId: id, targetLabel: inc.description.slice(0, 40) });
     return inc;
+  },
+
+  async listProspectEntries(filter) {
+    let rows = [...SEED_PROSPECT_ENTRIES];
+    if (filter?.prospectorId) rows = rows.filter(p => p.prospectorId === filter.prospectorId);
+    if (filter?.status) rows = rows.filter(p => p.status === filter.status);
+    // Plus récents d'abord (par jour de prospection, puis par horodatage de saisie).
+    return rows.sort((a, b) =>
+      b.prospectedAt.localeCompare(a.prospectedAt) ||
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   },
 };
 

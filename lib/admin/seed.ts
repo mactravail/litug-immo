@@ -5,7 +5,7 @@
    ============================================================ */
 
 import type {
-  Subscription, TeamMember, AuditLogEntry,
+  Subscription, TeamMember, AuditLogEntry, Invoice, ProspectEntry,
   Task, CashAdvance, AdvanceReceipt, WorkSession, FieldReport, Incident,
 } from './types';
 import { SELLER_ID, SEED_SELLER } from '@/lib/data/seed';
@@ -55,6 +55,10 @@ export const SEED_SUBSCRIPTIONS: Subscription[] = [
   },
 ];
 
+/* --- Factures émises (vide au départ : seules de vraies factures Stripe s'y
+   ajoutent, jamais de fausse facture présentée comme réelle, CLAUDE.md §12). --- */
+export const SEED_INVOICES: Invoice[] = [];
+
 /* --- Team & operational roles (separation of powers, §3.10) --- */
 export const SEED_TEAM: TeamMember[] = [
   { id: ADMIN_USER_ID,        displayName: ADMIN_USER_NAME, role: 'admin',      status: 'active', assignedProjectIds: [], createdAt: '2026-01-01T00:00:00Z' },
@@ -63,7 +67,45 @@ export const SEED_TEAM: TeamMember[] = [
   { id: 'user-insp-awa',      displayName: 'Awa Diallo',    role: 'inspector',   contact: '+221 77 400 30 30', status: 'active', assignedProjectIds: ['cproj-1'], createdAt: '2026-02-01T00:00:00Z' },
   { id: 'user-insp-ml',       displayName: 'Moussa Lô',     role: 'inspector',   contact: '+221 77 401 31 31', status: 'active', assignedProjectIds: [], createdAt: '2026-02-15T00:00:00Z' },
   { id: 'user-ctrl-ndiaye',   displayName: 'Cheikh Ndiaye', role: 'controller',  contact: '+221 77 500 40 40', status: 'active', assignedProjectIds: ['cproj-1'], createdAt: '2026-02-01T00:00:00Z' },
+  // Second métier : prospecteur commercial (démarche les vendeurs sur les réseaux pour Sara).
+  { id: 'user-prosp-fatou',   displayName: 'Fatou Ndoye',   role: 'prospector',  contact: '+221 77 600 50 50', status: 'active', assignedProjectIds: [], createdAt: '2026-05-20T00:00:00Z' },
 ];
+
+/* --- Prospection commerciale : carnet de bord du prospecteur (démo).
+   Adossé à globalThis pour SURVIVRE au rechargement à chaud (dev) et rester une
+   seule et même liste partagée entre l'espace prospecteur et l'admin dans un même
+   process. (En déployé multi-instances, la vraie persistance passera par Supabase.) --- */
+const _prospectStore = globalThis as unknown as { __litugProspects?: ProspectEntry[] };
+export const SEED_PROSPECT_ENTRIES: ProspectEntry[] =
+  _prospectStore.__litugProspects ?? (_prospectStore.__litugProspects = [
+  {
+    id: 'prosp-1', prospectorId: 'user-prosp-fatou', prospectorName: 'Fatou Ndoye',
+    companyName: 'Keur Massar Immobilier', network: 'facebook',
+    outcome: 'interested', contactMethod: 'message',
+    notes: 'Vend 3 terrains à Keur Massar. Veut une démo de Sara cette semaine.',
+    status: 'sent', prospectedAt: '2026-06-11', createdAt: '2026-06-11T16:20:00Z', sentAt: '2026-06-11T19:00:00Z',
+  },
+  {
+    id: 'prosp-2', prospectorId: 'user-prosp-fatou', prospectorName: 'Fatou Ndoye',
+    companyName: 'Promoteur Diamniadio', network: 'instagram',
+    outcome: 'refused', contactMethod: 'comment',
+    concern: 'Pense que c’est trop cher et préfère vendre lui-même via WhatsApp.',
+    status: 'sent', prospectedAt: '2026-06-11', createdAt: '2026-06-11T17:05:00Z', sentAt: '2026-06-11T19:00:00Z',
+  },
+  {
+    id: 'prosp-3', prospectorId: 'user-prosp-fatou', prospectorName: 'Fatou Ndoye',
+    companyName: 'Saly Terrains & Co', network: 'tiktok',
+    outcome: 'no_response',
+    status: 'sent', prospectedAt: '2026-06-11', createdAt: '2026-06-11T17:40:00Z', sentAt: '2026-06-11T19:00:00Z',
+  },
+  {
+    id: 'prosp-4', prospectorId: 'user-prosp-fatou', prospectorName: 'Fatou Ndoye',
+    companyName: 'Mbour Foncier', network: 'whatsapp',
+    outcome: 'refused', contactMethod: 'whatsapp',
+    concern: 'Peur de payer un abonnement sans être sûr de vendre. Veut des témoignages.',
+    status: 'sent', prospectedAt: '2026-06-10', createdAt: '2026-06-10T15:10:00Z', sentAt: '2026-06-10T18:30:00Z',
+  },
+]);
 
 /* --- Audit log — chronological, append-only. Newest first when read. --- */
 export const SEED_AUDIT: AuditLogEntry[] = [

@@ -42,5 +42,6 @@ next-env.d.ts
 
 # agent tooling / temp
 .agents/
+.claude/
 skills-lock.json
 litug-temp/

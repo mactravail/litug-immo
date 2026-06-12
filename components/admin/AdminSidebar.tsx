@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, TrendingUp, Store, HardHat, TriangleAlert, ScrollText, LogOut,
-  Users, ClipboardList, ClipboardCheck, Construction, UserCog, ShieldCheck,
+  Users, ClipboardList, ClipboardCheck, Construction, UserCog, ShieldCheck, Inbox, Receipt, Target,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { logout } from '@/app/(auth)/login/actions';
@@ -14,7 +14,9 @@ const GROUPS: { title: string; items: { href: string; label: string; icon: typeo
     title: 'Plateforme',
     items: [
       { href: '/admin',             label: 'Vue d’ensemble',  icon: LayoutDashboard },
+      { href: '/admin/demandes',    label: 'Demandes',        icon: Inbox },
       { href: '/admin/statistiques', label: 'Statistiques',   icon: TrendingUp },
+      { href: '/admin/factures',    label: 'Factures',        icon: Receipt },
       { href: '/admin/vendeurs',    label: 'Vendeurs (Sara)', icon: Store },
       { href: '/admin/mustaf',      label: 'Projets Mustaf',  icon: HardHat },
       { href: '/admin/anomalies',   label: 'Anomalies',       icon: TriangleAlert },
@@ -25,6 +27,7 @@ const GROUPS: { title: string; items: { href: string; label: string; icon: typeo
     title: 'Équipe',
     items: [
       { href: '/admin/employes',    label: 'Employés',         icon: Users },
+      { href: '/admin/prospection', label: 'Prospection',      icon: Target },
       { href: '/admin/taches',      label: 'Tâches & avances', icon: ClipboardList },
       { href: '/admin/redditions',  label: 'Redditions',       icon: ClipboardCheck },
       { href: '/admin/problemes',   label: 'Problèmes',        icon: Construction },
@@ -39,7 +42,7 @@ const GROUPS: { title: string; items: { href: string; label: string; icon: typeo
   },
 ];
 
-export function AdminSidebar({ adminName }: { adminName: string }) {
+export function AdminSidebar({ adminName, pendingCount = 0 }: { adminName: string; pendingCount?: number }) {
   const pathname = usePathname();
 
   return (
@@ -66,7 +69,12 @@ export function AdminSidebar({ adminName }: { adminName: string }) {
                   )}
                 >
                   <Icon size={17} />
-                  {label}
+                  <span className="flex-1">{label}</span>
+                  {href === '/admin/demandes' && pendingCount > 0 && (
+                    <span className="shrink-0 min-w-5 h-5 px-1.5 inline-flex items-center justify-center rounded-full bg-accent text-white text-[11px] font-bold">
+                      {pendingCount > 99 ? '99+' : pendingCount}
+                    </span>
+                  )}
                 </Link>
               );
             })}

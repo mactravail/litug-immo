@@ -38,7 +38,7 @@ export function Sidebar({ businessName, subscriptionStatus }: Props) {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden lg:flex flex-col w-64 min-h-screen bg-white border-r border-stone-100 px-4 py-6 shrink-0">
+    <aside className="hidden lg:flex flex-col w-64 h-screen bg-white border-r border-stone-100 px-4 py-6 shrink-0">
       {/* Logo */}
       <div className="px-3 mb-8">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -46,7 +46,7 @@ export function Sidebar({ businessName, subscriptionStatus }: Props) {
         <p className="text-[11px] text-muted mt-1">Tableau de bord vendeur</p>
       </div>
 
-      <nav className="flex-1 space-y-1">
+      <nav className="flex-1 space-y-1 overflow-y-auto">
         {NAV.map(({ href, label, icon: Icon }) => {
           const active = href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(href);
           return (

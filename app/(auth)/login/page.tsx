@@ -4,7 +4,7 @@ import { LoginForm } from './LoginForm';
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ inscrit?: string; reinitialise?: string }>;
+  searchParams: Promise<{ inscrit?: string; reinitialise?: string; active?: string }>;
 }) {
   const params = await searchParams;
 
@@ -21,6 +21,12 @@ export default async function LoginPage({
         <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-8">
           <h1 className="font-serif text-2xl font-semibold text-text mb-1">Connexion</h1>
           <p className="text-sm text-muted mb-6">Accédez à votre tableau de bord vendeur.</p>
+
+          {params.active && (
+            <div className="mb-4 rounded-xl bg-accent/10 border border-accent/20 px-4 py-3 text-sm text-accent">
+              Compte activé ✓ Connecte-toi avec ton email et ton mot de passe pour accéder à Sara.
+            </div>
+          )}
 
           {params.inscrit && (
             <div className="mb-4 rounded-xl bg-accent/10 border border-accent/20 px-4 py-3 text-sm text-accent">

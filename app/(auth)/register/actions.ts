@@ -1,25 +1,13 @@
 'use server';
 
-import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { redirect } from 'next/navigation';
 
-export async function register(formData: FormData) {
-  const supabase = await createSupabaseServerClient();
-
-  const { error } = await supabase.auth.signUp({
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
-    options: {
-      data: {
-        business_name: formData.get('businessName') as string,
-        phone: formData.get('phone') as string,
-      },
-    },
-  });
-
-  if (error) {
-    redirect('/register?error=inscription_echouee');
-  }
-
-  redirect('/login?inscrit=true');
+/**
+ * Inscription directe désactivée : on ne crée plus de compte sans abonnement
+ * (CLAUDE.md §5/§12 — la création de compte passe obligatoirement par le paiement
+ * d'un abonnement). Le choix Sara (vendeur) / Mustaf (propriétaire) se fait sur
+ * /register, qui mène vers la page de paiement correspondante où le compte est créé.
+ */
+export async function register() {
+  redirect('/register');
 }

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { getDataProvider } from '@/lib/data/provider';
-import { getAuthenticatedSellerId } from '@/lib/supabase-server';
+import { getAuthenticatedSellerId, getSellerAccount } from '@/lib/supabase-server';
 import type { SaleStatus, LeadStatus, NewLand, NewVisit, VisitStatus } from '@/lib/data/types';
 
 export async function updateLandSaleStatus(landId: string, status: SaleStatus) {
@@ -30,6 +30,12 @@ export async function requestVerification(landId: string) {
 
 export async function createLand(input: Omit<NewLand, 'sellerId'>) {
   const sellerId = await getAuthenticatedSellerId();
+  // Verrou anti-publication : tant que le paiement n'est pas validé par l'équipe,
+  // le vendeur ne peut rien publier (garde côté serveur, indépendante de l'UI).
+  const account = await getSellerAccount();
+  if (account.pendingVerification) {
+    throw new Error('Votre compte est en attente de validation du paiement. Publication possible sous 24 h.');
+  }
   const land = await getDataProvider().createLand({ ...input, sellerId });
   revalidatePath('/terrains');
   revalidatePath('/');

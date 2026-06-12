@@ -56,13 +56,15 @@ export default function DemarrerPage() {
           </div>
 
           <div className="demarrer-card">
-            <h2 className="section-title" style={{ fontSize: '24px' }}>Commencer par la Phase 0</h2>
+            <h2 className="section-title" style={{ fontSize: '24px' }}>Commencer</h2>
             <p className="section-sub" style={{ marginTop: 8 }}>
-              Réglez le forfait Phase 0 (plan d’architecte, dossier de permis, étude de sol) et on lance votre projet.
+              Choisissez votre point de départ : la Phase 0 complète (plan, permis, étude de sol),
+              ou — si vous avez déjà vos plans, votre permis, voire votre fondation — un accès direct
+              au tableau de bord pour démarrer.
             </p>
             <div className="demarrer-actions">
               <Link className="btn btn-primary btn-lg" href="/mustaf/demarrer/paiement">
-                Commencer par la Phase 0 <ArrowRight size={17} className="arr" />
+                Commencer <ArrowRight size={17} className="arr" />
               </Link>
               <a className="btn btn-ghost btn-lg" href="https://wa.me/221000000000" target="_blank" rel="noopener noreferrer">
                 <Phone size={16} /> Une question ? WhatsApp

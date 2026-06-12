@@ -2,11 +2,13 @@
 
 import { useActionState, useState } from 'react';
 import Link from 'next/link';
+import { Eye, EyeOff } from 'lucide-react';
 import { login } from './actions';
 
 export function LoginForm() {
   const [state, action, isPending] = useActionState(login, null);
   const [email, setEmail] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <form action={action} className="space-y-4">
@@ -42,15 +44,26 @@ export function LoginForm() {
             Mot de passe oublié ?
           </Link>
         </div>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          required
-          placeholder="••••••••"
-          className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent"
-        />
+        <div className="relative">
+          <input
+            id="password"
+            name="password"
+            type={showPassword ? 'text' : 'password'}
+            autoComplete="current-password"
+            required
+            placeholder="••••••••"
+            className="w-full border border-stone-200 rounded-xl px-4 py-2.5 pr-11 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((v) => !v)}
+            aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+            aria-pressed={showPassword}
+            className="absolute inset-y-0 right-0 flex items-center px-3 text-muted hover:text-text transition-colors cursor-pointer"
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
       </div>
 
       <button

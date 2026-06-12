@@ -6,6 +6,8 @@
 import type {
   SubscriptionStatus, SubjectType, AuditAction, TeamRole,
   TaskPriority, TaskStatus, FieldReportStatus, IncidentStatus,
+  InvoiceRecipientType, InvoiceStatus,
+  ProspectNetwork, ProspectContactMethod, ProspectOutcome, ProspectStatus,
 } from './types';
 
 export const SUBSCRIPTION_STATUS_LABEL: Record<SubscriptionStatus, string> = {
@@ -28,12 +30,35 @@ export const SUBJECT_TYPE_LABEL: Record<SubjectType, string> = {
   mustaf: 'Client construction (Mustaf)',
 };
 
+/* --- Factures --- */
+
+export const INVOICE_RECIPIENT_LABEL: Record<InvoiceRecipientType, string> = {
+  seller:   'Vendeur (Sara)',
+  mustaf:   'Client construction (Mustaf)',
+  employee: 'Employé',
+  other:    'Autre destinataire',
+};
+
+export const INVOICE_STATUS_LABEL: Record<InvoiceStatus, string> = {
+  open: 'À régler',
+  paid: 'Réglée',
+  void: 'Annulée',
+};
+
+/** Tailwind classes per invoice status — semantic, not brand. */
+export const INVOICE_STATUS_STYLE: Record<InvoiceStatus, string> = {
+  open: 'bg-amber-50 text-amber-700 border-amber-200',
+  paid: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+  void: 'bg-stone-100 text-stone-600 border-stone-200',
+};
+
 export const TEAM_ROLE_LABEL: Record<TeamRole, string> = {
   admin:      'Administrateur',
   procurement:'Achats',
   site_agent: 'Chef de chantier',
   inspector:  'Inspecteur indépendant',
   controller: 'Contrôleur (déblocage)',
+  prospector: 'Prospecteur commercial',
 };
 
 /** Human sentence for each audit action — used by the journal d'audit screen. */
@@ -43,6 +68,7 @@ export const AUDIT_ACTION_LABEL: Record<AuditAction, string> = {
   revoke_sub:          'a révoqué un abonnement',
   change_tier:         'a changé le palier d’un abonnement',
   add_invoice:         'a ajouté une facture',
+  issue_invoice:       'a émis une facture',
   add_media:           'a ajouté un média de chantier',
   update_phase_status: 'a fait avancer une phase',
   release_funds:       'a débloqué des fonds',
@@ -56,6 +82,53 @@ export const AUDIT_ACTION_LABEL: Record<AuditAction, string> = {
   cancel_task:         'a annulé une tâche',
   resolve_incident:    'a résolu un problème',
   escalate_incident:   'a escaladé un problème',
+  log_prospect:        'a enregistré une prospection',
+  submit_prospects:    'a envoyé ses prospections au superviseur',
+};
+
+/* --- Prospection commerciale --- */
+
+export const PROSPECT_NETWORK_LABEL: Record<ProspectNetwork, string> = {
+  facebook:    'Facebook',
+  instagram:   'Instagram',
+  tiktok:      'TikTok',
+  linkedin:    'LinkedIn',
+  whatsapp:    'WhatsApp',
+  youtube:     'YouTube',
+  marketplace: 'Marketplace',
+  other:       'Autre',
+};
+
+export const PROSPECT_CONTACT_LABEL: Record<ProspectContactMethod, string> = {
+  message:   'Message privé',
+  comment:   'Commentaire',
+  call:      'Appel téléphonique',
+  whatsapp:  'WhatsApp',
+  in_person: 'En personne',
+  other:     'Autre',
+};
+
+export const PROSPECT_OUTCOME_LABEL: Record<ProspectOutcome, string> = {
+  no_response: 'Pas de réponse',
+  interested:  'Intéressé(e)',
+  refused:     'Pas intéressé(e)',
+};
+
+/** Tailwind classes per outcome — semantic, not brand. */
+export const PROSPECT_OUTCOME_STYLE: Record<ProspectOutcome, string> = {
+  no_response: 'bg-stone-100 text-stone-600 border-stone-200',
+  interested:  'bg-emerald-50 text-emerald-700 border-emerald-200',
+  refused:     'bg-amber-50 text-amber-700 border-amber-200',
+};
+
+export const PROSPECT_STATUS_LABEL: Record<ProspectStatus, string> = {
+  draft: 'Brouillon',
+  sent:  'Envoyé',
+};
+
+export const PROSPECT_STATUS_STYLE: Record<ProspectStatus, string> = {
+  draft: 'bg-stone-100 text-stone-500 border-stone-200',
+  sent:  'bg-sky-50 text-sky-700 border-sky-200',
 };
 
 /* --- Volet B : tâches, redditions, incidents --- */

@@ -31,6 +31,42 @@ export interface Subscription {
   createdAt: string;
 }
 
+/* --- Invoices (services facturés : Sara, Mustaf, employés, libre) --- */
+
+/** Qui est facturé. `other` = saisie libre (destinataire hors liste). */
+export type InvoiceRecipientType = 'seller' | 'mustaf' | 'employee' | 'other';
+
+/** État local de la facture, calqué sur Stripe (la facture naît `open`). */
+export type InvoiceStatus = 'open' | 'paid' | 'void';
+
+export interface Invoice {
+  id: string;
+  recipientType: InvoiceRecipientType;
+  recipientName: string;
+  recipientEmail: string;
+  /** Abonnement/employé d'origine quand le destinataire vient de la liste. */
+  subjectId?: string;
+  description: string;
+  amount: number;             // FCFA (entier) — source de vérité ; € calculé à l'affichage
+  status: InvoiceStatus;
+  stripeInvoiceId?: string;
+  stripeNumber?: string;
+  hostedInvoiceUrl?: string;
+  invoicePdf?: string;
+  createdBy: string;
+  createdAt: string;
+}
+
+/** Une partie facturable proposée dans le formulaire (qui « doit un service »). */
+export interface BillableParty {
+  type: Exclude<InvoiceRecipientType, 'other'>;
+  refId: string;              // subscription id ou employee id
+  name: string;
+  detail: string;             // palier vendeur, zone Mustaf, ou rôle employé
+  email?: string;             // pré-rempli si le contact connu est un email
+  suggestedAmount?: number;   // FCFA pré-rempli (prix du palier vendeur, etc.)
+}
+
 /* --- Audit log (insert-only; never updated/deleted) --- */
 
 export type AuditAction =
@@ -39,6 +75,7 @@ export type AuditAction =
   | 'revoke_sub'
   | 'change_tier'
   | 'add_invoice'
+  | 'issue_invoice'
   | 'add_media'
   | 'update_phase_status'
   | 'release_funds'
@@ -51,10 +88,13 @@ export type AuditAction =
   | 'request_fix'
   | 'cancel_task'
   | 'resolve_incident'
-  | 'escalate_incident';
+  | 'escalate_incident'
+  | 'log_prospect'
+  | 'submit_prospects';
 
 export type AuditTargetType =
   | 'subscription'
+  | 'invoice'
   | 'expense'
   | 'media'
   | 'phase'
@@ -64,7 +104,8 @@ export type AuditTargetType =
   | 'task'
   | 'advance'
   | 'report'
-  | 'incident';
+  | 'incident'
+  | 'prospect';
 
 export interface AuditLogEntry {
   id: string;
@@ -80,7 +121,7 @@ export interface AuditLogEntry {
 
 /* --- Team & roles (Mustaf operational roles + admin) --- */
 
-export type TeamRole = 'admin' | 'procurement' | 'site_agent' | 'inspector' | 'controller';
+export type TeamRole = 'admin' | 'procurement' | 'site_agent' | 'inspector' | 'controller' | 'prospector';
 
 export interface TeamMember {
   id: string;
@@ -280,6 +321,43 @@ export interface Incident {
   occurredAt: string;
   status: IncidentStatus;
   createdAt: string;
+}
+
+/* ============================================================
+   Prospection commerciale — second métier d'employé.
+   Le prospecteur démarche, sur les réseaux sociaux, des gens qui
+   vendent des terrains et leur propose Sara. Il consigne chaque
+   jour qui il a prospecté et le résultat. Une ligne = un prospect.
+   ============================================================ */
+
+export type ProspectNetwork =
+  | 'facebook' | 'instagram' | 'tiktok' | 'linkedin'
+  | 'whatsapp' | 'youtube' | 'marketplace' | 'other';
+
+/** Comment le contact a réellement eu lieu (si le prospect a répondu). */
+export type ProspectContactMethod =
+  | 'message' | 'comment' | 'call' | 'whatsapp' | 'in_person' | 'other';
+
+/** Issue de la prise de contact. `no_response` = la personne n'a pas répondu. */
+export type ProspectOutcome = 'no_response' | 'interested' | 'refused';
+
+/** `draft` = saisi par le prospecteur, pas encore transmis ; `sent` = envoyé au superviseur (visible admin). */
+export type ProspectStatus = 'draft' | 'sent';
+
+export interface ProspectEntry {
+  id: string;
+  prospectorId: string;
+  prospectorName: string;
+  companyName: string;              // entreprise / vendeur prospecté
+  network: ProspectNetwork;
+  outcome: ProspectOutcome;
+  contactMethod?: ProspectContactMethod;  // renseigné si la personne a répondu
+  concern?: string;                 // son souci / pourquoi elle refuse Sara
+  notes?: string;                   // libre
+  status: ProspectStatus;
+  prospectedAt: string;             // jour de prospection (YYYY-MM-DD)
+  createdAt: string;
+  sentAt?: string;                  // horodatage de transmission au superviseur
 }
 
 /* --- View-models (derived) --- */

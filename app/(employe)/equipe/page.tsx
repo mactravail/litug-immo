@@ -1,6 +1,7 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { ListTodo, MapPin, Wallet, CalendarClock, ChevronRight, AlertTriangle, CheckCircle2 } from 'lucide-react';
-import { getCurrentWorkerId } from '@/lib/employe/current';
+import { getCurrentWorker } from '@/lib/employe/current';
 import { listMyTasks } from '@/lib/employe/provider';
 import { PriorityBadge, TaskBadge } from '@/components/admin/WorkforceBadges';
 import { formatFcfa, formatEur, formatDateShort, cn } from '@/lib/utils';
@@ -73,8 +74,10 @@ function StatCard({ value, label, tone }: { value: number; label: string; tone: 
 }
 
 export default async function MyTasksPage() {
-  const workerId = await getCurrentWorkerId();
-  const rows = listMyTasks(workerId);
+  const worker = await getCurrentWorker();
+  // Le prospecteur n'a pas de tâches de chantier : son espace, c'est la prospection.
+  if (worker.role === 'prospector') redirect('/equipe/prospection');
+  const rows = listMyTasks(worker.id);
 
   const todo = rows.filter(r => r.task.status === 'assigned' || r.task.status === 'in_progress');
   const urgent = todo.filter(r => r.overdue || r.dueSoon);

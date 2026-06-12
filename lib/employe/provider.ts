@@ -16,12 +16,14 @@
 import {
   SEED_TASKS, SEED_CASH_ADVANCES, SEED_ADVANCE_RECEIPTS,
   SEED_WORK_SESSIONS, SEED_FIELD_REPORTS, SEED_INCIDENTS, SEED_AUDIT, SEED_TEAM,
+  SEED_PROSPECT_ENTRIES,
 } from '@/lib/admin/seed';
 import { SEED_EXPENSES, SEED_MEDIA, SEED_PROJECT } from '@/lib/mustaf/seed';
 import { SEED_WORKER_PAYMENTS } from './seed';
 import type {
   Task, CashAdvance, AdvanceReceipt, WorkSession, FieldReport, Incident,
   AdvanceReconciliation, TaskPriority, AuditAction, AuditTargetType,
+  ProspectEntry, ProspectNetwork, ProspectContactMethod, ProspectOutcome,
 } from '@/lib/admin/types';
 import type { Expense, ExpenseCategory, ConstructionMedia, MediaType } from '@/lib/mustaf/types';
 import type { MyTaskRow, MyTaskDetail, WalletSummary, WorkerPayment } from './types';
@@ -250,6 +252,72 @@ export function raiseIncident(workerId: string, input: {
   };
   SEED_INCIDENTS.unshift(incident);
   return incident;
+}
+
+/* ---------------- Prospection commerciale ---------------- */
+
+/** Mes prospections, plus récentes d'abord (par jour puis par saisie). */
+export function listMyProspects(workerId: string): ProspectEntry[] {
+  return SEED_PROSPECT_ENTRIES
+    .filter(p => p.prospectorId === workerId)
+    .sort((a, b) =>
+      b.prospectedAt.localeCompare(a.prospectedAt) ||
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+}
+
+/** Enregistre une prospection du jour — n'écrit que SA ligne, tracée à l'audit. */
+export function createProspect(workerId: string, input: {
+  companyName: string;
+  network: ProspectNetwork;
+  outcome: ProspectOutcome;
+  contactMethod?: ProspectContactMethod;
+  concern?: string;
+  notes?: string;
+  prospectedAt?: string;   // jour ; défaut = aujourd'hui
+}): ProspectEntry {
+  const worker = SEED_TEAM.find(t => t.id === workerId);
+  if (!worker) throw new Error('Employé introuvable.');
+  if (worker.role !== 'prospector') throw new Error('Action réservée aux prospecteurs.');
+  if (!input.companyName.trim()) throw new Error('Indique le nom de l’entreprise prospectée.');
+  // Pas de réponse ⇒ ni moyen de contact ni objection (cohérence).
+  const responded = input.outcome !== 'no_response';
+  const entry: ProspectEntry = {
+    id: newId('prosp'), prospectorId: workerId, prospectorName: worker.displayName,
+    companyName: input.companyName.trim(),
+    network: input.network,
+    outcome: input.outcome,
+    contactMethod: responded ? input.contactMethod : undefined,
+    concern: input.outcome === 'refused' ? (input.concern?.trim() || undefined) : (responded ? input.concern?.trim() || undefined : undefined),
+    notes: input.notes?.trim() || undefined,
+    // Saisi mais pas encore transmis : reste un brouillon privé jusqu'à l'envoi au superviseur.
+    status: 'draft',
+    prospectedAt: input.prospectedAt || new Date().toISOString().slice(0, 10),
+    createdAt: new Date().toISOString(),
+  };
+  SEED_PROSPECT_ENTRIES.unshift(entry);
+  appendAudit(workerId, 'log_prospect', 'prospect', entry.id, entry.companyName, { network: entry.network, outcome: entry.outcome });
+  return entry;
+}
+
+/** Combien de prospections en brouillon (pas encore envoyées) pour ce prospecteur. */
+export function countDraftProspects(workerId: string): number {
+  return SEED_PROSPECT_ENTRIES.filter(p => p.prospectorId === workerId && p.status === 'draft').length;
+}
+
+/**
+ * Envoie au superviseur toutes les prospections en brouillon du prospecteur :
+ * elles passent en `sent` et apparaissent alors côté admin. Retourne le nombre transmis.
+ */
+export function sendProspectsToSupervisor(workerId: string): number {
+  const worker = SEED_TEAM.find(t => t.id === workerId);
+  if (!worker) throw new Error('Employé introuvable.');
+  if (worker.role !== 'prospector') throw new Error('Action réservée aux prospecteurs.');
+  const drafts = SEED_PROSPECT_ENTRIES.filter(p => p.prospectorId === workerId && p.status === 'draft');
+  if (drafts.length === 0) throw new Error('Aucune prospection à envoyer.');
+  const now = new Date().toISOString();
+  drafts.forEach(p => { p.status = 'sent'; p.sentAt = now; });
+  appendAudit(workerId, 'submit_prospects', 'prospect', workerId, worker.displayName, { count: drafts.length });
+  return drafts.length;
 }
 
 /* ---------------- Actions métier selon le rôle ---------------- */

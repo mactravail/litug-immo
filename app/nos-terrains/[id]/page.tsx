@@ -78,7 +78,7 @@ export default async function TerrainDetailPage({ params }: Props) {
 
           {/* Breadcrumb */}
           <div className="td-breadcrumb">
-            <Link href="/nos-terrains">Nos terrains</Link>
+            <Link href="/nos-terrains">Terrains</Link>
             <span>/</span>
             <span>{land.zone}</span>
           </div>

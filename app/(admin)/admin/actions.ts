@@ -1,7 +1,11 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { headers } from 'next/headers';
 import { getAdminProvider, ADMIN_USER_ID } from '@/lib/admin/provider';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { createSupabaseAdminClient } from '@/lib/supabase-admin';
+import { sendAccountApproved } from '@/lib/email/send';
 import type { SubscriptionStatus, TeamRole, TaskPriority } from '@/lib/admin/types';
 import type { ExpenseCategory, PhaseStatus, MediaType, AnomalyStatus } from '@/lib/mustaf/types';
 
@@ -44,6 +48,77 @@ export async function suspendSubscription(_prev: ActionState, formData: FormData
 export async function revokeSubscription(_prev: ActionState, formData: FormData): Promise<ActionState> {
   return setSubStatus(formData.get('id') as string, 'revoked');
 }
+/**
+ * Valide la demande d'un compte en attente (vendeur Sara ou client Mustaf) après
+ * contrôle du paiement : lève le flag `pending_verification` sur le VRAI compte auth
+ * Supabase (les deux stores de métadonnées), ce qui débloque le dashboard du client
+ * (publication pour un vendeur, accompagnement pour un client Mustaf). Action tracée.
+ */
+export async function validateAccountRequest(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  const userId = (formData.get('id') as string) ?? '';
+  if (!userId) return { error: 'Identifiant manquant.' };
+
+  // Garde : seul un admin connecté peut valider (comme la création d'accès employé, §5).
+  const supabase = await createSupabaseServerClient();
+  const { data: { user: actor } } = await supabase.auth.getUser();
+  const actorRole = (actor?.app_metadata as Record<string, unknown> | undefined)?.user_role;
+  if (!actor || actorRole !== 'admin') {
+    return { error: 'Action réservée à l’administrateur. Reconnectez-vous puis réessayez.' };
+  }
+
+  let admin;
+  try {
+    admin = createSupabaseAdminClient();
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : 'Configuration serveur manquante.' };
+  }
+
+  try {
+    const { data: target } = await admin.auth.admin.getUserById(userId);
+    const um = (target?.user?.user_metadata ?? {}) as Record<string, unknown>;
+    const apm = (target?.user?.app_metadata ?? {}) as Record<string, unknown>;
+
+    const { error } = await admin.auth.admin.updateUserById(userId, {
+      user_metadata: { ...um, pending_verification: false, verified_at: new Date().toISOString() },
+      app_metadata: { ...apm, pending_verification: false },
+    });
+    if (error) return { error: 'Validation impossible : ' + error.message };
+
+    // Journal d'audit (insert-only) — qui/quoi/quand.
+    await admin.from('audit_log').insert({
+      actor_id: actor.id,
+      action: 'validate_account',
+      target_type: 'user',
+      target_id: userId,
+      target_label: (um.full_name as string) || target?.user?.email || userId,
+      metadata: { type: um.account_type === 'owner' ? 'owner' : 'seller' },
+    });
+
+    revalidatePath('/admin/demandes');
+    revalidatePath('/admin');
+    revalidatePath('/admin/audit');
+
+    // Prévenir l'intéressé que son espace est ouvert (best-effort : un échec
+    // d'email ne doit pas annuler la validation, déjà actée en base).
+    const recipient = target?.user?.email;
+    if (recipient) {
+      const h = await headers();
+      const host = h.get('x-forwarded-host') ?? h.get('host') ?? 'localhost:3000';
+      const proto = h.get('x-forwarded-proto') ?? (host.startsWith('localhost') ? 'http' : 'https');
+      await sendAccountApproved({
+        to: recipient,
+        name: (um.full_name as string) || (um.business_name as string) || recipient.split('@')[0],
+        type: um.account_type === 'owner' ? 'owner' : 'seller',
+        loginUrl: `${proto}://${host}/login`,
+      });
+    }
+
+    return { ok: true };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : 'Validation impossible.' };
+  }
+}
+
 export async function changeTier(_prev: ActionState, formData: FormData): Promise<ActionState> {
   try {
     await getAdminProvider().changeSubscriptionTier(formData.get('id') as string, formData.get('tier') as string);

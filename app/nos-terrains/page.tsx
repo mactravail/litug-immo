@@ -88,12 +88,16 @@ export default async function TerrainsPage() {
 
       {/* ── Footer ──────────────────────────────────────────────── */}
       <footer className="offer-foot">
-        <p>
+        <p className="offer-foot-trust">
           <ShieldCheck
             size={15}
             style={{ display: 'inline', verticalAlign: '-2px', marginRight: 6, color: 'var(--green)' }}
           />
-          Types de documents affichés sans filtre · Vérification via la Conservation Foncière · Séquestre notarial
+          <span className="offer-foot-item">Types de documents affichés sans filtre</span>
+          <span className="offer-foot-sep" aria-hidden="true">·</span>
+          <span className="offer-foot-item">Vérification via la Conservation Foncière</span>
+          <span className="offer-foot-sep" aria-hidden="true">·</span>
+          <span className="offer-foot-item">Séquestre notarial</span>
         </p>
         <p style={{ marginTop: 10 }}>
           <Link href="/">← Retour à l&apos;accueil</Link>

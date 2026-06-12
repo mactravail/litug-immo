@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
-import { homeRouteFor, TEAM_ROLES } from '@/lib/auth/home-route';
+import { homeRouteFor, effectiveRole, TEAM_ROLES } from '@/lib/auth/home-route';
 
 export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
@@ -35,6 +35,20 @@ export async function proxy(request: NextRequest) {
   // la porte d'entrée est réelle. Garde désactivable avec ADMIN_AUTH_ENABLED≠true (démo).
   const role = (user?.app_metadata as Record<string, unknown> | undefined)?.user_role;
 
+  // Première connexion d'un employé créé par l'admin : tant que le mot de passe
+  // provisoire n'est pas changé (must_change_password), on force /bienvenue.
+  // On laisse passer la page elle-même, le callback auth et la déconnexion.
+  const mustChangePassword =
+    (user?.app_metadata as Record<string, unknown> | undefined)?.must_change_password === true;
+  if (
+    user && mustChangePassword &&
+    !pathname.startsWith('/bienvenue') &&
+    !pathname.startsWith('/auth') &&
+    !pathname.startsWith('/logout')
+  ) {
+    return NextResponse.redirect(new URL('/bienvenue', request.url));
+  }
+
   // Espace Admin (/admin) — réservé au rôle `admin`.
   if (pathname.startsWith('/admin')) {
     if (process.env.ADMIN_AUTH_ENABLED !== 'true') return supabaseResponse;  // démo ouverte
@@ -61,6 +75,7 @@ export async function proxy(request: NextRequest) {
     pathname.startsWith('/auth') ||
     pathname.startsWith('/forgot-password') ||
     pathname.startsWith('/reset-password') ||
+    pathname.startsWith('/bienvenue') ||   // employé invité : pose son 1er mot de passe
     pathname.startsWith('/nos-terrains') ||
     pathname.startsWith('/blog') ||
     pathname.startsWith('/sara') ||
@@ -86,9 +101,9 @@ export async function proxy(request: NextRequest) {
   }
 
   // Déjà connecté sur /login ou /register → renvoyer vers SON espace
-  // (admin → /admin, équipe → /equipe, vendeur → /dashboard).
+  // (admin → /admin, équipe → /equipe, client Mustaf → /projet, vendeur → /dashboard).
   if (user && (pathname === '/login' || pathname === '/register')) {
-    return NextResponse.redirect(new URL(homeRouteFor(role), request.url));
+    return NextResponse.redirect(new URL(homeRouteFor(effectiveRole(user)), request.url));
   }
 
   return supabaseResponse;

@@ -4,11 +4,11 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import {
   startTask, endTask, addReceipt, submitReport, raiseIncident,
-  addInvoice, addChantierMedia,
+  addInvoice, addChantierMedia, createProspect, sendProspectsToSupervisor,
 } from '@/lib/employe/provider';
-import { getCurrentWorkerId, WORKER_COOKIE, TEAM_ROLES } from '@/lib/employe/current';
+import { getCurrentWorkerId, getCurrentProspectorId, WORKER_COOKIE, TEAM_ROLES } from '@/lib/employe/current';
 import { SEED_TEAM } from '@/lib/admin/seed';
-import type { TaskPriority } from '@/lib/admin/types';
+import type { TaskPriority, ProspectNetwork, ProspectContactMethod, ProspectOutcome } from '@/lib/admin/types';
 import type { ExpenseCategory, MediaType } from '@/lib/mustaf/types';
 
 export type ActionState = { error?: string; ok?: boolean } | null;
@@ -119,6 +119,46 @@ export async function raiseIncidentAction(_prev: ActionState, formData: FormData
     return { ok: true };
   } catch (e) {
     return { error: e instanceof Error ? e.message : 'Signalement impossible.' };
+  }
+}
+
+/* --- Prospection commerciale --- */
+export async function createProspectAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  try {
+    const companyName = (formData.get('companyName') as string)?.trim();
+    if (!companyName) return { error: 'Indique le nom de l’entreprise prospectée.' };
+    const outcome = (formData.get('outcome') as ProspectOutcome) || 'no_response';
+    const responded = outcome !== 'no_response';
+    const contactMethod = (formData.get('contactMethod') as ProspectContactMethod) || undefined;
+    if (responded && !contactMethod) return { error: 'Indique comment le contact a eu lieu.' };
+    createProspect(await getCurrentProspectorId(), {
+      companyName,
+      network: (formData.get('network') as ProspectNetwork) || 'other',
+      outcome,
+      contactMethod,
+      concern: (formData.get('concern') as string)?.trim() || undefined,
+      notes: (formData.get('notes') as string)?.trim() || undefined,
+      prospectedAt: (formData.get('prospectedAt') as string) || undefined,
+    });
+    revalidatePath('/equipe/prospection');
+    revalidatePath('/admin/prospection');
+    revalidatePath('/admin/audit');
+    return { ok: true };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : 'Enregistrement impossible.' };
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- signature imposée par useActionState ; aucun champ requis pour l'envoi.
+export async function sendProspectsAction(_prev: ActionState, _formData: FormData): Promise<ActionState> {
+  try {
+    sendProspectsToSupervisor(await getCurrentProspectorId());
+    revalidatePath('/equipe/prospection');
+    revalidatePath('/admin/prospection');
+    revalidatePath('/admin/audit');
+    return { ok: true };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : 'Envoi impossible.' };
   }
 }
 

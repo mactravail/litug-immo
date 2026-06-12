@@ -535,6 +535,34 @@
   font-weight: 600;
 }
 
+.offer-foot-trust {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 8px;
+  line-height: 1.5;
+}
+
+.offer-foot-sep {
+  color: var(--line);
+}
+
+@media (max-width: 600px) {
+  .offer-foot-trust {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .offer-foot-sep {
+    display: none;
+  }
+
+  .offer-foot-item {
+    display: block;
+  }
+}
+
 /* ══════════════════════════════════════════════════════════════
    Fiche détail terrain  (/nos-terrains/[id])
    ══════════════════════════════════════════════════════════════ */

@@ -2,23 +2,43 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { existsSync } from 'fs';
 import { join } from 'path';
-import { ArrowLeft, ShieldCheck } from 'lucide-react';
-import { CheckoutForm } from './CheckoutForm';
+import { ArrowLeft } from 'lucide-react';
+import { Checkout } from './Checkout';
+import { getStripe } from '@/lib/stripe';
 import '../../landing.css';
 import './checkout.css';
 
 export const metadata: Metadata = {
-  title: 'Paiement — Abonnement Sara (Wave) | Litug',
-  description: 'Active ton abonnement à Sara en payant via Wave.',
+  title: 'Paiement — Abonnement Sara | Litug',
+  description: 'Active ton abonnement à Sara : paiement par Wave (carte bancaire, PayPal et Stripe bientôt disponibles).',
 };
 
-// Montants (FCFA)
-const SETUP = '100 000';
-const MONTHLY = '50 000';
+// Montant total à payer aujourd'hui (FCFA)
 const TODAY = '150 000';
-const TODAY_EUR = '≈ 228 €';
 
-export default function PaiementPage() {
+/** Au retour de Stripe (?paid=1&session_id=…), confirme que la session est payée. */
+async function confirmStripeReturn(sessionId?: string): Promise<string | null> {
+  if (!sessionId) return null;
+  try {
+    const session = await getStripe().checkout.sessions.retrieve(sessionId);
+    if (session.payment_status === 'paid') {
+      return session.customer_details?.email ?? session.customer_email ?? '';
+    }
+  } catch {
+    // session introuvable / clé absente → on n'affiche pas la confirmation
+  }
+  return null;
+}
+
+export default async function PaiementPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ paid?: string; session_id?: string; canceled?: string }>;
+}) {
+  const sp = await searchParams;
+  const paidEmail = sp.paid === '1' ? await confirmStripeReturn(sp.session_id) : null;
+  const canceled = sp.canceled === '1';
+
   // QR Wave officiel de Litug, déposé dans public/wave-qr.png.
   const hasQr = existsSync(join(process.cwd(), 'public', 'wave-qr.png'));
 
@@ -36,80 +56,13 @@ export default function PaiementPage() {
       </nav>
 
       <header className="wrap offer-hero" style={{ paddingTop: 'clamp(32px,5vw,56px)' }}>
-        <span className="eyebrow">Paiement sécurisé · Wave</span>
+        <span className="eyebrow">Paiement sécurisé</span>
         <h1>Finalise ton abonnement <span className="accent">Sara</span></h1>
-        <p>Paie par Wave en scannant le QR code, puis confirme avec ton numéro de transaction.</p>
+        <p>Choisis ton moyen de paiement, crée ton accès, et reçois ton email d&apos;activation.</p>
       </header>
 
       <section className="section wrap" style={{ paddingTop: 'clamp(24px,3vw,36px)' }}>
-        <div className="checkout-grid">
-          {/* Colonne formulaire */}
-          <div className="checkout-form-col">
-            <CheckoutForm />
-          </div>
-
-          {/* Colonne récap + Wave */}
-          <div className="checkout-pay-col">
-            <div className="co-card">
-              <h2>Ton abonnement</h2>
-              <div className="co-line">
-                <span className="desc">
-                  Mise en service
-                  <small>Frais d&apos;installation unique</small>
-                </span>
-                <span className="amt">{SETUP} FCFA</span>
-              </div>
-              <div className="co-line">
-                <span className="desc">
-                  Abonnement Sara
-                  <small>Premier mois</small>
-                </span>
-                <span className="amt">{MONTHLY} FCFA</span>
-              </div>
-              <div className="co-total">
-                <span className="lbl">À payer aujourd&apos;hui</span>
-                <span className="val">
-                  <span className="big">{TODAY} FCFA</span>
-                  <small>{TODAY_EUR}</small>
-                </span>
-              </div>
-              <p className="co-recurring">Puis {MONTHLY} FCFA / mois · sans engagement, résiliable à tout moment.</p>
-            </div>
-
-            <div className="co-card">
-              <div className="wave-head">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="wave-logo" src="/wave-icon.png" alt="Wave" />
-                <span>
-                  <b>Payer avec Wave</b>
-                  <span>Scanne le QR avec l&apos;application Wave</span>
-                </span>
-              </div>
-
-              <div className="qr-box">
-                {hasQr ? (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img src="/wave-qr.png" alt="QR code Wave — Litug" />
-                ) : (
-                  <span className="qr-missing">QR Wave à ajouter</span>
-                )}
-              </div>
-              <p className="qr-cap">Montant à envoyer : <b>{TODAY} FCFA</b></p>
-
-              <ol className="wave-steps">
-                <li><span className="n">1</span><span>Ouvre l&apos;application <b>Wave</b> sur ton téléphone.</span></li>
-                <li><span className="n">2</span><span>Appuie sur <b>Scanner</b> et vise le QR code ci-dessus.</span></li>
-                <li><span className="n">3</span><span>Envoie <b>{TODAY} FCFA</b> à Litug.</span></li>
-                <li><span className="n">4</span><span>Copie le <b>numéro de transaction</b> et colle-le dans le formulaire.</span></li>
-              </ol>
-            </div>
-
-            <p className="price-note" style={{ marginTop: 16 }}>
-              <ShieldCheck size={15} />
-              Paiement direct à Litug via Wave. Aucune donnée bancaire ne transite par le site.
-            </p>
-          </div>
-        </div>
+        <Checkout hasQr={hasQr} today={TODAY} paidEmail={paidEmail} canceled={canceled} />
       </section>
 
       <footer className="offer-foot">

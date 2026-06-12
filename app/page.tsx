@@ -14,14 +14,14 @@ type Lang = 'fr' | 'en';
 /* ------------------------------------------------------------------ */
 const I18N = {
   fr: {
-    nav: { terrains: "Nos terrains", comment: "Comment ça marche", garanties: "Nos garanties", tarifs: "Tarifs", login: "Se connecter", cta: "Réserver un entretien" },
+    nav: { terrains: "Terrains", comment: "Comment ça marche", garanties: "Nos garanties", tarifs: "Tarifs", blog: "Blog", login: "Se connecter", cta: "Réserver un entretien" },
     hero: {
       badge: "Vol. Arnaque. Gaspillage · Plus jamais",
       title_1: "Achetez votre terrain.",
       title_2: "Construisez sereinement.",
       sub: "De l'achat du terrain vérifié jusqu'à la remise des clés, Litug vous accompagne avec un suivi financier transparent et un contrôle total de votre projet — depuis l'étranger.",
-      cta_primary: "Je veux acheter ou construire en sécurité",
-      cta_secondary: "Voir une démonstration",
+      cta_primary: "Je veux construire ma maison",
+      cta_secondary: "Je vends des terrains",
       proof: "Déjà utilisé par des vendeurs, architectes et professionnels de l'immobilier",
       checks: ["Budget maîtrisé", "Dépenses vérifiables", "Suivi en temps réel", "Tiers de confiance"],
     },
@@ -55,10 +55,10 @@ const I18N = {
     parcours: {
       kicker: "La solution · Deux produits, une même promesse",
       title: "La confiance, du terrain à la maison finie",
-      sub: "Que vous achetiez un terrain ou que vous construisiez, Litug vous donne une visibilité totale sur votre argent, vos documents et l'avancement de votre projet.",
-      card1_tag: "Acheter un terrain",
-      card1_title: "Sara — votre agent terrain IA",
-      card1_desc: "Trouvez et achetez un terrain vérifié sans intermédiaire douteux. Sara qualifie, informe et ne vous propose que des terrains au statut clair.",
+      sub: "Que vous vendiez des terrains ou que vous bâtissiez votre maison, Litug place la confiance au cœur de chaque échange — pour vous comme pour vos clients.",
+      card1_tag: "Vendre des terrains",
+      card1_title: "Sara — votre commerciale IA",
+      card1_desc: "Vous avez des terrains à vendre ? Sara répond à vos prospects sur WhatsApp 24h/24, les qualifie et ne vous transmet que les acheteurs sérieux. Vous vendez plus, sans jamais laisser un client sans réponse.",
       card1_cta: "Découvrir Sara",
       card2_tag: "Construire sa maison",
       card2_title: "Mustaf — construire en confiance",
@@ -66,16 +66,16 @@ const I18N = {
       card2_cta: "Découvrir Mustaf",
     },
     sara: {
-      kicker: "Produit 1 · Acheter un terrain",
+      kicker: "Produit 1 · Vendre vos terrains",
       badge: "Disponible 24h/24",
-      title: "Sara, votre commercial qui ne dort jamais",
-      desc: "Sara est un agent IA WhatsApp qui répond instantanément, qualifie chaque acheteur et ne met en avant que des terrains au statut vérifié — fini les arnaques et les terrains fantômes.",
+      title: "Sara, votre commerciale qui ne dort jamais",
+      desc: "Agent immobilier ou propriétaire de plusieurs terrains ? Sara est votre assistante IA sur WhatsApp : elle répond à chaque prospect, le qualifie (budget, zone, superficie) et ne vous transmet que les acheteurs sérieux — pendant que vous concluez.",
       features: [
         "Répond automatiquement, 24/7",
         "Qualifie chaque client : budget, zone, superficie",
         "N'envoie que des terrains au statut clair (TF, Bail, Délibération)",
         "Envoie photos et fiches d'information",
-        "Ne transfère que les prospects sérieux à un humain",
+        "Ne vous transfère que les prospects sérieux, prêts à acheter",
       ],
       cta: "Activer Sara",
     },
@@ -221,14 +221,14 @@ const I18N = {
     },
   },
   en: {
-    nav: { terrains: "Our land", comment: "How it works", garanties: "Our guarantees", tarifs: "Pricing", login: "Log in", cta: "Book a call" },
+    nav: { terrains: "Land", comment: "How it works", garanties: "Our guarantees", tarifs: "Pricing", blog: "Blog", login: "Log in", cta: "Book a call" },
     hero: {
       badge: "Vol? arnaque? · Basta",
       title_1: "Buy your land and build your home in Senegal",
       title_2: "without losing your money, your time or your peace of mind.",
       sub: "From a verified plot to the handover of the keys, Litug supports you with transparent financial tracking and full control of your project — from abroad.",
-      cta_primary: "I want to buy or build safely",
-      cta_secondary: "See a demo",
+      cta_primary: "I want to build my home",
+      cta_secondary: "I sell land",
       proof: "Already used by sellers, architects and real-estate professionals",
       checks: ["Budget under control", "Verifiable expenses", "Real-time tracking", "Trusted third party"],
     },
@@ -262,10 +262,10 @@ const I18N = {
     parcours: {
       kicker: "The solution · Two products, one promise",
       title: "Trust, from the land to the finished home",
-      sub: "Whether you're buying land or building, Litug gives you full visibility over your money, your documents and your project's progress.",
-      card1_tag: "Buy land",
-      card1_title: "Sara — your AI land agent",
-      card1_desc: "Find and buy verified land with no shady middleman. Sara qualifies, informs, and only offers you plots with a clear status.",
+      sub: "Whether you're selling land or building your home, Litug puts trust at the heart of every exchange — for you and your clients.",
+      card1_tag: "Sell land",
+      card1_title: "Sara — your AI sales agent",
+      card1_desc: "Got land to sell? Sara answers your prospects on WhatsApp 24/7, qualifies them, and only hands you serious buyers. You sell more — and never leave a client waiting.",
       card1_cta: "Meet Sara",
       card2_tag: "Build a home",
       card2_title: "Mustaf — build with confidence",
@@ -273,16 +273,16 @@ const I18N = {
       card2_cta: "Meet Mustaf",
     },
     sara: {
-      kicker: "Product 1 · Buy land",
+      kicker: "Product 1 · Sell your land",
       badge: "Available 24/7",
       title: "Sara, the salesperson that never sleeps",
-      desc: "Sara is a WhatsApp AI agent that replies instantly, qualifies every buyer, and only surfaces verified plots — no more scams or phantom land.",
+      desc: "A real-estate agent or own several plots? Sara is your WhatsApp AI assistant: she answers every prospect, qualifies them (budget, area, size) and only forwards the serious buyers — while you close the deal.",
       features: [
         "Replies automatically, 24/7",
         "Qualifies every client: budget, area, size",
         "Only sends land with a clear status (TF, Bail, Délibération)",
         "Sends photos and info sheets",
-        "Only forwards serious leads to a human",
+        "Only forwards you serious, ready-to-buy leads",
       ],
       cta: "Activate Sara",
     },
@@ -777,6 +777,7 @@ function Nav({ t, lang, setLang }: { t: T; lang: Lang; setLang: (l: Lang) => voi
           <a className="nav-link" href="#preuves">{t.nav.garanties}</a>
           <a className="nav-link" href="/nos-terrains">{t.nav.terrains}</a>
           <a className="nav-link" href="/produits">{t.nav.tarifs}</a>
+          <a className="nav-link" href="/blog">{t.nav.blog}</a>
         </div>
 
         <div className="nav-right">
@@ -808,6 +809,7 @@ function Nav({ t, lang, setLang }: { t: T; lang: Lang; setLang: (l: Lang) => voi
           <a href="#preuves" onClick={close}>{t.nav.garanties}</a>
           <a href="/nos-terrains" onClick={close}>{t.nav.terrains}</a>
           <a href="/produits" onClick={close}>{t.nav.tarifs}</a>
+          <a href="/blog" onClick={close}>{t.nav.blog}</a>
         </div>
         <div className="nav-mobile-actions">
           <Link className="btn btn-ghost btn-lg" href="/login" onClick={close}>{t.nav.login}</Link>
@@ -853,8 +855,8 @@ function Hero({ t, lang }: { t: T; lang: Lang }) {
             ))}
           </ul>
           <div className="hero-ctas">
-            <a className="btn btn-gold btn-lg" href="#contact">{t.hero.cta_primary}<Icon name="arrow" size={17} className="arr" /></a>
-            <a className="btn btn-ghost btn-lg" href="#sara">{t.hero.cta_secondary}</a>
+            <a className="btn btn-gold btn-lg" href="/mustaf/demarrer">{t.hero.cta_primary}<Icon name="arrow" size={17} className="arr" /></a>
+            <a className="btn btn-ghost btn-lg" href="/sara">{t.hero.cta_secondary}</a>
           </div>
           <div className="hero-proof">
             <div className="avatars">
@@ -1377,18 +1379,21 @@ function Contact({ t, lang }: { t: T; lang: Lang }) {
 
     const form = e.currentTarget;
     const data = new FormData(form);
-    data.append("access_key", process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY ?? "");
-    data.append("subject", "Nouveau message — formulaire de contact Litug");
-    data.append("from_name", "Site Litug");
+    const payload = {
+      name: String(data.get("name") ?? ""),
+      email: String(data.get("email") ?? ""),
+      whatsapp: String(data.get("whatsapp") ?? ""),
+      message: String(data.get("message") ?? ""),
+    };
 
     try {
-      const res = await fetch("https://api.web3forms.com/submit", {
+      const res = await fetch("/api/contact", {
         method: "POST",
-        headers: { Accept: "application/json" },
-        body: data,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
       const json = await res.json();
-      if (json.success) {
+      if (res.ok && json.ok) {
         setSent(true);
         form.reset();
       } else {

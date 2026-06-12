@@ -2,10 +2,11 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ListTodo, ClipboardCheck, Wrench, Wallet, ShieldCheck } from 'lucide-react';
+import { ListTodo, ClipboardCheck, Wrench, Wallet, ShieldCheck, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import type { TeamRole } from '@/lib/admin/types';
 
-const NAV = [
+const FIELD_NAV = [
   { href: '/equipe',             label: 'Tâches',     icon: ListTodo },
   { href: '/equipe/portefeuille', label: 'Argent',    icon: Wallet },
   { href: '/equipe/redditions',  label: 'Redditions', icon: ClipboardCheck },
@@ -13,8 +14,14 @@ const NAV = [
   { href: '/equipe/securite',    label: 'Sécurité',   icon: ShieldCheck },
 ];
 
-export function EmployeMobileNav() {
+const PROSPECT_NAV = [
+  { href: '/equipe/prospection', label: 'Prospection', icon: Target },
+  { href: '/equipe/securite',    label: 'Sécurité',    icon: ShieldCheck },
+];
+
+export function EmployeMobileNav({ role }: { role: TeamRole }) {
   const pathname = usePathname();
+  const NAV = role === 'prospector' ? PROSPECT_NAV : FIELD_NAV;
 
   return (
     <nav className="lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-stone-100 z-50">

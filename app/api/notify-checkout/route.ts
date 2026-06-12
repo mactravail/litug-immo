@@ -1,9 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { sendNewRequestNotice } from '@/lib/email/send';
 
 const NOTIFY_TO = '+393291114442';
 
 export async function POST(req: NextRequest) {
   const { name, business, phone, email, tx } = await req.json();
+
+  // Notification email au fondateur (best-effort, en parallèle du SMS).
+  const origin = req.nextUrl.origin;
+  await sendNewRequestNotice({
+    name, business, phone, email, payment: tx,
+    adminUrl: `${origin}/admin/demandes`,
+  }).catch(() => { /* l'email ne doit jamais bloquer l'inscription */ });
 
   const sid = process.env.TWILIO_ACCOUNT_SID;
   const token = process.env.TWILIO_AUTH_TOKEN;

@@ -2,19 +2,29 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ListTodo, ClipboardCheck, Wrench, Wallet, LogOut, ShieldCheck } from 'lucide-react';
+import { ListTodo, ClipboardCheck, Wrench, Wallet, LogOut, ShieldCheck, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { logout } from '@/app/(auth)/login/actions';
 import { TEAM_ROLE_LABEL } from '@/lib/admin/labels';
 import type { TeamRole } from '@/lib/admin/types';
 import { WorkerSwitcher } from './WorkerSwitcher';
 
-const NAV = [
+/** Navigation terrain (chantier) — pour procurement / site_agent / inspector / controller. */
+const FIELD_NAV = [
   { href: '/equipe',             label: 'Mes tâches',     icon: ListTodo },
   { href: '/equipe/portefeuille', label: 'Mon argent',    icon: Wallet },
   { href: '/equipe/redditions',  label: 'Mes redditions', icon: ClipboardCheck },
   { href: '/equipe/action',      label: 'Action métier',  icon: Wrench },
 ];
+
+/** Navigation prospecteur commercial — son seul métier, c'est la prospection. */
+const PROSPECT_NAV = [
+  { href: '/equipe/prospection', label: 'Prospection', icon: Target },
+];
+
+function navFor(role: TeamRole) {
+  return role === 'prospector' ? PROSPECT_NAV : FIELD_NAV;
+}
 
 interface Props {
   workerName: string;
@@ -27,15 +37,15 @@ export function EmployeSidebar({ workerName, role, workers, currentId }: Props) 
   const pathname = usePathname();
 
   return (
-    <aside className="hidden lg:flex flex-col w-64 min-h-screen bg-white border-r border-stone-100 px-4 py-6 shrink-0">
+    <aside className="hidden lg:flex flex-col w-64 h-screen bg-white border-r border-stone-100 px-4 py-6 shrink-0">
       <div className="px-3 mb-8">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/logo.png" alt="Litug" className="h-12 w-auto" />
         <p className="text-[11px] text-muted mt-1">Espace équipe · Terrain</p>
       </div>
 
-      <nav className="flex-1 space-y-1">
-        {NAV.map(({ href, label, icon: Icon }) => {
+      <nav className="flex-1 space-y-1 overflow-y-auto">
+        {navFor(role).map(({ href, label, icon: Icon }) => {
           const active = href === '/equipe' ? pathname === '/equipe' : pathname.startsWith(href);
           return (
             <Link

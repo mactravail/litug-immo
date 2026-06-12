@@ -22,6 +22,21 @@
 }
 .offer-nav .brand img { height: 32px; width: auto; display: block; }
 
+/* ── Hero ────────────────────────────────────────────────── */
+.offer-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5vw, 52px);
+  letter-spacing: -.02em;
+  margin-top: 16px;
+}
+.offer-hero h1 .accent { color: var(--green); }
+.offer-hero p {
+  color: var(--text-muted);
+  font-size: clamp(15px, 1.7vw, 19px);
+  max-width: 60ch;
+  margin-top: 16px;
+}
+
 .pay-grid {
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
@@ -43,6 +58,16 @@
   padding: clamp(22px, 3vw, 30px);
 }
 .pay-card h2 { font-family: var(--font-display); font-size: 20px; }
+
+/* En-tête + cadenas vert « Paiement sécurisé » (signal de confiance sémantique) */
+.pay-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.pay-secure-badge {
+  display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0;
+  font-size: 12.5px; font-weight: 600; color: #15803d;
+  background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 999px;
+  padding: 4px 10px;
+}
+.pay-secure-badge svg { color: #16a34a; }
 
 /* ── Sélecteur de moyen de paiement ──────────────────────── */
 .pay-methods {
@@ -223,3 +248,102 @@
   background: var(--paper-2); border: 1px solid var(--line); font-size: 14px;
 }
 .pay-success .ref b { font-family: var(--font-display); }
+
+/* ── Choix du point de départ (Phase 0 vs accès dashboard) ── */
+.plan-choice {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  margin-top: clamp(20px, 3vw, 32px);
+}
+@media (max-width: 640px) { .plan-choice { grid-template-columns: 1fr; } }
+.plan-opt {
+  text-align: left; cursor: pointer; background: var(--surface);
+  border: 1.5px solid var(--line); border-radius: var(--r-lg, 18px);
+  padding: 18px; display: flex; flex-direction: column; gap: 7px;
+  transition: border-color .18s, box-shadow .18s;
+}
+.plan-opt:hover { border-color: color-mix(in srgb, var(--green) 40%, var(--line)); }
+.plan-opt.active {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 12%, transparent);
+}
+.plan-opt-head { display: flex; align-items: center; justify-content: space-between; }
+.plan-ic {
+  width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center;
+  background: color-mix(in srgb, var(--green) 12%, transparent); color: var(--green);
+}
+.plan-check {
+  width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center;
+  border: 2px solid var(--line); color: #fff; flex-shrink: 0;
+}
+.plan-opt.active .plan-check { background: var(--green); border-color: var(--green); }
+.plan-opt b { font-family: var(--font-display); font-size: 16px; margin-top: 4px; }
+.plan-opt > span:not(.plan-opt-head):not(.plan-ic):not(.plan-check):not(.plan-price) {
+  color: var(--text-muted); font-size: 13.5px; line-height: 1.5;
+}
+.plan-price {
+  font-family: var(--font-display); font-weight: 700; font-size: 18px; color: var(--text);
+  margin-top: 6px;
+}
+.plan-price small { font-family: var(--font-sans); font-weight: 500; font-size: 12.5px; color: var(--text-muted); }
+
+/* ── Sous-titre + textarea + select du formulaire « sans Phase 0 » ── */
+.pay-sub { color: var(--text-muted); font-size: 14px; line-height: 1.55; margin-top: 6px; }
+.field textarea, .pay-select {
+  width: 100%; padding: 12px 14px; border: 1px solid var(--line);
+  border-radius: var(--r-md, 12px); background: var(--surface); color: var(--text);
+  font-size: 15px; font-family: var(--font-sans); resize: vertical;
+}
+.field textarea:focus, .pay-select:focus {
+  outline: none; border-color: var(--green);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 16%, transparent);
+}
+.field input[aria-invalid='true'] { border-color: #dc2626; }
+.field-err { color: #dc2626; font-size: 12.5px; margin: 0; }
+.co-error {
+  margin-top: 14px; border-radius: 12px; padding: 11px 14px; font-size: 14px;
+  background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c;
+}
+.pay-sim {
+  display: flex; align-items: flex-start; gap: 7px; font-size: 12.5px;
+  color: var(--text-muted); line-height: 1.45;
+}
+.pay-sim svg { flex-shrink: 0; margin-top: 1px; color: #16a34a; }
+
+/* ── Case « je ne suis pas un robot » / « j'ai commencé » ── */
+.captcha {
+  display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none;
+  border: 1px solid var(--line); border-radius: var(--r-md, 12px); padding: 13px 15px;
+  background: var(--paper-2); transition: border-color .15s, background .15s;
+}
+.captcha.is-checked { border-color: var(--green); background: var(--surface); }
+.captcha input { position: absolute; opacity: 0; width: 0; height: 0; }
+.captcha .box {
+  flex-shrink: 0; width: 26px; height: 26px; border-radius: 7px;
+  border: 2px solid var(--text-muted); background: #fff; display: grid; place-items: center;
+  color: var(--green);
+}
+.captcha.is-checked .box { border-color: var(--green); }
+.captcha .lbl { font-size: 14.5px; font-weight: 600; color: var(--text); }
+
+/* ── Confirmation « email envoyé » (branche sans Phase 0) ── */
+.co-confirm { text-align: center; }
+.co-confirm .ic {
+  width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 18px;
+  background: color-mix(in srgb, var(--green) 14%, transparent); color: var(--green);
+  display: grid; place-items: center;
+}
+.co-confirm h2 { font-family: var(--font-display); font-size: 24px; }
+.co-confirm p { color: var(--text-muted); margin-top: 12px; font-size: 15px; line-height: 1.55; }
+.co-confirm .email-pill {
+  display: inline-block; margin-top: 14px; padding: 9px 16px; border-radius: 999px;
+  background: var(--paper-2); border: 1px solid var(--line);
+  font-family: var(--font-display); font-weight: 600; font-size: 15px; color: var(--text);
+}
+.co-confirm-note {
+  display: flex; align-items: flex-start; gap: 8px; justify-content: center;
+  text-align: left; margin-top: 18px !important; padding: 14px 16px;
+  border-radius: 12px; background: var(--paper-2); border: 1px solid var(--line);
+  font-size: 13.5px !important;
+}
+.co-confirm-note svg { flex-shrink: 0; margin-top: 2px; color: var(--green); }
+.co-confirm .btn { width: 100%; }

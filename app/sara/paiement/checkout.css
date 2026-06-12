@@ -92,6 +92,144 @@
 }
 .wave-steps b { font-family: var(--font-display); }
 
+/* ---- Champs de formulaire (compte + carte) ---- */
+.co-form .field { display: flex; flex-direction: column; gap: 6px; }
+.co-form label,
+.pay-panel label { font-size: 13.5px; font-weight: 600; color: var(--text); }
+.co-form input,
+.pay-panel input {
+  width: 100%; border: 1px solid var(--line); border-radius: 12px;
+  padding: 11px 14px; font-size: 15px; background: var(--surface); color: var(--text);
+}
+.co-form input:focus,
+.pay-panel input:focus {
+  outline: none; border-color: var(--green);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 14%, transparent);
+}
+.co-form input[aria-invalid='true'] { border-color: #dc2626; }
+.field-err { color: #dc2626; font-size: 12.5px; margin: 0; }
+
+.co-error {
+  margin-top: 14px; border-radius: 12px; padding: 11px 14px; font-size: 14px;
+  background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c;
+}
+
+/* ---- « Je ne suis pas un robot » ---- */
+.captcha {
+  display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none;
+  border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
+  background: var(--paper-2); transition: border-color .15s, background .15s;
+}
+.captcha.is-checked { border-color: var(--green); background: var(--surface); }
+.captcha input { position: absolute; opacity: 0; width: 0; height: 0; }
+.captcha .box {
+  flex-shrink: 0; width: 26px; height: 26px; border-radius: 7px;
+  border: 2px solid var(--text-muted); background: #fff;
+  display: grid; place-items: center; color: var(--green);
+}
+.captcha.is-checked .box { border-color: var(--green); }
+.captcha .lbl { font-size: 14.5px; font-weight: 600; color: var(--text); }
+
+/* ---- En-tête « Moyen de paiement » + cadenas vert « sécurisé » ---- */
+.pay-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.pay-secure-badge {
+  display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0;
+  font-size: 12.5px; font-weight: 600; color: #15803d;       /* vert sémantique « sécurisé » */
+  background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 999px;
+  padding: 4px 10px;
+}
+.pay-secure-badge svg { color: #16a34a; }
+
+/* Logos de marque (Visa, Mastercard, PayPal, Stripe, Wave…) */
+.pay-logo { width: auto; display: inline-block; object-fit: contain; vertical-align: middle; }
+
+/* ---- Bandeau « seul Wave pour l'instant » ---- */
+.pay-notice {
+  display: flex; align-items: flex-start; gap: 8px; margin-top: 18px;
+  padding: 12px 14px; border-radius: 12px; font-size: 13.5px; line-height: 1.45;
+  background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8;
+}
+.pay-notice b { color: #1e3a8a; }
+.pay-notice svg { flex-shrink: 0; margin-top: 1px; color: #2563eb; }
+
+/* ---- Sélecteur de moyen de paiement ---- */
+.pay-methods {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px;
+}
+.pay-method {
+  position: relative;
+  text-align: left; cursor: pointer; border: 1.5px solid var(--line);
+  border-radius: 14px; padding: 12px 14px; background: var(--surface);
+  display: flex; flex-direction: column; gap: 8px; min-height: 64px;
+  transition: border-color .15s, box-shadow .15s;
+}
+.pay-method:hover { border-color: var(--text-muted); }
+.pay-method.is-active {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 12%, transparent);
+}
+.pay-method-logos { display: flex; align-items: center; gap: 8px; height: 22px; }
+.pay-method .pm-name { font-family: var(--font-display); font-weight: 600; font-size: 14px; }
+
+/* ---- Moyen de paiement à venir (désactivé, visible mais non cliquable) ---- */
+.pay-method.is-soon {
+  cursor: not-allowed; opacity: .55; background: var(--paper-2);
+}
+.pay-method.is-soon:hover { border-color: var(--line); }
+.pay-method.is-soon .pay-method-logos { filter: grayscale(1); }
+.pay-method .pm-soon {
+  position: absolute; top: 8px; right: 8px;
+  font-family: var(--font-sans); font-size: 10.5px; font-weight: 700;
+  letter-spacing: .02em; text-transform: uppercase; color: var(--text-muted);
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 999px; padding: 2px 8px;
+}
+
+/* Bandeau « Cartes acceptées » sous le formulaire carte */
+.pay-accepted {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  font-size: 12.5px; color: var(--text-muted);
+}
+.pay-accepted span { margin-right: 2px; }
+
+.pay-panel { margin-top: 18px; display: flex; flex-direction: column; gap: 14px; }
+.pay-panel .qr-box { margin-top: 4px; }
+.pay-sim {
+  display: flex; align-items: flex-start; gap: 7px; font-size: 12.5px;
+  color: var(--text-muted); line-height: 1.4;
+}
+.pay-sim svg { flex-shrink: 0; margin-top: 1px; }
+
+.paypal-mock {
+  text-align: center; border: 1px dashed var(--line); border-radius: 14px;
+  padding: 22px 16px; background: var(--paper-2);
+}
+.paypal-mock .pay-logo { margin: 0 auto; }
+.paypal-mock p { color: var(--text-muted); font-size: 13px; margin-top: 8px; }
+
+/* ---- Confirmation « email envoyé » ---- */
+.co-confirm { text-align: center; }
+.co-confirm .ic {
+  width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 18px;
+  background: color-mix(in srgb, var(--green) 14%, transparent); color: var(--green);
+  display: grid; place-items: center;
+}
+.co-confirm h2 { font-family: var(--font-display); font-size: 24px; }
+.co-confirm p { color: var(--text-muted); margin-top: 12px; font-size: 15px; line-height: 1.55; }
+.co-confirm .email-pill {
+  display: inline-block; margin-top: 14px; padding: 9px 16px; border-radius: 999px;
+  background: var(--paper-2); border: 1px solid var(--line);
+  font-family: var(--font-display); font-weight: 600; font-size: 15px; color: var(--text);
+}
+.co-confirm-note {
+  display: flex; align-items: flex-start; gap: 8px; justify-content: center;
+  text-align: left; margin-top: 18px !important; padding: 14px 16px;
+  border-radius: 12px; background: var(--paper-2); border: 1px solid var(--line);
+  font-size: 13.5px !important;
+}
+.co-confirm-note svg { flex-shrink: 0; margin-top: 2px; color: var(--green); }
+.co-confirm .btn { width: 100%; }
+
 /* ---- Succès ---- */
 .co-success { text-align: center; padding: 8px 4px; }
 .co-success .ic {

@@ -1,26 +1,40 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowLeft, ShieldCheck, FileText, FileCheck2, Layers } from 'lucide-react';
-import { formatFcfa, formatEur } from '@/lib/utils';
-import { PHASE_ZERO_FEE } from '../../offers';
-import PaiementForm from './PaiementForm';
+import { ArrowLeft, ShieldCheck, Check } from 'lucide-react';
+import { MustafCheckout } from './MustafCheckout';
+import { getStripe } from '@/lib/stripe';
 import '../../../landing.css';
 import './paiement.css';
 
 export const metadata: Metadata = {
-  title: 'Paiement Phase 0 — Mustaf | Litug',
+  title: 'Commencer — Mustaf | Litug',
   description:
-    'Réglez le forfait Phase 0 de Mustaf (plan d’architecte, dossier de permis, étude de sol) pour lancer votre projet de construction.',
+    'Lancez votre projet Mustaf : la Phase 0 complète (plan, permis, étude de sol) ou un accès direct au tableau de bord si vous avez déjà vos plans.',
 };
 
-// Détail du forfait Phase 0 (§8.1) — frais fixe payé une fois.
-const PHASE_ZERO_ITEMS = [
-  { icon: FileText, label: 'Plan d’architecte', note: 'Conçu selon votre terrain et votre budget' },
-  { icon: FileCheck2, label: 'Dossier de permis de construire', note: 'Montage et dépôt du dossier' },
-  { icon: Layers, label: 'Étude de sol', note: 'Fondations dimensionnées sans surprise' },
-];
+/** Au retour de Stripe (?paid=1&session_id=…), confirme que la session est payée. */
+async function confirmStripeReturn(sessionId?: string): Promise<string | null> {
+  if (!sessionId) return null;
+  try {
+    const session = await getStripe().checkout.sessions.retrieve(sessionId);
+    if (session.payment_status === 'paid') {
+      return session.customer_details?.email ?? session.customer_email ?? '';
+    }
+  } catch {
+    // session introuvable / clé absente
+  }
+  return null;
+}
 
-export default function PaiementPhaseZeroPage() {
+export default async function PaiementPhaseZeroPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ paid?: string; session_id?: string; canceled?: string }>;
+}) {
+  const sp = await searchParams;
+  const paidEmail = sp.paid === '1' ? await confirmStripeReturn(sp.session_id) : null;
+  const canceled = sp.canceled === '1';
+
   return (
     <div className="landing-root">
       {/* Nav simple */}
@@ -35,59 +49,37 @@ export default function PaiementPhaseZeroPage() {
       </nav>
 
       <header className="wrap offer-hero" style={{ paddingTop: 'clamp(32px,5vw,56px)' }}>
-        <span className="eyebrow">Paiement sécurisé · Phase 0</span>
+        <span className="eyebrow">Paiement sécurisé</span>
         <h1>Lancez votre projet <span className="accent">Mustaf</span></h1>
         <p>
-          Le forfait Phase 0 couvre tout ce qu’il faut avant de construire : plan, permis et étude de sol.
-          C’est un frais fixe, payé une seule fois — jamais prélevé sur l’argent de votre chantier.
+          Choisissez votre point de départ : la Phase 0 complète (plan, permis, étude de sol), ou —
+          si vous avez déjà vos plans, votre permis, voire votre fondation — un accès direct au
+          tableau de bord pour démarrer.
         </p>
       </header>
 
       <section className="section wrap" style={{ paddingTop: 'clamp(24px,3vw,36px)' }}>
-        <div className="pay-grid">
-          {/* Colonne formulaire de paiement */}
-          <div className="pay-form-col">
-            <PaiementForm />
+        {paidEmail !== null ? (
+          <div className="pay-card co-confirm" style={{ maxWidth: 560, margin: '0 auto' }}>
+            <span className="ic"><Check size={30} /></span>
+            <h2>Paiement reçu !</h2>
+            <p>
+              Merci, votre paiement a bien été confirmé. Votre inscription <b>Mustaf</b> est
+              enregistrée
+              {paidEmail ? <> et un <b>email d&apos;activation</b> vous a été envoyé à&nbsp;:</> : '.'}
+            </p>
+            {paidEmail && <span className="email-pill">{paidEmail}</span>}
+            <p className="co-confirm-note">
+              <ShieldCheck size={15} />
+              Notre équipe étudie votre dossier pour démarrer votre accompagnement.
+            </p>
+            <Link href="/login" className="btn btn-primary btn-lg" style={{ marginTop: 18 }}>
+              Aller à la connexion
+            </Link>
           </div>
-
-          {/* Colonne récap commande */}
-          <div className="pay-summary-col">
-            <div className="pay-card">
-              <h2>Forfait Phase 0</h2>
-              <ul className="pay-includes">
-                {PHASE_ZERO_ITEMS.map(({ icon: Icon, label, note }) => (
-                  <li key={label}>
-                    <span className="pay-includes-ic"><Icon size={17} /></span>
-                    <span>
-                      <b>{label}</b>
-                      <small>{note}</small>
-                    </span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="pay-total">
-                <span className="lbl">À payer aujourd’hui</span>
-                <span className="val">
-                  <span className="big">{formatFcfa(PHASE_ZERO_FEE)}</span>
-                  <small>≈ {formatEur(PHASE_ZERO_FEE)}</small>
-                </span>
-              </div>
-              <p className="pay-recurring">
-                Frais fixe unique. Les honoraires de gestion (8 à 16 %) ne démarrent qu’au lancement
-                du chantier, étalés phase par phase.
-              </p>
-            </div>
-
-            <div className="pay-trust">
-              <p>
-                <ShieldCheck size={15} />
-                Paiement chiffré. Votre argent de construction, lui, reste bloqué chez un tiers de
-                confiance et n’est libéré qu’après vérification sur le chantier.
-              </p>
-            </div>
-          </div>
-        </div>
+        ) : (
+          <MustafCheckout canceled={canceled} />
+        )}
       </section>
 
       <footer className="offer-foot">

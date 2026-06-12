@@ -699,8 +699,8 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 .cta-final { background: var(--ink); position: relative; overflow: hidden; text-align: center; }
 .cta-final .hero-bg { position: absolute; inset: 0; background-image: url(/call.jpg); }
 .cta-final-inner { position: relative; display: flex; flex-direction: column; align-items: center; }
-.cta-final .section-title { color: var(--ink) !important; max-width: 20ch; text-align: center; font-size: clamp(30px, 4.6vw, 54px); }
-.cta-final .section-sub { color: var(--text); text-align: center; }
+.cta-final .section-title { color: var(--text-on-ink) !important; max-width: 20ch; text-align: center; font-size: clamp(30px, 4.6vw, 54px); }
+.cta-final .section-sub { color: var(--text-on-ink-muted); text-align: center; }
 .cta-final-btns { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 34px; }
 
 /* ================================================================== */

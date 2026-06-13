@@ -1,10 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendNewRequestNotice } from '@/lib/email/send';
+import { rateLimit, clientIp } from '@/lib/rate-limit';
 
 const NOTIFY_TO = '+393291114442';
 
+const str = (v: unknown, max: number) =>
+  (typeof v === 'string' ? v : '').trim().slice(0, max);
+
 export async function POST(req: NextRequest) {
-  const { name, business, phone, email, tx } = await req.json();
+  // Anti-abus : cet endpoint déclenche un SMS Twilio (coût réel) + un email.
+  // 8 notifications / 10 min par IP suffisent largement aux inscriptions légitimes.
+  if (!rateLimit('notify-checkout', clientIp(req), 8, 10 * 60_000)) {
+    return NextResponse.json({ ok: false, error: 'Trop de requêtes.' }, { status: 429 });
+  }
+
+  let payload: Record<string, unknown>;
+  try {
+    payload = await req.json();
+  } catch {
+    return NextResponse.json({ ok: false, error: 'Requête invalide.' }, { status: 400 });
+  }
+
+  const name = str(payload.name, 120);
+  const business = str(payload.business, 160);
+  const phone = str(payload.phone, 40);
+  const email = str(payload.email, 200);
+  const tx = str(payload.tx, 200);
+
+  if (!name || !email) {
+    return NextResponse.json({ ok: false, error: 'Nom et email requis.' }, { status: 400 });
+  }
 
   // Notification email au fondateur (best-effort, en parallèle du SMS).
   const origin = req.nextUrl.origin;
@@ -47,10 +72,11 @@ export async function POST(req: NextRequest) {
   );
 
   if (!res.ok) {
-    const err = await res.json();
+    const err = await res.json().catch(() => ({}));
     console.error('[notify-checkout] Twilio error:', err);
-    // Ne pas bloquer le client sur une erreur SMS
-    return NextResponse.json({ ok: true, warn: 'sms_failed', detail: err });
+    // Ne pas bloquer le client sur une erreur SMS — et ne PAS renvoyer le détail
+    // Twilio au client (fuite d'info interne). On log côté serveur uniquement.
+    return NextResponse.json({ ok: true, warn: 'sms_failed' });
   }
 
   return NextResponse.json({ ok: true });

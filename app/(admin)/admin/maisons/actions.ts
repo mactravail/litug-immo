@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { createSupabaseAdminClient } from '@/lib/supabase-admin';
+import { requireAdmin } from '@/lib/auth/require-admin';
 
 export type ActionResult = { ok: true } | { ok: false; error: string };
 
@@ -18,6 +19,9 @@ export async function addHouseExample(input: {
   surface?: string;
   photo: string;
 }): Promise<ActionResult> {
+  const guard = await requireAdmin();
+  if (!guard.ok) return { ok: false, error: guard.error };
+
   const photo = (input.photo ?? '').trim();
   if (!photo.startsWith('data:image/')) {
     return { ok: false, error: 'Photo manquante ou format non supporté.' };
@@ -43,6 +47,9 @@ export async function addHouseExample(input: {
 
 /** Supprime un exemple de maison. */
 export async function deleteHouseExample(id: string): Promise<ActionResult> {
+  const guard = await requireAdmin();
+  if (!guard.ok) return { ok: false, error: guard.error };
+
   if (!id) return { ok: false, error: 'Identifiant manquant.' };
   try {
     const supabase = createSupabaseAdminClient();

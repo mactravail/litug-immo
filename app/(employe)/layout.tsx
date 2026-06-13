@@ -1,9 +1,9 @@
-import { ShieldCheck, LogOut } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 import { EmployeSidebar } from '@/components/employe/EmployeSidebar';
 import { EmployeMobileNav } from '@/components/employe/EmployeMobileNav';
+import { EmployeMobileMenu } from '@/components/employe/EmployeMobileMenu';
 import { getCurrentWorker, getCurrentWorkerId, selectableWorkers } from '@/lib/employe/current';
 import { TEAM_ROLE_LABEL } from '@/lib/admin/labels';
-import { logout } from '@/app/(auth)/login/actions';
 
 /**
  * Espace employé (travailleurs terrain) — route group isolé, séparé de
@@ -27,17 +27,18 @@ export default async function EmployeLayout({ children }: { children: React.Reac
         {/* Bandeau confiance — l'employé ne voit que ce qui le concerne (prompt §2.1) */}
         <header className="sticky top-0 z-40 bg-ink text-on-ink px-4 sm:px-6 py-2.5">
           <div className="max-w-3xl mx-auto flex items-center gap-3 text-xs">
-            <ShieldCheck size={13} className="text-gold shrink-0" />
-            <span className="text-on-ink-muted">
+            {/* Mobile : menu hamburger (tous les menus + Sécurité + profil + déconnexion). */}
+            <EmployeMobileMenu
+              workerName={worker.displayName}
+              role={worker.role}
+              workers={workers}
+              currentId={currentId}
+            />
+            {/* Desktop : bandeau de confiance (la sidebar porte la navigation). */}
+            <ShieldCheck size={13} className="text-gold shrink-0 hidden lg:block" />
+            <span className="text-on-ink-muted hidden lg:inline">
               Tu ne vois que <strong className="text-on-ink font-medium">tes</strong> tâches et <strong className="text-on-ink font-medium">ton</strong> argent. Chaque dépense se justifie par un reçu.
             </span>
-            {/* Déconnexion mobile : la sidebar (desktop) la porte déjà. */}
-            <form action={logout} className="lg:hidden ml-auto shrink-0">
-              <button type="submit" className="inline-flex items-center gap-1.5 text-on-ink-muted hover:text-white transition-colors cursor-pointer">
-                <LogOut size={14} />
-                Quitter
-              </button>
-            </form>
           </div>
         </header>
 

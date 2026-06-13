@@ -4,34 +4,43 @@ import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Wallet, ReceiptText, Camera, Users, FileText, LogOut, Menu, X } from 'lucide-react';
+import { ListTodo, ClipboardCheck, Wrench, Wallet, LogOut, ShieldCheck, Target, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { logout } from '@/app/(auth)/login/actions';
+import { TEAM_ROLE_LABEL } from '@/lib/admin/labels';
+import type { TeamRole } from '@/lib/admin/types';
+import { WorkerSwitcher } from './WorkerSwitcher';
 
-const NAV = [
-  { href: '/projet',                label: 'Mon projet',        icon: Home },
-  { href: '/projet/epargne',        label: 'Compte épargne',    icon: Wallet },
-  { href: '/projet/depenses',       label: 'Dépenses',          icon: ReceiptText },
-  { href: '/projet/chantier',       label: 'Suivi du chantier', icon: Camera },
-  { href: '/projet/contributions',  label: 'Contributions',     icon: Users },
-  { href: '/projet/documents',      label: 'Documents',         icon: FileText },
+/** Navigation terrain (chantier) — procurement / site_agent / inspector / controller. */
+const FIELD_NAV = [
+  { href: '/equipe',              label: 'Mes tâches',     icon: ListTodo },
+  { href: '/equipe/portefeuille', label: 'Mon argent',     icon: Wallet },
+  { href: '/equipe/redditions',   label: 'Mes redditions', icon: ClipboardCheck },
+  { href: '/equipe/action',       label: 'Action métier',  icon: Wrench },
 ];
 
-interface Props {
-  ownerName: string;
-  tierLabel: string;
+/** Navigation prospecteur commercial — son seul métier, c'est la prospection. */
+const PROSPECT_NAV = [
+  { href: '/equipe/prospection', label: 'Prospection', icon: Target },
+];
+
+function navFor(role: TeamRole) {
+  return role === 'prospector' ? PROSPECT_NAV : FIELD_NAV;
 }
 
-function initials(name: string) {
-  return name.split(' ').slice(0, 2).map(w => w[0]?.toUpperCase() ?? '').join('');
+interface Props {
+  workerName: string;
+  role: TeamRole;
+  workers: { id: string; name: string; role: string }[];
+  currentId: string;
 }
 
 /**
- * Menu hamburger mobile pour l'espace Mustaf — remplace le bandeau de texte
- * dans l'en-tête. Donne accès à tous les menus + au profil + à la déconnexion
- * (la sidebar desktop porte déjà ce rôle, donc masqué dès `lg`).
+ * Menu hamburger mobile pour l'espace équipe — remplace le bandeau de texte
+ * dans l'en-tête. Donne accès à tous les menus + Sécurité + sélecteur de démo
+ * + profil + déconnexion (la sidebar desktop porte déjà ce rôle, donc `lg:hidden`).
  */
-export function MustafMobileMenu({ ownerName, tierLabel }: Props) {
+export function EmployeMobileMenu({ workerName, role, workers, currentId }: Props) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -43,7 +52,7 @@ export function MustafMobileMenu({ ownerName, tierLabel }: Props) {
   // Verrouille le scroll de l'arrière-plan quand le panneau est ouvert.
   // Dans ce layout, ce n'est PAS le <body> qui défile mais la colonne
   // `flex-1 overflow-y-auto` du layout — on remonte donc le DOM pour geler
-  // chaque ancêtre réellement scrollable (sinon le fond continue de bouger sur iOS).
+  // chaque ancêtre réellement scrollable (sinon le fond bouge encore sur iOS).
   useEffect(() => {
     if (!open) return;
     const scrollers: HTMLElement[] = [];
@@ -61,6 +70,8 @@ export function MustafMobileMenu({ ownerName, tierLabel }: Props) {
       document.body.style.overflow = '';
     };
   }, [open]);
+
+  const securiteActive = pathname.startsWith('/equipe/securite');
 
   return (
     <div ref={triggerRef} className="lg:hidden">
@@ -94,7 +105,7 @@ export function MustafMobileMenu({ ownerName, tierLabel }: Props) {
               <div>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/logo.png" alt="Litug" className="h-10 w-auto" />
-                <p className="text-[11px] text-muted mt-1">Espace construction · Mustaf</p>
+                <p className="text-[11px] text-muted mt-1">Espace équipe · Terrain</p>
               </div>
               <button
                 type="button"
@@ -109,8 +120,8 @@ export function MustafMobileMenu({ ownerName, tierLabel }: Props) {
             {/* Navigation — seule cette zone défile (overscroll-contain évite
                 que le scroll se propage à l'arrière-plan sur iOS). */}
             <nav className="flex-1 space-y-1 overflow-y-auto overscroll-contain">
-              {NAV.map(({ href, label, icon: Icon }) => {
-                const active = href === '/projet' ? pathname === '/projet' : pathname.startsWith(href);
+              {navFor(role).map(({ href, label, icon: Icon }) => {
+                const active = href === '/equipe' ? pathname === '/equipe' : pathname.startsWith(href);
                 return (
                   <Link
                     key={href}
@@ -126,19 +137,34 @@ export function MustafMobileMenu({ ownerName, tierLabel }: Props) {
                   </Link>
                 );
               })}
+
+              <Link
+                href="/equipe/securite"
+                onClick={() => setOpen(false)}
+                className={cn(
+                  'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors',
+                  securiteActive ? 'bg-accent-light text-accent' : 'text-muted hover:bg-stone-50 hover:text-text',
+                )}
+              >
+                <ShieldCheck size={17} />
+                Sécurité
+              </Link>
             </nav>
 
-            {/* Profil + déconnexion */}
-            <div className="border-t border-stone-100 pt-4 mt-4 space-y-1">
-              <div className="flex items-center gap-3 px-3 py-2">
-                <div className="w-8 h-8 rounded-full bg-accent-light flex items-center justify-center text-accent text-xs font-bold shrink-0">
-                  {initials(ownerName)}
+            {/* Profil + sélecteur de démo + déconnexion */}
+            <div className="border-t border-stone-100 pt-4 mt-4 space-y-3">
+              <div className="flex items-center gap-3 px-3">
+                <div className="w-8 h-8 rounded-full bg-ink flex items-center justify-center text-on-ink text-xs font-bold shrink-0">
+                  {workerName.slice(0, 2).toUpperCase()}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-text truncate">{ownerName}</p>
-                  <p className="text-[11px] text-muted">Formule {tierLabel}</p>
+                  <p className="text-sm font-medium text-text truncate">{workerName}</p>
+                  <p className="text-[11px] text-muted">{TEAM_ROLE_LABEL[role]}</p>
                 </div>
               </div>
+
+              <WorkerSwitcher workers={workers} currentId={currentId} />
+
               <form action={logout}>
                 <button
                   type="submit"

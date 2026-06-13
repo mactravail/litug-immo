@@ -7,7 +7,7 @@ import { formatFcfa, formatEur } from '@/lib/utils';
 import { PHASE_ZERO_FEE, type TierId } from '../../offers';
 import { submitPhaseZero } from './actions';
 
-type Method = 'card' | 'paypal' | 'mobile';
+type Method = 'wave' | 'card' | 'paypal' | 'mobile';
 
 /* Logos de marque (public/pay/*.svg + Wave). */
 function Logo({ src, alt, h = 22 }: { src: string; alt: string; h?: number }) {
@@ -24,7 +24,7 @@ function Logo({ src, alt, h = 22 }: { src: string; alt: string; h?: number }) {
 export default function PaiementForm({ canceled, tier }: { canceled?: boolean; tier?: TierId }) {
   const [state, action, isPending] = useActionState(submitPhaseZero, null);
 
-  const [method, setMethod] = useState<Method>('card');
+  const [method, setMethod] = useState<Method>('wave');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [captcha, setCaptcha] = useState(false);
@@ -73,10 +73,12 @@ export default function PaiementForm({ canceled, tier }: { canceled?: boolean; t
     );
   }
 
-  const methods: { id: Method; label: string; logos: React.ReactNode }[] = [
+  const methods: { id: Method; label: string; logos: React.ReactNode; soon?: boolean }[] = [
+    { id: 'wave', label: 'Wave', logos: <Logo src="/wave-icon.png" alt="Wave" h={22} /> },
     {
       id: 'card',
       label: 'Carte bancaire',
+      soon: true,
       logos: (
         <>
           <Logo src="/pay/visa.svg" alt="Visa" h={13} />
@@ -84,16 +86,12 @@ export default function PaiementForm({ canceled, tier }: { canceled?: boolean; t
         </>
       ),
     },
-    { id: 'paypal', label: 'PayPal', logos: <Logo src="/pay/paypal.svg" alt="PayPal" h={16} /> },
+    { id: 'paypal', label: 'PayPal', soon: true, logos: <Logo src="/pay/paypal.svg" alt="PayPal" h={16} /> },
     {
       id: 'mobile',
       label: 'Mobile Money',
-      logos: (
-        <>
-          <Logo src="/wave-icon.png" alt="Wave" h={18} />
-          <Logo src="/pay/orange-money.svg" alt="Orange Money" h={18} />
-        </>
-      ),
+      soon: true,
+      logos: <Logo src="/pay/orange-money.svg" alt="Orange Money" h={18} />,
     },
   ];
 
@@ -154,18 +152,48 @@ export default function PaiementForm({ canceled, tier }: { canceled?: boolean; t
         {/* ── Moyen de paiement ── */}
         <input type="hidden" name="method" value={method} />
         {tier && <input type="hidden" name="tier" value={tier} />}
+        <p className="pay-notice">
+          <ShieldCheck size={15} />
+          <span>
+            Pour l&apos;instant, seul le paiement par <b>Wave</b> est disponible. Carte bancaire,
+            PayPal et Mobile Money arrivent bientôt.
+          </span>
+        </p>
         <div className="pay-methods" role="tablist" aria-label="Moyen de paiement">
-          {methods.map(({ id, label, logos }) => (
+          {methods.map(({ id, label, logos, soon }) => (
             <button
               key={id} type="button" role="tab" aria-selected={method === id}
-              className={`pay-method${method === id ? ' active' : ''}`}
-              onClick={() => setMethod(id)}
+              className={`pay-method${method === id ? ' active' : ''}${soon ? ' is-soon' : ''}`}
+              onClick={() => { if (!soon) setMethod(id); }}
+              disabled={soon}
+              aria-disabled={soon}
+              title={soon ? 'Bientôt disponible' : undefined}
             >
+              {soon && <span className="pm-soon">En cours</span>}
               <span className="pay-method-logos">{logos}</span>
               <span className="pay-method-label">{label}</span>
             </button>
           ))}
         </div>
+
+        {method === 'wave' && (
+          <div className="pay-wave">
+            <div className="qr-box">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/wave-qr.png" alt="QR code Wave — Litug" />
+            </div>
+            <p className="qr-cap">
+              Scannez ce code avec l&apos;application <b>Wave</b> et envoyez <b>{formatFcfa(PHASE_ZERO_FEE)}</b>.
+            </p>
+            <p className="pay-sim">
+              <ShieldCheck size={14} />
+              <span>
+                Après le paiement, cliquez sur le bouton ci-dessous ; notre équipe confirme la
+                réception sous <b>24&nbsp;h</b>.
+              </span>
+            </p>
+          </div>
+        )}
 
         {method === 'card' && (
           <>

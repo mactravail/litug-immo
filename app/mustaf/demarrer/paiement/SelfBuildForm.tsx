@@ -6,17 +6,19 @@ import { Lock, ExternalLink, ShieldCheck, Mail, Check } from 'lucide-react';
 import type { TierId } from '../../offers';
 import { submitSelfBuild } from './actions';
 
-type Method = 'mastercard' | 'paypal' | 'stripe';
+type Method = 'wave' | 'mastercard' | 'paypal' | 'stripe';
 
 function Logo({ src, alt, h = 22 }: { src: string; alt: string; h?: number }) {
   // eslint-disable-next-line @next/next/no-img-element
   return <img className="pay-logo" src={src} alt={alt} style={{ height: h }} />;
 }
 
-const METHODS: { id: Method; label: string; logos: React.ReactNode }[] = [
+const METHODS: { id: Method; label: string; logos: React.ReactNode; soon?: boolean }[] = [
+  { id: 'wave', label: 'Wave', logos: <Logo src="/wave-icon.png" alt="Wave" h={22} /> },
   {
     id: 'mastercard',
     label: 'Carte bancaire',
+    soon: true,
     logos: (
       <>
         <Logo src="/pay/visa.svg" alt="Visa" h={13} />
@@ -24,8 +26,8 @@ const METHODS: { id: Method; label: string; logos: React.ReactNode }[] = [
       </>
     ),
   },
-  { id: 'paypal', label: 'PayPal', logos: <Logo src="/pay/paypal.svg" alt="PayPal" h={17} /> },
-  { id: 'stripe', label: 'Stripe', logos: <Logo src="/pay/stripe.svg" alt="Stripe" h={16} /> },
+  { id: 'paypal', label: 'PayPal', soon: true, logos: <Logo src="/pay/paypal.svg" alt="PayPal" h={17} /> },
+  { id: 'stripe', label: 'Stripe', soon: true, logos: <Logo src="/pay/stripe.svg" alt="Stripe" h={16} /> },
 ];
 
 const STAGES = [
@@ -39,7 +41,7 @@ const STAGES = [
 export function SelfBuildForm({ canceled, tier }: { canceled?: boolean; tier?: TierId }) {
   const [state, action, isPending] = useActionState(submitSelfBuild, null);
 
-  const [method, setMethod] = useState<Method>('mastercard');
+  const [method, setMethod] = useState<Method>('wave');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [captcha, setCaptcha] = useState(false);
@@ -184,18 +186,48 @@ export function SelfBuildForm({ canceled, tier }: { canceled?: boolean; tier?: T
         {/* ── Moyen de paiement (50 €) ── */}
         <input type="hidden" name="method" value={method} />
         {tier && <input type="hidden" name="tier" value={tier} />}
+        <p className="pay-notice">
+          <ShieldCheck size={15} />
+          <span>
+            Pour l&apos;instant, seul le paiement par <b>Wave</b> est disponible. Carte bancaire,
+            PayPal et Stripe arrivent bientôt.
+          </span>
+        </p>
         <div className="pay-methods" role="tablist" aria-label="Moyen de paiement">
           {METHODS.map((m) => (
             <button
               key={m.id} type="button" role="tab" aria-selected={method === m.id}
-              className={`pay-method${method === m.id ? ' active' : ''}`}
-              onClick={() => setMethod(m.id)}
+              className={`pay-method${method === m.id ? ' active' : ''}${m.soon ? ' is-soon' : ''}`}
+              onClick={() => { if (!m.soon) setMethod(m.id); }}
+              disabled={m.soon}
+              aria-disabled={m.soon}
+              title={m.soon ? 'Bientôt disponible' : undefined}
             >
+              {m.soon && <span className="pm-soon">En cours</span>}
               <span className="pay-method-logos">{m.logos}</span>
               <span className="pay-method-label">{m.label}</span>
             </button>
           ))}
         </div>
+
+        {method === 'wave' && (
+          <div className="pay-wave">
+            <div className="qr-box">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/wave-qr.png" alt="QR code Wave — Litug" />
+            </div>
+            <p className="qr-cap">
+              Scannez ce code avec l&apos;application <b>Wave</b> et envoyez <b>50&nbsp;€</b>.
+            </p>
+            <p className="pay-sim">
+              <ShieldCheck size={14} />
+              <span>
+                Après le paiement, cliquez sur le bouton ci-dessous ; notre équipe confirme la
+                réception sous <b>24&nbsp;h</b>.
+              </span>
+            </p>
+          </div>
+        )}
 
         {isCard && (
           <>

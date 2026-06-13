@@ -72,13 +72,15 @@
 /* ── Sélecteur de moyen de paiement ──────────────────────── */
 .pay-methods {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
   margin: 20px 0 24px;
 }
-@media (max-width: 420px) { .pay-methods { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .pay-methods { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 360px) { .pay-methods { grid-template-columns: 1fr; } }
 
 .pay-method {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -101,6 +103,27 @@
   background: color-mix(in srgb, var(--green) 7%, var(--surface));
   box-shadow: inset 0 0 0 1px var(--green);
 }
+/* Moyen de paiement pas encore disponible : grisé, non cliquable, pastille « En cours ». */
+.pay-method.is-soon {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--paper-2);
+}
+.pay-method.is-soon:hover { border-color: var(--line); }
+.pay-method.is-soon .pay-method-logos { filter: grayscale(1); }
+.pm-soon {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+}
 .pay-method-logos {
   display: flex;
   align-items: center;
@@ -108,6 +131,48 @@
   height: 20px;
 }
 .pay-method-label { line-height: 1; }
+
+/* Bandeau « seul Wave est disponible pour l'instant » (note verte = sécurité/info). */
+.pay-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 4px 0 16px;
+  padding: 11px 14px;
+  border-radius: 12px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.pay-notice svg { flex-shrink: 0; margin-top: 1px; color: #16a34a; }
+.pay-notice b { color: #166534; }
+
+/* ── Panneau Wave (QR à scanner) ─────────────────────────── */
+.pay-wave {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 18px;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-md, 14px);
+  background: var(--paper);
+}
+.qr-box {
+  width: 184px;
+  height: 184px;
+  padding: 10px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+}
+.qr-box img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.qr-cap { text-align: center; color: var(--text-muted); font-size: 13.5px; margin-top: 12px; }
+.qr-cap b { color: var(--text); }
+.pay-wave .pay-sim { margin-top: 12px; justify-content: center; text-align: center; }
 
 /* Logos de marque */
 .pay-logo { width: auto; display: block; object-fit: contain; }

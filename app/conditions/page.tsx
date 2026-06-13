@@ -86,7 +86,10 @@ export default function ConditionsPage() {
 
           <h2>9. Contact</h2>
           <p>
-            Pour toute question, écrivez-nous à <a href="/#contact">[contact@litug.com]</a>.
+            Pour toute question, écrivez-nous à{' '}
+            <a href="mailto:contact@litug.com">contact@litug.com</a> ou appelez-nous au{' '}
+            <a href="tel:+393291114442">+39 329 111 4442</a> (Europe) ou au{' '}
+            <a href="tel:+221775008583">+221 77 500 85 83</a> (Sénégal).
           </p>
         </div>
       </main>

@@ -43,10 +43,16 @@ const JOBS = [
     desc: 'Accompagner les vendeurs et promoteurs dans l’adoption de Sara.',
   },
   {
-    title: 'Développeur·se Full-Stack',
-    location: 'Remote',
+    title: 'Prospecteur réseaux sociaux (terrains)',
+    location: 'Sénégal · Terrain',
     type: 'Temps plein',
-    desc: 'Next.js, Supabase, n8n — construire le produit de bout en bout.',
+    desc: 'Repérer les vendeurs de terrain sur les réseaux sociaux et leur proposer Sara.',
+  },
+  {
+    title: 'Entreprise de construction partenaire',
+    location: 'Sénégal · Partenariat',
+    type: 'Collaboration',
+    desc: 'Entreprise de construction professionnelle pour collaborer sur les chantiers Mustaf.',
   },
 ];
 

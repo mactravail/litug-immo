@@ -72,17 +72,52 @@ export const metadata: Metadata = {
 };
 
 // Données structurées (schema.org) — aident Google à comprendre qui est Litug
-// et à afficher un résultat enrichi (nom, logo, zone desservie).
+// et à alimenter le panneau de marque (Knowledge Panel) : nom, logo, langue,
+// zone desservie, contact. Graphe Organization + WebSite reliés par @id.
+// NB : `sameAs` (profils sociaux officiels) renforce fortement le panneau de
+// marque ; à compléter dès que les réseaux sociaux existent.
+const ORG_ID = `${SITE_URL}/#organization`;
 const JSON_LD = {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "Litug",
-  url: SITE_URL,
-  logo: `${SITE_URL}/logo.png`,
-  description: SITE_DESCRIPTION,
-  areaServed: "SN",
-  email: "contact@litug.com",
-  knowsLanguage: ["fr"],
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": ORG_ID,
+      name: "Litug",
+      legalName: "Litug",
+      url: SITE_URL,
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE_URL}/logo.png`,
+        caption: "Litug",
+      },
+      image: `${SITE_URL}/blog-hero.jpg`,
+      description: SITE_DESCRIPTION,
+      slogan: "Acheter un terrain et construire au Sénégal, sans arnaque.",
+      areaServed: { "@type": "Country", name: "Sénégal" },
+      knowsLanguage: ["fr"],
+      email: "contact@litug.com",
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          contactType: "customer support",
+          email: "contact@litug.com",
+          areaServed: "SN",
+          availableLanguage: ["French"],
+        },
+      ],
+      // sameAs: ["https://instagram.com/…", "https://facebook.com/…"],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: SITE_URL,
+      name: "Litug",
+      description: SITE_DESCRIPTION,
+      inLanguage: "fr",
+      publisher: { "@id": ORG_ID },
+    },
+  ],
 };
 
 export default function RootLayout({

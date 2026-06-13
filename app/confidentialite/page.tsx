@@ -71,7 +71,9 @@ export default function ConfidentialitePage() {
           <p>
             Vous disposez d&apos;un droit d&apos;accès, de rectification, de suppression et
             d&apos;opposition concernant vos données. Pour exercer ces droits, écrivez-nous à{' '}
-            <a href="/#contact">[contact@litug.com]</a>.
+            <a href="mailto:contact@litug.com">contact@litug.com</a> ou appelez-nous au{' '}
+            <a href="tel:+393291114442">+39 329 111 4442</a> (Europe) ou au{' '}
+            <a href="tel:+221775008583">+221 77 500 85 83</a> (Sénégal).
           </p>
 
           <h2>7. Modifications</h2>

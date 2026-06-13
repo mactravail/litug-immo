@@ -3,6 +3,7 @@
 import { headers } from 'next/headers';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { createCheckoutSession, fcfaToEurCents } from '@/lib/stripe';
+import { validatePassword } from '@/lib/auth/password-policy';
 import { PHASE_ZERO_FEE, TIERS } from '../../offers';
 
 export type SelfBuildState =
@@ -35,7 +36,8 @@ export async function submitPhaseZero(
   if (!name) return { error: 'Indique ton nom complet.' };
   if (!phone) return { error: 'Indique ton numéro WhatsApp.' };
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: 'Adresse email invalide.' };
-  if (password.length < 8) return { error: 'Le mot de passe doit faire au moins 8 caractères.' };
+  const pwError = validatePassword(password);
+  if (pwError) return { error: pwError };
   if (password !== confirm) return { error: 'Les deux mots de passe ne correspondent pas.' };
   if (captcha !== 'on') return { error: "Confirme que tu n'es pas un robot." };
   if (!PHASE_ZERO_METHODS.includes(method)) return { error: 'Choisis un moyen de paiement.' };
@@ -120,10 +122,10 @@ export async function submitPhaseZero(
   return { ok: true, email, name };
 }
 
-const METHODS = ['mastercard', 'paypal', 'stripe'] as const;
+const METHODS = ['wave', 'mastercard', 'paypal', 'stripe'] as const;
 type PaymentMethod = (typeof METHODS)[number];
 
-const PHASE_ZERO_METHODS = ['card', 'paypal', 'mobile'] as const;
+const PHASE_ZERO_METHODS = ['wave', 'card', 'paypal', 'mobile'] as const;
 
 const STAGES = ['plans', 'permis', 'fondation', 'elevation', 'autre'] as const;
 
@@ -158,7 +160,8 @@ export async function submitSelfBuild(
   if (!name) return { error: 'Indique ton nom complet.' };
   if (!phone) return { error: 'Indique ton numéro WhatsApp.' };
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: 'Adresse email invalide.' };
-  if (password.length < 8) return { error: 'Le mot de passe doit faire au moins 8 caractères.' };
+  const pwError = validatePassword(password);
+  if (pwError) return { error: pwError };
   if (password !== confirm) return { error: 'Les deux mots de passe ne correspondent pas.' };
   if (captcha !== 'on') return { error: "Confirme que tu n'es pas un robot." };
   if (!METHODS.includes(method)) return { error: 'Choisis un moyen de paiement.' };

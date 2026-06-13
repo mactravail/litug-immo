@@ -33,10 +33,12 @@ export default function MentionsLegalesPage() {
             commerce sous le numéro <strong>[RCCM / NINEA]</strong>.
           </p>
           <ul>
+            <li>Site : <strong>litug.com</strong></li>
             <li>Siège social : [adresse complète], Dakar, Sénégal</li>
             <li>Directeur de la publication : [Nom du responsable]</li>
-            <li>E-mail : [contact@litug.com]</li>
-            <li>Téléphone : [+221 …]</li>
+            <li>E-mail : <a href="mailto:contact@litug.com">contact@litug.com</a></li>
+            <li>Téléphone (Europe) : <a href="tel:+393291114442">+39 329 111 4442</a></li>
+            <li>Téléphone (Sénégal) : <a href="tel:+221775008583">+221 77 500 85 83</a></li>
           </ul>
 
           <h2>2. Hébergement</h2>
@@ -72,7 +74,9 @@ export default function MentionsLegalesPage() {
           <h2>6. Contact</h2>
           <p>
             Pour toute question relative aux présentes mentions, écrivez-nous à{' '}
-            <a href="/#contact">[contact@litug.com]</a>.
+            <a href="mailto:contact@litug.com">contact@litug.com</a> ou appelez-nous au{' '}
+            <a href="tel:+393291114442">+39 329 111 4442</a> (Europe) ou au{' '}
+            <a href="tel:+221775008583">+221 77 500 85 83</a> (Sénégal).
           </p>
         </div>
       </main>

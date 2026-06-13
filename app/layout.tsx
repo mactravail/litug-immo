@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Archivo, Inter } from "next/font/google";
 import { SITE_URL } from "@/lib/site";
+import PWARegister from "./components/PWARegister";
 import "./globals.css";
 
 // Identité grayscale : trio de polices, gratuites/libres de droits.
@@ -37,6 +38,8 @@ export const metadata: Metadata = {
   title: "Litug — Terrains vérifiés & construction suivie au Sénégal",
   description: SITE_DESCRIPTION,
   applicationName: "Litug",
+  // PWA iOS : ouverture en plein écran depuis l'écran d'accueil + titre court.
+  appleWebApp: { capable: true, title: "Litug", statusBarStyle: "default" },
   keywords: [
     "terrain Sénégal",
     "acheter terrain Dakar",
@@ -120,6 +123,14 @@ const JSON_LD = {
   ],
 };
 
+// Couleur de la barre d'état (mobile) + zoom — palette monochrome (thème noir).
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -137,6 +148,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
         />
+        <PWARegister />
         {children}
       </body>
     </html>

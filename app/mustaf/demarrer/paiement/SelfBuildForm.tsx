@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Lock, ExternalLink, ShieldCheck, Mail, Check } from 'lucide-react';
+import type { TierId } from '../../offers';
 import { submitSelfBuild } from './actions';
 
 type Method = 'mastercard' | 'paypal' | 'stripe';
@@ -35,7 +36,7 @@ const STAGES = [
   { value: 'autre', label: 'Autre — je précise ci-dessous' },
 ];
 
-export function SelfBuildForm({ canceled }: { canceled?: boolean }) {
+export function SelfBuildForm({ canceled, tier }: { canceled?: boolean; tier?: TierId }) {
   const [state, action, isPending] = useActionState(submitSelfBuild, null);
 
   const [method, setMethod] = useState<Method>('mastercard');
@@ -49,6 +50,11 @@ export function SelfBuildForm({ canceled }: { canceled?: boolean }) {
     if (state && 'checkoutUrl' in state && state.checkoutUrl) {
       window.location.href = state.checkoutUrl;
     }
+  }, [state]);
+
+  // En cas d'erreur, on fait recocher le captcha (les autres champs restent remplis).
+  useEffect(() => {
+    if (state?.error) setCaptcha(false);
   }, [state]);
 
   const pwMismatch = confirm.length > 0 && password !== confirm;
@@ -175,8 +181,9 @@ export function SelfBuildForm({ canceled }: { canceled?: boolean }) {
           </>
         )}
 
-        {/* ── Moyen de paiement (10 €) ── */}
+        {/* ── Moyen de paiement (50 €) ── */}
         <input type="hidden" name="method" value={method} />
+        {tier && <input type="hidden" name="tier" value={tier} />}
         <div className="pay-methods" role="tablist" aria-label="Moyen de paiement">
           {METHODS.map((m) => (
             <button
@@ -232,8 +239,8 @@ export function SelfBuildForm({ canceled }: { canceled?: boolean }) {
             : isPending
               ? 'Traitement…'
               : isCard
-                ? 'Payer 10 € par carte'
-                : 'Payer 10 € et commencer'}
+                ? 'Payer 50 € par carte'
+                : 'Payer 50 € et commencer'}
         </button>
         <p className="pay-secure" style={{ marginTop: 2 }}>
           Un email d&apos;activation te sera envoyé après l&apos;inscription.

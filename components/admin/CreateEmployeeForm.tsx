@@ -14,12 +14,35 @@ const LABEL = 'block text-xs font-medium text-text mb-1';
  *  depuis sa propre page (/admin/prospection) via le rôle verrouillé `lockedRole`. */
 const FIELD_ROLES = ['site_agent', 'procurement', 'inspector', 'controller'] as const;
 
-/** Mot de passe provisoire lisible (évite 0/O, 1/l) — l'admin le dicte à l'employé. */
+/**
+ * Mot de passe provisoire lisible (évite 0/O, 1/l) — l'admin le dicte à l'employé.
+ * Respecte la politique : 8+ caractères, majuscule, minuscule, chiffre, caractère spécial.
+ */
 function generatePassword(): string {
-  const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+  const upper = 'ABCDEFGHJKMNPQRSTUVWXYZ';
+  const lower = 'abcdefghijkmnpqrstuvwxyz';
+  const digits = '23456789';
+  const special = '!@#$%&*';
+  const all = upper + lower + digits + special;
+
   const arr = new Uint32Array(10);
   crypto.getRandomValues(arr);
-  return Array.from(arr, n => chars[n % chars.length]).join('');
+
+  const chars = [
+    upper[arr[0] % upper.length],
+    lower[arr[1] % lower.length],
+    digits[arr[2] % digits.length],
+    special[arr[3] % special.length],
+    ...Array.from(arr.slice(4), n => all[n % all.length]),
+  ];
+
+  // Mélange pour ne pas avoir un ordre prévisible (Maj, min, chiffre, spécial, ...).
+  for (let i = chars.length - 1; i > 0; i--) {
+    const j = arr[i % arr.length] % (i + 1);
+    [chars[i], chars[j]] = [chars[j], chars[i]];
+  }
+
+  return chars.join('');
 }
 
 /**

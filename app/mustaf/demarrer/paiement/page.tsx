@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { ArrowLeft, ShieldCheck, Check } from 'lucide-react';
 import { MustafCheckout } from './MustafCheckout';
 import { getStripe } from '@/lib/stripe';
+import { TIERS, type TierId } from '../../offers';
 import '../../../landing.css';
 import './paiement.css';
 
@@ -29,11 +31,18 @@ async function confirmStripeReturn(sessionId?: string): Promise<string | null> {
 export default async function PaiementPhaseZeroPage({
   searchParams,
 }: {
-  searchParams: Promise<{ paid?: string; session_id?: string; canceled?: string }>;
+  searchParams: Promise<{ paid?: string; session_id?: string; canceled?: string; tier?: string }>;
 }) {
   const sp = await searchParams;
   const paidEmail = sp.paid === '1' ? await confirmStripeReturn(sp.session_id) : null;
   const canceled = sp.canceled === '1';
+  const tier = TIERS.find((t) => t.id === sp.tier)?.id as TierId | undefined;
+
+  // On n'accède au paiement qu'après avoir choisi un abonnement Mustaf — sauf
+  // pour le retour Stripe (succès/annulation), qui ne porte pas le tier.
+  if (!tier && sp.paid !== '1' && sp.canceled !== '1') {
+    redirect('/mustaf#offres');
+  }
 
   return (
     <div className="landing-root">
@@ -43,22 +52,12 @@ export default async function PaiementPhaseZeroPage({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.png" alt="Litug" />
         </Link>
-        <Link className="btn btn-ghost" href="/mustaf/demarrer">
+        <Link className="btn btn-ghost" href="/mustaf">
           <ArrowLeft size={16} /> Retour
         </Link>
       </nav>
 
-      <header className="wrap offer-hero" style={{ paddingTop: 'clamp(32px,5vw,56px)' }}>
-        <span className="eyebrow">Paiement sécurisé</span>
-        <h1>Lancez votre projet <span className="accent">Mustaf</span></h1>
-        <p>
-          Choisissez votre point de départ : la Phase 0 complète (plan, permis, étude de sol), ou —
-          si vous avez déjà vos plans, votre permis, voire votre fondation — un accès direct au
-          tableau de bord pour démarrer.
-        </p>
-      </header>
-
-      <section className="section wrap" style={{ paddingTop: 'clamp(24px,3vw,36px)' }}>
+      <section className="section wrap" style={{ paddingTop: 'clamp(32px,5vw,56px)' }}>
         {paidEmail !== null ? (
           <div className="pay-card co-confirm" style={{ maxWidth: 560, margin: '0 auto' }}>
             <span className="ic"><Check size={30} /></span>
@@ -78,7 +77,7 @@ export default async function PaiementPhaseZeroPage({
             </Link>
           </div>
         ) : (
-          <MustafCheckout canceled={canceled} />
+          <MustafCheckout canceled={canceled} tier={tier} />
         )}
       </section>
 

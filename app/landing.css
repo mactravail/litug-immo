@@ -424,7 +424,7 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 .bp-badge .stp { display: flex; gap: 6px; }
 .bp-badge .stp i { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
 .bp-badge .stp i.off { background: var(--line-on-ink); }
-.bp-badge span { color: var(--text-on-ink); font-size: 13px; font-weight: 600; }
+.bp-badge span { color: var(--ink); font-size: 13px; font-weight: 600; }
 @media (max-width: 820px) { .agent-inner { grid-template-columns: 1fr; } .agent.reverse .agent-text { order: 0; } }
 
 /* ================================================================== */
@@ -482,7 +482,7 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .map-card { background: var(--ink); border-radius: var(--r-xl); position: relative; overflow: hidden; min-height: 420px; display: flex; flex-direction: column; justify-content: flex-end; padding: 28px; }
 .map-card .grid-lines { position: absolute; inset: 0; background-image: linear-gradient(var(--line-on-ink) 1px, transparent 1px), linear-gradient(90deg, var(--line-on-ink) 1px, transparent 1px); background-size: 32px 32px; opacity: .5; }
-.map-card svg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -54%); width: 78%; }
+.map-card svg { position: absolute; inset: 10%; width: 80%; height: 80%; }
 .map-pin { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 4px color-mix(in srgb, var(--gold) 28%, transparent); }
 .map-pin::after { content: attr(data-c); position: absolute; left: 16px; top: -3px; font-size: 11px; font-weight: 600; color: var(--text-on-ink); white-space: nowrap; }
 .map-card .map-label { position: relative; color: var(--text-on-ink); font-family: var(--font-display); font-weight: 600; font-size: 17px; }

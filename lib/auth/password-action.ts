@@ -1,6 +1,7 @@
 'use server';
 
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { validatePassword } from './password-policy';
 
 export type PasswordState = { error?: string; ok?: boolean } | null;
 
@@ -19,7 +20,8 @@ export async function changePassword(
   const password = (formData.get('password') as string) ?? '';
   const confirm = (formData.get('confirm') as string) ?? '';
 
-  if (password.length < 8) return { error: 'Le nouveau mot de passe doit faire au moins 8 caractères.' };
+  const passwordError = validatePassword(password);
+  if (passwordError) return { error: passwordError };
   if (password !== confirm) return { error: 'Les deux mots de passe ne correspondent pas.' };
   if (password === current) return { error: 'Le nouveau mot de passe doit être différent de l’ancien.' };
 

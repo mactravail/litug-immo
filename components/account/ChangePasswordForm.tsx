@@ -28,7 +28,7 @@ export function ChangePasswordForm() {
       <div>
         <label className={LABEL} htmlFor="pwd-new">Nouveau mot de passe</label>
         <div className="relative">
-          <input id="pwd-new" name="password" type={type} required minLength={8} autoComplete="new-password" placeholder="8 caractères minimum" className={INPUT} />
+          <input id="pwd-new" name="password" type={type} required minLength={8} autoComplete="new-password" placeholder="8 caractères : Maj, min, chiffre, spécial" className={INPUT} />
           <button
             type="button"
             onClick={() => setShow(s => !s)}
@@ -38,6 +38,7 @@ export function ChangePasswordForm() {
             {show ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>
         </div>
+        <p className="text-xs text-muted mt-1">8 caractères minimum, avec majuscule, minuscule, chiffre et caractère spécial.</p>
       </div>
 
       <div>

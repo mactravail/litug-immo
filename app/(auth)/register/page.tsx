@@ -50,7 +50,7 @@ export default function RegisterPage() {
 
             {/* Mustaf — propriétaire */}
             <Link
-              href="/mustaf/demarrer/paiement"
+              href="/mustaf#offres"
               className="group flex flex-col rounded-2xl border border-stone-200 p-5 hover:border-accent hover:shadow-md transition-all"
             >
               <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent/10 text-accent mb-4">

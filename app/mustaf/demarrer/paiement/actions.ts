@@ -3,14 +3,14 @@
 import { headers } from 'next/headers';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { createCheckoutSession, fcfaToEurCents } from '@/lib/stripe';
-import { PHASE_ZERO_FEE } from '../../offers';
+import { PHASE_ZERO_FEE, TIERS } from '../../offers';
 
 export type SelfBuildState =
   | { error?: string; ok?: boolean; email?: string; name?: string; checkoutUrl?: string }
   | null;
 
-// Accès dashboard sans Phase 0 : 10 € fixe (1000 centimes).
-const DASHBOARD_FEE_CENTS = 1000;
+// Accès dashboard sans Phase 0 : 50 € fixe (5000 centimes). N'inclut pas l'abonnement de gestion.
+const DASHBOARD_FEE_CENTS = 5000;
 
 /**
  * Inscription Mustaf « Phase 0 » : le client règle le forfait Phase 0 (plan, permis,
@@ -29,6 +29,8 @@ export async function submitPhaseZero(
   const confirm = (formData.get('confirm') as string) ?? '';
   const captcha = formData.get('captcha');
   const method = ((formData.get('method') as string) ?? 'card') as (typeof PHASE_ZERO_METHODS)[number];
+  const tier = (formData.get('tier') as string) ?? '';
+  const subscriptionTier = TIERS.find((t) => t.id === tier)?.id ?? null;
 
   if (!name) return { error: 'Indique ton nom complet.' };
   if (!phone) return { error: 'Indique ton numéro WhatsApp.' };
@@ -58,6 +60,7 @@ export async function submitPhaseZero(
         payment_status: 'pending',
         skip_phase_zero: false,
         phase_zero: true,
+        subscription_tier: subscriptionTier,
       },
       emailRedirectTo: `${origin}/auth/callback?next=${next}`,
     },
@@ -68,6 +71,12 @@ export async function submitPhaseZero(
       return { error: 'Un compte existe déjà avec cet email. Connecte-toi simplement.' };
     }
     return { error: 'Création du compte impossible : ' + error.message };
+  }
+
+  // Supabase ne renvoie pas d'erreur pour un email déjà inscrit (anti-énumération) :
+  // un compte existant et confirmé donne un user sans identité nouvelle.
+  if (data.user?.identities?.length === 0) {
+    return { error: 'Un compte existe déjà avec cet email. Connecte-toi simplement.' };
   }
 
   // --- Paiement carte → Stripe Checkout (mode test, EUR) ---
@@ -122,7 +131,7 @@ const STAGES = ['plans', 'permis', 'fondation', 'elevation', 'autre'] as const;
  * Inscription Mustaf « j'ai déjà mes plans / permis (voire ma fondation) ».
  *
  * Le client n'a pas besoin de la Phase 0 : il règle seulement l'accès au tableau
- * de bord (~10 €, paiement SIMULÉ — CLAUDE.md §12) et nous explique pourquoi, et
+ * de bord (~50 €, paiement SIMULÉ — CLAUDE.md §12) et nous explique pourquoi, et
  * où en sont ses travaux. On crée son compte client (`account_type = owner`) avec
  * le flag `pending_verification` ; Supabase envoie l'email d'activation, dont le
  * lien ramène vers /login. Après connexion il atterrit sur son dashboard /projet.
@@ -142,6 +151,8 @@ export async function submitSelfBuild(
   const started = formData.get('started') === 'on';
   const stage = ((formData.get('stage') as string) ?? '') as (typeof STAGES)[number];
   const stageDetail = ((formData.get('stage_detail') as string) ?? '').trim();
+  const tier = (formData.get('tier') as string) ?? '';
+  const subscriptionTier = TIERS.find((t) => t.id === tier)?.id ?? null;
 
   // --- Validation ---
   if (!name) return { error: 'Indique ton nom complet.' };
@@ -183,6 +194,7 @@ export async function submitSelfBuild(
         works_started: started,
         works_stage: started ? stage : null,
         works_stage_detail: started ? stageDetail : null,
+        subscription_tier: subscriptionTier,
       },
       emailRedirectTo: `${origin}/auth/callback?next=${next}`,
     },
@@ -195,7 +207,13 @@ export async function submitSelfBuild(
     return { error: 'Création du compte impossible : ' + error.message };
   }
 
-  // --- Paiement carte → Stripe Checkout (10 €, mode test) ---
+  // Supabase ne renvoie pas d'erreur pour un email déjà inscrit (anti-énumération) :
+  // un compte existant et confirmé donne un user sans identité nouvelle.
+  if (data.user?.identities?.length === 0) {
+    return { error: 'Un compte existe déjà avec cet email. Connecte-toi simplement.' };
+  }
+
+  // --- Paiement carte → Stripe Checkout (50 €, mode test) ---
   if (method === 'mastercard' || method === 'stripe') {
     try {
       const checkoutUrl = await createCheckoutSession({

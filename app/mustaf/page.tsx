@@ -2,14 +2,14 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
   ArrowRight, Check, ShieldCheck, Lock, Layers, ReceiptText, UserCheck, Users,
-  FileCheck2, Wallet, HardHat, Smartphone, Star, Building2, Eye,
+  FileCheck2, FileText, Wallet, HardHat, Smartphone, Star, Building2, Eye,
 } from 'lucide-react';
 import '../landing.css';
 import './pricing.css';
 import SiteHeader from '../components/SiteHeader';
 import FaqPanel from './FaqPanel';
 import FeesSimulator from './FeesSimulator';
-import { TIERS, COMMON_FEATURES, PHASE_ZERO_FEE, SIM_DEFAULT } from './offers';
+import { TIERS, COMMON_FEATURES, PHASE_ZERO_FEE, DASHBOARD_FEE, DASHBOARD_FEE_EUR, SIM_DEFAULT } from './offers';
 import { formatFcfa, formatEur } from '@/lib/utils';
 
 export const metadata: Metadata = {
@@ -56,7 +56,7 @@ const STEPS = [
 export default function MustafProductPage() {
   return (
     <div className="landing-root">
-      <SiteHeader cta={{ label: 'Démarrer mon projet', href: '/mustaf/demarrer' }} />
+      <SiteHeader cta={{ label: 'Démarrer mon projet', href: '/mustaf#offres' }} />
 
       {/* ── Hero ──────────────────────────────────────────────── */}
       <header className="mustaf-hero">
@@ -79,7 +79,7 @@ export default function MustafProductPage() {
             en photo, depuis votre téléphone — où que vous soyez.
           </p>
           <div className="mustaf-hero-ctas">
-            <Link className="btn btn-primary btn-lg" href="/mustaf/demarrer">
+            <Link className="btn btn-primary btn-lg" href="/mustaf#offres">
               Démarrer mon projet <ArrowRight size={17} className="arr" />
             </Link>
             <a className="btn btn-ghost btn-lg" href="#offres">Voir les offres</a>
@@ -176,10 +176,31 @@ export default function MustafProductPage() {
             <div>
               <p className="mustaf-phase0-label">Phase 0 — plan d’architecte + permis + étude de sol</p>
               <p className="mustaf-phase0-note">Forfait fixe, payé une fois au départ, séparé du pourcentage.</p>
+              <ul className="mustaf-phase0-list">
+                <li><span className="plan-tick"><FileText size={12} strokeWidth={2.8} /></span>Plan d’architecte conçu selon votre terrain et votre budget</li>
+                <li><span className="plan-tick"><FileCheck2 size={12} strokeWidth={2.8} /></span>Montage et dépôt du dossier de permis de construire</li>
+                <li><span className="plan-tick"><Layers size={12} strokeWidth={2.8} /></span>Étude de sol pour dimensionner les fondations sans surprise</li>
+              </ul>
             </div>
             <div className="mustaf-phase0-price">
               <span>{formatFcfa(PHASE_ZERO_FEE)}</span>
               <small>≈ {formatEur(PHASE_ZERO_FEE)}</small>
+            </div>
+          </div>
+
+          {/* Contre-offre : pas besoin de la Phase 0 */}
+          <div className="mustaf-phase0 mustaf-phase0-alt">
+            <div>
+              <p className="mustaf-phase0-label">Vous avez déjà ces papiers ?</p>
+              <p className="mustaf-phase0-note">
+                Pas besoin de la Phase 0 : accédez directement au tableau de bord. Les {DASHBOARD_FEE_EUR} €
+                couvrent l’étude de votre dossier par notre équipe et la création de votre espace
+                personnel — hors abonnement de gestion (8 à 16 % selon le palier choisi).
+              </p>
+            </div>
+            <div className="mustaf-phase0-price">
+              <span>{DASHBOARD_FEE_EUR} €</span>
+              <small>≈ {formatFcfa(DASHBOARD_FEE)}</small>
             </div>
           </div>
 
@@ -207,7 +228,7 @@ export default function MustafProductPage() {
                   </div>
 
                   <Link
-                    href="/mustaf/demarrer"
+                    href={`/mustaf/demarrer/paiement?tier=${tier.id}`}
                     className={`btn btn-lg${tier.featured ? ' btn-gold' : ' btn-primary'}`}
                   >
                     Démarrer mon projet <ArrowRight size={16} className="arr" />
@@ -270,7 +291,7 @@ export default function MustafProductPage() {
             <p>Rejoignez les familles de la diaspora qui bâtissent au pays, en toute confiance.</p>
           </div>
           <div className="mustaf-cta-btns">
-            <Link className="btn btn-primary btn-lg" href="/mustaf/demarrer">
+            <Link className="btn btn-primary btn-lg" href="/mustaf#offres">
               Démarrer mon projet <ArrowRight size={17} className="arr" />
             </Link>
             <Link className="btn btn-ghost btn-lg" href="/#contact">Parler à l’équipe</Link>

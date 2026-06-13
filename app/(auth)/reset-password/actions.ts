@@ -1,6 +1,7 @@
 'use server';
 
 import { createSupabaseServerClient } from '@/lib/supabase-server';
+import { validatePassword } from '@/lib/auth/password-policy';
 import { redirect } from 'next/navigation';
 
 export async function resetPassword(
@@ -11,7 +12,8 @@ export async function resetPassword(
   const confirm = formData.get('confirm') as string;
 
   if (password !== confirm) return { error: 'Les mots de passe ne correspondent pas.' };
-  if (password.length < 6) return { error: 'Le mot de passe doit contenir au moins 6 caractères.' };
+  const passwordError = validatePassword(password);
+  if (passwordError) return { error: passwordError };
 
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase.auth.updateUser({ password });

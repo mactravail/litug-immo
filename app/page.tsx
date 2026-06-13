@@ -862,7 +862,7 @@ function Hero({ t, lang }: { t: T; lang: Lang }) {
             ))}
           </ul>
           <div className="hero-ctas">
-            <a className="btn btn-gold btn-lg" href="/mustaf/demarrer">{t.hero.cta_primary}<Icon name="arrow" size={17} className="arr" /></a>
+            <a className="btn btn-gold btn-lg" href="/mustaf#offres">{t.hero.cta_primary}<Icon name="arrow" size={17} className="arr" /></a>
             <a className="btn btn-ghost btn-lg" href="/sara">{t.hero.cta_secondary}</a>
           </div>
           <div className="hero-proof">

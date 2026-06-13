@@ -6,6 +6,11 @@
 
 export const PHASE_ZERO_FEE = 500_000; // forfait fixe Phase 0 (FCFA), payé une fois
 
+// Accès direct au tableau de bord sans Phase 0 (50 €, FCFA au taux fixe XOF).
+// Couvre la prise en charge du dossier + création du dashboard, hors abonnement de gestion.
+export const DASHBOARD_FEE_EUR = 50;
+export const DASHBOARD_FEE = 32_800;
+
 // Bornes du simulateur d'honoraires (FCFA)
 export const SIM_MIN = 15_000_000;
 export const SIM_MAX = 80_000_000;

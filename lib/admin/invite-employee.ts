@@ -6,6 +6,7 @@ import { createSupabaseAdminClient } from '@/lib/supabase-admin';
 import { getAdminProvider } from '@/lib/admin/provider';
 import { sendEmployeeCredentials } from '@/lib/email/send';
 import { TEAM_ROLES } from '@/lib/auth/home-route';
+import { validatePassword } from '@/lib/auth/password-policy';
 import type { TeamRole } from '@/lib/admin/types';
 
 export type CreateEmployeeState =
@@ -45,7 +46,8 @@ export async function createEmployee(
   if (!fullName) return { error: 'Le nom de l’employé est obligatoire.' };
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: 'Adresse email invalide.' };
   if (!isEmployeeRole(role)) return { error: 'Rôle terrain invalide.' };
-  if (password.length < 8) return { error: 'Le mot de passe provisoire doit faire au moins 8 caractères.' };
+  const passwordError = validatePassword(password);
+  if (passwordError) return { error: passwordError };
 
   // --- Garde : seul un admin connecté peut créer un accès ---
   const supabase = await createSupabaseServerClient();

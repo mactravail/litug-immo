@@ -21,7 +21,8 @@ export function WelcomeForm() {
         <label className="block text-sm font-medium text-text mb-1.5" htmlFor="password">
           Choisissez votre mot de passe
         </label>
-        <input id="password" name="password" type="password" required minLength={8} placeholder="8 caractères minimum" autoComplete="new-password" className={INPUT} />
+        <input id="password" name="password" type="password" required minLength={8} placeholder="8 caractères : Maj, min, chiffre, spécial" autoComplete="new-password" className={INPUT} />
+        <p className="text-xs text-muted mt-1">8 caractères minimum, avec majuscule, minuscule, chiffre et caractère spécial.</p>
       </div>
 
       <div>

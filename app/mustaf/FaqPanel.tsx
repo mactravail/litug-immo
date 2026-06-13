@@ -68,11 +68,11 @@ export default function FaqPanel() {
               </button>
             </div>
 
-            <ul className="faq-list">
+            <ul className="mfaq-list">
               {FAQS.map((item, i) => (
-                <li key={i} className={`faq-item${expanded === i ? ' open' : ''}`}>
+                <li key={i} className={`mfaq-item${expanded === i ? ' open' : ''}`}>
                   <button
-                    className="faq-q"
+                    className="mfaq-q"
                     onClick={() => setExpanded(expanded === i ? null : i)}
                     aria-expanded={expanded === i}
                   >
@@ -80,7 +80,7 @@ export default function FaqPanel() {
                     <ChevronDown size={16} className="faq-chevron" />
                   </button>
                   {expanded === i && (
-                    <div className="faq-a">{item.a}</div>
+                    <div className="mfaq-a">{item.a}</div>
                   )}
                 </li>
               ))}

@@ -4,7 +4,7 @@ import { useActionState, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Lock, ExternalLink, ShieldCheck, Mail, Check } from 'lucide-react';
 import { formatFcfa, formatEur } from '@/lib/utils';
-import { PHASE_ZERO_FEE } from '../../offers';
+import { PHASE_ZERO_FEE, type TierId } from '../../offers';
 import { submitPhaseZero } from './actions';
 
 type Method = 'card' | 'paypal' | 'mobile';
@@ -21,7 +21,7 @@ function Logo({ src, alt, h = 22 }: { src: string; alt: string; h?: number }) {
  * Le paiement carte passe par la page sécurisée Stripe (mode test, EUR) : aucune
  * donnée bancaire ne transite par notre site.
  */
-export default function PaiementForm({ canceled }: { canceled?: boolean }) {
+export default function PaiementForm({ canceled, tier }: { canceled?: boolean; tier?: TierId }) {
   const [state, action, isPending] = useActionState(submitPhaseZero, null);
 
   const [method, setMethod] = useState<Method>('card');
@@ -34,6 +34,11 @@ export default function PaiementForm({ canceled }: { canceled?: boolean }) {
     if (state && 'checkoutUrl' in state && state.checkoutUrl) {
       window.location.href = state.checkoutUrl;
     }
+  }, [state]);
+
+  // En cas d'erreur, on fait recocher le captcha (les autres champs restent remplis).
+  useEffect(() => {
+    if (state?.error) setCaptcha(false);
   }, [state]);
 
   const pwMismatch = confirm.length > 0 && password !== confirm;
@@ -148,6 +153,7 @@ export default function PaiementForm({ canceled }: { canceled?: boolean }) {
 
         {/* ── Moyen de paiement ── */}
         <input type="hidden" name="method" value={method} />
+        {tier && <input type="hidden" name="tier" value={tier} />}
         <div className="pay-methods" role="tablist" aria-label="Moyen de paiement">
           {methods.map(({ id, label, logos }) => (
             <button

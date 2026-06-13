@@ -23,10 +23,11 @@ export function ResetPasswordForm() {
           name="password"
           type="password"
           required
-          minLength={6}
-          placeholder="••••••••"
+          minLength={8}
+          placeholder="8 caractères : Maj, min, chiffre, spécial"
           className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent"
         />
+        <p className="text-xs text-muted mt-1">8 caractères minimum, avec majuscule, minuscule, chiffre et caractère spécial.</p>
       </div>
 
       <div>
@@ -38,7 +39,7 @@ export function ResetPasswordForm() {
           name="confirm"
           type="password"
           required
-          minLength={6}
+          minLength={8}
           placeholder="••••••••"
           className="w-full border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-text placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent"
         />

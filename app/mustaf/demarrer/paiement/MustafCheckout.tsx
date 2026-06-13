@@ -1,18 +1,16 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import {
-  ShieldCheck, FileText, FileCheck2, Layers, LayoutDashboard, Check,
+  ShieldCheck, FileText, FileCheck2, Layers, LayoutDashboard, Check, Star,
 } from 'lucide-react';
 import { formatFcfa, formatEur } from '@/lib/utils';
-import { PHASE_ZERO_FEE } from '../../offers';
+import { PHASE_ZERO_FEE, DASHBOARD_FEE, DASHBOARD_FEE_EUR, TIERS, type TierId } from '../../offers';
 import PaiementForm from './PaiementForm';
 import { SelfBuildForm } from './SelfBuildForm';
 
 type Plan = 'phase0' | 'self';
-
-// Accès au tableau de bord sans Phase 0 : ~10 € (FCFA ≈ 6 560 au taux fixe XOF).
-const DASHBOARD_FEE = 6_560;
 
 const PHASE_ZERO_ITEMS = [
   { icon: FileText, label: 'Plan d’architecte', note: 'Conçu selon votre terrain et votre budget' },
@@ -26,11 +24,23 @@ const SELF_ITEMS = [
   { label: 'Argent bloqué chez un tiers de confiance', note: 'Libéré par phase, après vérification' },
 ];
 
-export function MustafCheckout({ canceled }: { canceled?: boolean }) {
+export function MustafCheckout({ canceled, tier }: { canceled?: boolean; tier?: TierId }) {
   const [plan, setPlan] = useState<Plan>('phase0');
+  const selectedTier = TIERS.find((t) => t.id === tier);
 
   return (
     <>
+      {/* ── Abonnement choisi ── */}
+      {selectedTier && (
+        <div className="tier-chosen">
+          <span className="tier-chosen-ic"><Star size={15} /></span>
+          <span className="tier-chosen-text">
+            Abonnement choisi : <b>{selectedTier.name}</b> ({selectedTier.pct} % du budget de construction)
+          </span>
+          <Link href="/mustaf#offres" className="tier-chosen-change">Changer</Link>
+        </div>
+      )}
+
       {/* ── Choix du point de départ ── */}
       <div className="plan-choice" role="tablist" aria-label="Point de départ">
         <button
@@ -58,14 +68,18 @@ export function MustafCheckout({ canceled }: { canceled?: boolean }) {
           </span>
           <b>J’ai déjà mes plans / permis</b>
           <span>Vous avez déjà tout — peut-être même la fondation. Accédez directement au tableau de bord.</span>
-          <span className="plan-price">10 € <small>· accès au dashboard</small></span>
+          <span className="plan-price">{DASHBOARD_FEE_EUR} € <small>· accès au dashboard</small></span>
         </button>
       </div>
 
       <div className="pay-grid">
         {/* Colonne formulaire */}
         <div className="pay-form-col">
-          {plan === 'phase0' ? <PaiementForm canceled={canceled} /> : <SelfBuildForm canceled={canceled} />}
+          {plan === 'phase0' ? (
+            <PaiementForm canceled={canceled} tier={selectedTier?.id} />
+          ) : (
+            <SelfBuildForm canceled={canceled} tier={selectedTier?.id} />
+          )}
         </div>
 
         {/* Colonne récap */}
@@ -107,13 +121,17 @@ export function MustafCheckout({ canceled }: { canceled?: boolean }) {
               <div className="pay-total">
                 <span className="lbl">À payer aujourd’hui</span>
                 <span className="val">
-                  <span className="big">10 €</span>
+                  <span className="big">{DASHBOARD_FEE_EUR} €</span>
                   <small>≈ {formatFcfa(DASHBOARD_FEE)}</small>
                 </span>
               </div>
               <p className="pay-recurring">
                 Sans la Phase 0. Notre équipe étudie votre situation et reprend votre projet là où
                 il en est, pour un accompagnement sur mesure.
+              </p>
+              <p className="pay-recurring">
+                <b>NB :</b> ces 50 € n’incluent pas l’abonnement de gestion (le palier de suivi que
+                vous choisirez ensuite — Suivi essentiel, Sérénité ou Tranquillité totale).
               </p>
             </div>
           )}

@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Wallet, ReceiptText, Camera, Users, FileText, ArrowLeft } from 'lucide-react';
+import { Home, Wallet, ReceiptText, Camera, Users, FileText, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { logout } from '@/app/(auth)/login/actions';
 
 const NAV = [
   { href: '/projet',                label: 'Mon projet',        icon: Home },
@@ -65,13 +66,15 @@ export function MustafSidebar({ ownerName, tierLabel }: Props) {
             <p className="text-[11px] text-muted">Formule {tierLabel}</p>
           </div>
         </div>
-        <Link
-          href="/"
-          className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-muted hover:bg-stone-50 hover:text-text transition-colors"
-        >
-          <ArrowLeft size={16} />
-          Retour à l’accueil
-        </Link>
+        <form action={logout}>
+          <button
+            type="submit"
+            className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-muted hover:bg-stone-50 hover:text-red-500 transition-colors w-full cursor-pointer"
+          >
+            <LogOut size={16} />
+            Se déconnecter
+          </button>
+        </form>
       </div>
     </aside>
   );

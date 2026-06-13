@@ -3,6 +3,7 @@
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { createSupabaseAdminClient } from '@/lib/supabase-admin';
 import { homeRouteFor } from '@/lib/auth/home-route';
+import { validatePassword } from '@/lib/auth/password-policy';
 import { redirect } from 'next/navigation';
 
 export type WelcomeState = { error?: string } | null;
@@ -23,7 +24,8 @@ export async function setInitialPassword(
   const password = (formData.get('password') as string) ?? '';
   const confirm = (formData.get('confirm') as string) ?? '';
 
-  if (password.length < 8) return { error: 'Le mot de passe doit contenir au moins 8 caractères.' };
+  const passwordError = validatePassword(password);
+  if (passwordError) return { error: passwordError };
   if (password !== confirm) return { error: 'Les deux mots de passe ne correspondent pas.' };
 
   const supabase = await createSupabaseServerClient();

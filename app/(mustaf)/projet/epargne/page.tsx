@@ -25,7 +25,7 @@ export default async function EpargnePage() {
           <Wallet size={16} className="text-gold" />
           Solde du compte séquestre
         </div>
-        <p className="font-display text-4xl font-semibold tracking-tight mt-2">{formatFcfa(escrow.balance)}</p>
+        <p className="font-display text-3xl sm:text-4xl font-semibold tracking-tight mt-2 break-words">{formatFcfa(escrow.balance)}</p>
         <p className="text-on-ink-muted text-sm mt-1">{formatEur(escrow.balance)}</p>
         <div className="mt-4 pt-4 border-t border-line-on-ink grid grid-cols-2 gap-4 text-sm">
           <div>

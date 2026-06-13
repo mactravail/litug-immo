@@ -30,19 +30,21 @@ export function StatCard({ label, value, icon: Icon, variant = 'default', sub, c
   return (
     <div
       className={cn(
-        'rounded-2xl p-5 flex flex-col gap-3 bg-surface border border-line shadow-sm',
+        'rounded-2xl p-5 flex flex-col gap-3 bg-surface border border-line shadow-sm min-w-0',
         className,
       )}
     >
-      <div className="flex items-start justify-between">
-        <p className="text-sm text-muted font-medium">{label}</p>
-        <span className={cn('p-2 rounded-xl', v.chip)}>
+      <div className="flex items-start justify-between gap-2">
+        <p className="text-sm text-muted font-medium min-w-0 break-words">{label}</p>
+        <span className={cn('p-2 rounded-xl shrink-0', v.chip)}>
           <Icon size={16} />
         </span>
       </div>
-      <div>
-        <p className="font-display text-3xl font-semibold tracking-tight text-text">{value}</p>
-        {sub && <p className="text-xs text-muted mt-1">{sub}</p>}
+      <div className="min-w-0">
+        {/* Police réduite sur mobile + coupure autorisée : un grand montant
+            FCFA (séparateur insécable U+202F) ne peut plus déborder la carte. */}
+        <p className="font-display text-2xl sm:text-3xl font-semibold tracking-tight text-text break-words">{value}</p>
+        {sub && <p className="text-xs text-muted mt-1 break-words">{sub}</p>}
       </div>
     </div>
   );

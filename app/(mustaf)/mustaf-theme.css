@@ -1,0 +1,194 @@
+/* ============================================================
+   Mustaf (espace client construction /projet) — THÈME SOMBRE.
+   ⚠️ Portée : UNIQUEMENT l'espace client Mustaf. Tout est scopé
+   sous `.mustaf-shell` pour ne JAMAIS contaminer la charte
+   monochrome du reste du produit (landing, Sara, admin, équipe).
+   Charte définie par le founder (mockup sombre or/vert/bleu).
+   Les couleurs de statut (vert/or/bleu/rouge) restent sémantiques.
+   ============================================================ */
+
+.mustaf-shell {
+  /* Palette sombre (mockup) */
+  --m-bg: #0b0c0e;
+  --m-bg2: #0e1013;
+  --m-card: #14171c;
+  --m-card2: #191d23;
+  --m-line: rgba(255, 255, 255, 0.07);
+  --m-line2: rgba(255, 255, 255, 0.12);
+  --m-txt: #f3f1ea;
+  --m-mut: #9aa2ad;
+  --m-mut2: #6b7280;
+  --m-gold: #e2a53f;
+  --m-gold-soft: rgba(226, 165, 63, 0.14);
+  --m-green: #34c77b;
+  --m-green-soft: rgba(52, 199, 123, 0.12);
+  --m-blue: #5b9df9;
+  --m-blue-soft: rgba(91, 157, 249, 0.12);
+  --m-red: #f1646c;
+  --m-red-soft: rgba(241, 100, 108, 0.1);
+
+  --m-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Redéfinition des tokens de marque DANS ce scope : les utilitaires
+     Tailwind v4 (text-text, text-muted, bg-bg, border-line, bg-accent…)
+     pointent sur var(--color-*) → ils s'adaptent automatiquement ici. */
+  --color-bg: var(--m-bg);
+  --color-surface: var(--m-card);
+  --color-text: var(--m-txt);
+  --color-muted: var(--m-mut);
+  --color-line: var(--m-line2);
+  --color-accent: var(--m-gold);
+  --color-accent-bright: #f0c878;
+  --color-accent-light: var(--m-gold-soft);
+  --color-gold: var(--m-gold);
+  --color-gold-soft: var(--m-gold-soft);
+  --color-gold-light: var(--m-gold-soft);
+  --color-ink: var(--m-bg2);
+  --color-on-ink: var(--m-txt);
+  --color-on-ink-muted: var(--m-mut);
+
+  background: radial-gradient(1200px 700px at 80% -10%, #16130c 0%, #0b0c0e 55%);
+  color: var(--m-txt);
+}
+
+/* --- Overrides ciblés des sous-pages (qui utilisent encore des
+       utilitaires clairs en dur). On garde la cohérence sombre sans
+       réécrire chaque page. --- */
+.mustaf-shell .bg-white { background-color: var(--m-card) !important; }
+.mustaf-shell .bg-stone-50,
+.mustaf-shell .bg-stone-100 { background-color: var(--m-card2) !important; }
+.mustaf-shell .border-stone-100,
+.mustaf-shell .border-stone-200 { border-color: var(--m-line) !important; }
+.mustaf-shell .shadow-sm,
+.mustaf-shell .shadow { box-shadow: none !important; }
+.mustaf-shell .text-ink { color: var(--m-txt) !important; }
+.mustaf-shell .hover\:bg-stone-50:hover,
+.mustaf-shell .hover\:bg-stone-100:hover { background-color: var(--m-card2) !important; }
+
+/* ===== Composants du dashboard (portés du mockup, responsives) ===== */
+
+.mustaf-shell .m-mono { font-family: var(--m-mono); font-variant-numeric: tabular-nums; }
+
+/* Carte générique */
+.m-card {
+  background: var(--m-card);
+  border: 1px solid var(--m-line);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+/* En-tête de section */
+.m-sec-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+.m-sec-t { font-size: 14px; font-weight: 600; color: var(--m-txt); }
+.m-sec-s { font-size: 11.5px; color: var(--m-mut); }
+
+/* ---- KPI ---- */
+.m-kpi-top { display: flex; align-items: center; justify-content: space-between; }
+.m-kpi-lbl { font-size: 11.5px; color: var(--m-mut); font-weight: 500; }
+.m-kpi-ic { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; flex: none; }
+.m-kpi-ic svg { width: 16px; height: 16px; fill: none; stroke-width: 1.9; }
+.m-kpi-val { font-size: 22px; font-weight: 700; margin-top: 12px; letter-spacing: -0.5px; color: var(--m-txt); line-height: 1.1; }
+.m-kpi-val .m-cur { font-size: 12px; color: var(--m-mut); font-weight: 600; margin-left: 4px; }
+.m-kpi-sub { font-size: 11.5px; color: var(--m-mut); margin-top: 6px; display: flex; align-items: center; gap: 5px; }
+.m-up { color: var(--m-green); font-weight: 600; }
+
+/* ---- Barres ---- */
+.m-bar { height: 8px; border-radius: 99px; background: var(--m-card2); overflow: hidden; margin-top: 6px; }
+.m-bar > i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--m-gold), #f0c878); }
+.m-bar.m-bar-g > i { background: linear-gradient(90deg, var(--m-green), #7ce0a8); }
+
+/* ---- Timeline phases ---- */
+.m-timeline { display: flex; align-items: flex-start; gap: 0; position: relative; margin-top: 4px; }
+.m-ph { flex: 1; text-align: center; position: relative; min-width: 0; }
+.m-ph .m-dot { width: 26px; height: 26px; border-radius: 50%; margin: 0 auto 9px; display: grid; place-items: center; border: 2px solid var(--m-line2); background: var(--m-bg2); position: relative; z-index: 2; }
+.m-ph .m-dot svg { width: 13px; height: 13px; stroke-width: 2.4; }
+.m-ph.m-done .m-dot { background: var(--m-green); border-color: var(--m-green); }
+.m-ph.m-done .m-dot svg { stroke: #06210f; }
+.m-ph.m-cur .m-dot { background: var(--m-gold); border-color: var(--m-gold); box-shadow: 0 0 0 5px var(--m-gold-soft); }
+.m-ph.m-cur .m-pulse { width: 7px; height: 7px; border-radius: 50%; background: #1a1206; }
+.m-ph .m-ln { position: absolute; top: 13px; left: 50%; width: 100%; height: 2px; background: var(--m-line2); z-index: 1; }
+.m-ph.m-done .m-ln { background: var(--m-green); }
+.m-ph .m-ph-nm { font-size: 12px; font-weight: 600; color: var(--m-txt); }
+.m-ph .m-ph-st { font-size: 10.5px; color: var(--m-mut); margin-top: 2px; }
+.m-ph.m-cur .m-ph-nm { color: var(--m-gold); }
+
+/* ---- Pills ---- */
+.m-pill { font-size: 10.5px; padding: 3px 9px; border-radius: 99px; font-weight: 600; }
+.m-pill.m-warn { background: var(--m-gold-soft); color: var(--m-gold); }
+.m-pill.m-ok { background: var(--m-green-soft); color: var(--m-green); }
+
+.m-fin-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12px; margin-top: 14px; }
+.m-fin-row .m-a { color: var(--m-mut); }
+.m-fin-row .m-b { font-weight: 600; color: var(--m-txt); }
+
+/* ---- Dépenses ---- */
+.m-exp { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--m-line); }
+.m-exp:last-child { border-bottom: none; }
+.m-exp .m-l { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.m-exp .m-ico { width: 32px; height: 32px; border-radius: 8px; background: var(--m-card2); display: grid; place-items: center; color: var(--m-mut); font-size: 14px; flex: none; }
+.m-exp .m-nm { font-size: 13px; font-weight: 500; color: var(--m-txt); }
+.m-exp .m-meta { font-size: 11px; color: var(--m-mut); margin-top: 1px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.m-fac { font-size: 9.5px; font-weight: 600; color: var(--m-green); background: var(--m-green-soft); padding: 1px 6px; border-radius: 5px; }
+.m-exp .m-amt { font-weight: 600; font-size: 13.5px; color: var(--m-txt); flex: none; }
+.m-exp-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--m-line2); font-size: 12.5px; color: var(--m-mut); }
+
+/* ---- Photo géolocalisée ---- */
+.m-photo { position: relative; border-radius: 12px; overflow: hidden; height: 200px; background: linear-gradient(180deg, #3a4a5c, #1b2530); }
+.m-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.m-photo .m-sky { position: absolute; inset: 0; background: linear-gradient(180deg, #6f86a3 0%, #9fb0c2 38%, #c9b8a0 39%, #caa877 40%, #7a5f3c 100%); }
+.m-geo { position: absolute; left: 10px; bottom: 10px; display: flex; align-items: center; gap: 6px; background: rgba(11, 12, 14, 0.7); backdrop-filter: blur(6px); border: 1px solid var(--m-line2); border-radius: 8px; padding: 5px 9px; }
+.m-geo svg { width: 13px; height: 13px; stroke: var(--m-blue); fill: none; stroke-width: 2; }
+.m-geo span { font-size: 10.5px; color: #dfe6ef; font-family: var(--m-mono); }
+.m-geo-badge { position: absolute; right: 10px; top: 10px; font-size: 10px; font-weight: 600; color: var(--m-green); background: rgba(11, 12, 14, 0.7); backdrop-filter: blur(6px); border: 1px solid rgba(52, 199, 123, 0.3); border-radius: 7px; padding: 4px 9px; display: flex; align-items: center; gap: 5px; }
+.m-geo-badge .m-d { width: 6px; height: 6px; border-radius: 50%; background: var(--m-green); }
+
+/* ---- Famille ---- */
+.m-fam { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--m-line); }
+.m-fam:last-child { border-bottom: none; padding-bottom: 0; }
+.m-fam .m-l { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.m-fam .m-nm { font-size: 12.5px; font-weight: 500; color: var(--m-txt); }
+.m-fam .m-rl { font-size: 10.5px; color: var(--m-mut); }
+.m-fam .m-amt { font-weight: 600; font-size: 12.5px; color: var(--m-green); flex: none; }
+.m-av { border-radius: 50%; display: grid; place-items: center; font-weight: 700; color: #1a1206; flex: none; }
+
+/* ---- Trust strip ---- */
+.m-tstrip { display: flex; flex-direction: column; gap: 0; }
+.m-tcell { flex: 1; display: flex; align-items: center; gap: 11px; padding: 14px 4px; }
+.m-tcell + .m-tcell { border-top: 1px solid var(--m-line); }
+.m-tcell .m-ic { width: 36px; height: 36px; border-radius: 9px; display: grid; place-items: center; flex: none; }
+.m-tcell .m-ic svg { width: 18px; height: 18px; fill: none; stroke-width: 1.8; }
+.m-tcell .m-t { font-size: 12.5px; font-weight: 600; color: var(--m-txt); }
+.m-tcell .m-s { font-size: 11px; color: var(--m-mut); margin-top: 2px; }
+
+@media (min-width: 768px) {
+  .m-tstrip { flex-direction: row; }
+  .m-tcell { padding: 0 18px; }
+  .m-tcell + .m-tcell { border-top: none; border-left: 1px solid var(--m-line); }
+}
+
+/* ---- Sidebar (desktop) ---- */
+.m-side { background: var(--m-bg2); border-right: 1px solid var(--m-line); }
+.m-proj-switch { background: var(--m-card); border: 1px solid var(--m-line); border-radius: 11px; padding: 11px 12px; }
+.m-proj-switch .m-lbl { font-size: 10.5px; color: var(--m-mut2); text-transform: uppercase; letter-spacing: 0.7px; }
+.m-proj-switch .m-nm { font-size: 13.5px; font-weight: 600; margin-top: 3px; color: var(--m-txt); display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.m-nav-h { font-size: 10px; color: var(--m-mut2); text-transform: uppercase; letter-spacing: 0.8px; margin: 6px 10px 8px; }
+.m-nav-link { display: flex; align-items: center; gap: 11px; padding: 9px 11px; border-radius: 9px; color: var(--m-mut); font-size: 13.5px; font-weight: 500; }
+.m-nav-link:hover { background: var(--m-card); color: var(--m-txt); }
+.m-nav-link.m-active { background: var(--m-gold-soft); color: var(--m-gold); }
+.m-trust-mini { background: var(--m-green-soft); border: 1px solid rgba(52, 199, 123, 0.2); border-radius: 11px; padding: 11px 12px; }
+.m-trust-mini .m-t { font-size: 12px; font-weight: 600; color: var(--m-green); display: flex; align-items: center; gap: 7px; }
+.m-trust-mini .m-s { font-size: 11px; color: var(--m-mut); margin-top: 4px; line-height: 1.4; }
+
+/* ---- Topbar ---- */
+.m-topbar { background: var(--m-bg); border-bottom: 1px solid var(--m-line); }
+.m-chip { font-family: var(--m-mono); font-size: 11px; padding: 3px 8px; border-radius: 6px; background: var(--m-card2); border: 1px solid var(--m-line); color: var(--m-mut); }
+.m-badge-gold { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--m-gold-soft); color: var(--m-gold); border: 1px solid rgba(226, 165, 63, 0.25); }
+.m-btn-anom { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 600; color: var(--m-red); background: var(--m-red-soft); border: 1px solid rgba(241, 100, 108, 0.28); padding: 8px 13px; border-radius: 9px; cursor: pointer; }
+.m-btn-anom svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; }
+.m-icon-btn { width: 36px; height: 36px; border-radius: 9px; border: 1px solid var(--m-line); background: var(--m-card); display: grid; place-items: center; }
+.m-icon-btn svg { width: 17px; height: 17px; stroke: var(--m-mut); fill: none; stroke-width: 1.8; }
+
+/* ---- Mobile bottom nav ---- */
+.m-mobnav { background: var(--m-bg2); border-top: 1px solid var(--m-line); }
+.m-mobnav a { color: var(--m-mut); }
+.m-mobnav a.m-active { color: var(--m-gold); }

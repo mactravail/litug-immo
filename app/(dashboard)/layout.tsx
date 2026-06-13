@@ -1,3 +1,5 @@
+import './sara-theme.css';
+import { Bell } from 'lucide-react';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { MobileNav } from '@/components/layout/MobileNav';
 import { SubscriptionBanner } from '@/components/layout/SubscriptionBanner';
@@ -12,10 +14,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const sellerId = await getAuthenticatedSellerId();
   const account = await getSellerAccount();
   const dp = getDataProvider();
-  const [seller, lands, leads] = await Promise.all([
+  const [seller, lands, leads, visits] = await Promise.all([
     dp.getSeller(sellerId),
     dp.listLands(sellerId),
     dp.listLeads(sellerId),
+    dp.listVisits(sellerId),
   ]);
 
   const searchItems: SearchItem[] = [
@@ -36,15 +39,23 @@ export default async function DashboardLayout({ children }: { children: React.Re
   ];
 
   return (
-    <div className="flex h-screen overflow-hidden bg-bg">
+    <div className="sara-shell flex h-screen overflow-hidden">
       <Sidebar
         businessName={seller?.businessName ?? 'Mon compte'}
         subscriptionStatus={seller?.subscriptionStatus ?? 'trial'}
+        landsCount={lands.length}
+        leadsCount={leads.length}
+        visitsCount={visits.length}
       />
       <div className="flex-1 min-w-0 flex flex-col overflow-y-auto pb-20 lg:pb-0">
-        {/* Top bar avec recherche */}
-        <header className="sticky top-0 z-40 bg-bg/80 backdrop-blur-sm border-b border-stone-100 px-4 sm:px-6 py-3">
-          <GlobalSearch items={searchItems} />
+        {/* Top bar : recherche + notifications */}
+        <header className="s-topbar sticky top-0 z-40 px-4 sm:px-6 py-3 flex items-center gap-3">
+          <div className="flex-1 min-w-0">
+            <GlobalSearch items={searchItems} />
+          </div>
+          <div className="s-icon-btn shrink-0">
+            <Bell />
+          </div>
         </header>
         {account.pendingVerification
           ? <PendingVerificationBanner />

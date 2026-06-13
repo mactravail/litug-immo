@@ -47,34 +47,25 @@ export function AdminSidebar({ adminName, pendingCount = 0 }: { adminName: strin
   const pathname = usePathname();
 
   return (
-    <aside className="hidden lg:flex flex-col w-64 h-screen bg-white border-r border-stone-100 px-4 py-6 shrink-0">
-      <div className="px-3 mb-8">
+    <aside className="a-side hidden lg:flex flex-col w-64 h-screen px-4 py-6 shrink-0">
+      <div className="px-3 mb-7">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo.png" alt="Litug" className="h-12 w-auto" />
-        <p className="text-[11px] text-muted mt-1">Back-office · Administration</p>
+        <img src="/logo.png" alt="Litug" className="h-10 w-auto invert" />
+        <p className="a-side-sub mt-1">Back-office · Administration</p>
       </div>
 
-      <nav className="flex-1 space-y-6 overflow-y-auto">
+      <nav className="flex-1 space-y-5 overflow-y-auto">
         {GROUPS.map(group => (
-          <div key={group.title} className="space-y-1">
-            <p className="px-3 mb-1 text-[10px] font-semibold uppercase tracking-wider text-muted/70">{group.title}</p>
+          <div key={group.title} className="space-y-0.5">
+            <p className="a-nav-h px-3 mb-1.5">{group.title}</p>
             {group.items.map(({ href, label, icon: Icon }) => {
               const active = href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
               return (
-                <Link
-                  key={href}
-                  href={href}
-                  className={cn(
-                    'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors',
-                    active ? 'bg-accent-light text-accent' : 'text-muted hover:bg-stone-50 hover:text-text',
-                  )}
-                >
+                <Link key={href} href={href} className={cn('a-nav-link', active && 'a-active')}>
                   <Icon size={17} />
                   <span className="flex-1">{label}</span>
                   {href === '/admin/demandes' && pendingCount > 0 && (
-                    <span className="shrink-0 min-w-5 h-5 px-1.5 inline-flex items-center justify-center rounded-full bg-accent text-white text-[11px] font-bold">
-                      {pendingCount > 99 ? '99+' : pendingCount}
-                    </span>
+                    <span className="a-nav-badge">{pendingCount > 99 ? '99+' : pendingCount}</span>
                   )}
                 </Link>
               );
@@ -83,20 +74,18 @@ export function AdminSidebar({ adminName, pendingCount = 0 }: { adminName: strin
         ))}
       </nav>
 
-      <div className="border-t border-stone-100 pt-4 mt-4 space-y-1">
+      <div className="mt-4 pt-4 space-y-1" style={{ borderTop: '1px solid var(--a-line)' }}>
         <div className="flex items-center gap-3 px-3 py-2">
-          <div className="w-8 h-8 rounded-full bg-ink flex items-center justify-center text-on-ink text-xs font-bold shrink-0">
-            {adminName.slice(0, 2).toUpperCase()}
-          </div>
+          <div className="a-profile-av">{adminName.slice(0, 2).toUpperCase()}</div>
           <div className="min-w-0">
-            <p className="text-sm font-medium text-text truncate">{adminName}</p>
-            <p className="text-[11px] text-muted">Administrateur</p>
+            <p className="text-sm font-medium truncate" style={{ color: 'var(--a-txt)' }}>{adminName}</p>
+            <p className="text-[11px]" style={{ color: 'var(--a-mut)' }}>Administrateur</p>
           </div>
         </div>
         <form action={logout}>
           <button
             type="submit"
-            className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-muted hover:bg-stone-50 hover:text-red-500 transition-colors w-full cursor-pointer"
+            className="a-nav-link w-full cursor-pointer"
           >
             <LogOut size={16} />
             Se déconnecter

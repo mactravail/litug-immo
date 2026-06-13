@@ -1,0 +1,114 @@
+/* ============================================================
+   Admin — back-office (espace /admin) — THÈME SOMBRE.
+   ⚠️ Portée : UNIQUEMENT le back-office admin. Tout est scopé sous
+   `.admin-shell` pour ne JAMAIS contaminer la charte monochrome du
+   reste du produit (landing). Pendant des thèmes Mustaf et Sara.
+   Les couleurs de statut (vert/or/bleu/rouge) restent sémantiques.
+   Tonalité « poste de commande » : radial bleuté pour différencier
+   de Sara (vert) et Mustaf (or).
+   ============================================================ */
+
+.admin-shell {
+  /* Palette sombre (cohérente avec Mustaf / Sara) */
+  --a-bg: #0b0c0e;
+  --a-bg2: #0e1013;
+  --a-card: #14171c;
+  --a-card2: #191d23;
+  --a-line: rgba(255, 255, 255, 0.07);
+  --a-line2: rgba(255, 255, 255, 0.12);
+  --a-txt: #f3f1ea;
+  --a-mut: #9aa2ad;
+  --a-mut2: #6b7280;
+  --a-gold: #e2a53f;
+  --a-gold-soft: rgba(226, 165, 63, 0.14);
+  --a-green: #34c77b;
+  --a-green-soft: rgba(52, 199, 123, 0.12);
+  --a-blue: #5b9df9;
+  --a-blue-soft: rgba(91, 157, 249, 0.12);
+  --a-red: #f1646c;
+  --a-red-soft: rgba(241, 100, 108, 0.1);
+
+  --a-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Redéfinition des tokens de marque DANS ce scope : les utilitaires
+     Tailwind v4 (text-text, text-muted, bg-bg, border-line, bg-accent,
+     bg-ink, text-on-ink…) pointent sur var(--color-*) → ils s'adaptent
+     automatiquement ici. */
+  --color-bg: var(--a-bg);
+  --color-surface: var(--a-card);
+  --color-text: var(--a-txt);
+  --color-muted: var(--a-mut);
+  --color-line: var(--a-line2);
+  --color-accent: var(--a-gold);
+  --color-accent-bright: #f0c878;
+  --color-accent-light: var(--a-gold-soft);
+  --color-gold: var(--a-gold);
+  --color-gold-soft: var(--a-gold-soft);
+  --color-gold-light: var(--a-gold-soft);
+  --color-ink: var(--a-bg2);
+  --color-on-ink: var(--a-txt);
+  --color-on-ink-muted: var(--a-mut);
+
+  background: radial-gradient(1200px 700px at 85% -10%, #0a1320 0%, #0b0c0e 55%);
+  color: var(--a-txt);
+}
+
+/* --- Overrides ciblés des sous-pages (qui utilisent des utilitaires
+       clairs en dur). On garde la cohérence sombre sans réécrire
+       chaque page. --- */
+.admin-shell .bg-white,
+.admin-shell .bg-surface { background-color: var(--a-card) !important; }
+.admin-shell .bg-stone-50,
+.admin-shell .bg-stone-100,
+.admin-shell .bg-stone-200,
+.admin-shell .bg-stone-50\/50,
+.admin-shell .bg-stone-100\/50 { background-color: var(--a-card2) !important; }
+.admin-shell .border-stone-50,
+.admin-shell .border-stone-100,
+.admin-shell .border-stone-200,
+.admin-shell .border-line { border-color: var(--a-line) !important; }
+.admin-shell .divide-stone-50 > :not([hidden]) ~ :not([hidden]),
+.admin-shell .divide-stone-100 > :not([hidden]) ~ :not([hidden]) { border-color: var(--a-line) !important; }
+.admin-shell .shadow-sm,
+.admin-shell .shadow,
+.admin-shell .shadow-md { box-shadow: none !important; }
+.admin-shell .text-ink,
+.admin-shell .text-text { color: var(--a-txt) !important; }
+.admin-shell .text-stone-400,
+.admin-shell .text-stone-500,
+.admin-shell .text-stone-600,
+.admin-shell .text-stone-700,
+.admin-shell .text-stone-900 { color: var(--a-mut) !important; }
+.admin-shell .hover\:bg-stone-50:hover,
+.admin-shell .hover\:bg-stone-100:hover,
+.admin-shell .hover\:bg-stone-50\/50:hover { background-color: var(--a-card2) !important; }
+
+/* Le GlobalSearch / inputs clairs s'adaptent au sombre */
+.admin-shell input,
+.admin-shell textarea,
+.admin-shell select { color: var(--a-txt); }
+.admin-shell input::placeholder,
+.admin-shell textarea::placeholder { color: var(--a-mut2); }
+
+.admin-shell .a-mono { font-family: var(--a-mono); font-variant-numeric: tabular-nums; }
+
+/* ---- Sidebar (desktop) ---- */
+.a-side { background: var(--a-bg2); border-right: 1px solid var(--a-line); }
+.a-side-sub { font-size: 11px; color: var(--a-mut2); }
+.a-nav-h { font-size: 10px; color: var(--a-mut2); text-transform: uppercase; letter-spacing: 0.8px; }
+.a-nav-link { display: flex; align-items: center; gap: 11px; padding: 9px 11px; border-radius: 9px; color: var(--a-mut); font-size: 13.5px; font-weight: 500; }
+.a-nav-link svg { flex: none; }
+.a-nav-link:hover { background: var(--a-card); color: var(--a-txt); }
+.a-nav-link.a-active { background: var(--a-gold-soft); color: var(--a-gold); }
+.a-nav-badge { flex: none; min-width: 20px; height: 20px; padding: 0 6px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; background: var(--a-gold); color: #1a1206; font-size: 11px; font-weight: 700; }
+.a-profile-av { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; flex: none; background: var(--a-gold-soft); color: var(--a-gold); border: 1px solid rgba(226, 165, 63, 0.25); }
+.a-icon-btn { width: 30px; height: 30px; border-radius: 9px; border: 1px solid var(--a-line); background: var(--a-card); display: grid; place-items: center; }
+.a-icon-btn svg { width: 16px; height: 16px; stroke: var(--a-mut); fill: none; stroke-width: 1.8; }
+
+/* ---- Topbar (trust strip) ---- */
+.a-topbar { background: var(--a-bg2); border-bottom: 1px solid var(--a-line); }
+
+/* ---- Nav mobile ---- */
+.a-mobnav { background: var(--a-bg2); border-top: 1px solid var(--a-line); }
+.a-mobnav a { color: var(--a-mut); }
+.a-mobnav a.a-active { color: var(--a-gold); }

@@ -1,0 +1,204 @@
+/* ============================================================
+   Sara — dashboard vendeur (espace /dashboard) — THÈME SOMBRE.
+   ⚠️ Portée : UNIQUEMENT l'espace vendeur. Tout est scopé sous
+   `.sara-shell` pour ne JAMAIS contaminer la charte monochrome
+   du reste du produit (landing, admin, équipe).
+   Charte définie par le founder (mockup sombre or/vert/bleu),
+   pendant du thème Mustaf. Les couleurs de statut (vert/or/bleu/
+   rouge) restent sémantiques — badges fonciers TF/Bail/Délib.
+   ============================================================ */
+
+.sara-shell {
+  /* Palette sombre (mockup) */
+  --s-bg: #0b0c0e;
+  --s-bg2: #0e1013;
+  --s-card: #14171c;
+  --s-card2: #191d23;
+  --s-line: rgba(255, 255, 255, 0.07);
+  --s-line2: rgba(255, 255, 255, 0.12);
+  --s-txt: #f3f1ea;
+  --s-mut: #9aa2ad;
+  --s-mut2: #6b7280;
+  --s-gold: #e2a53f;
+  --s-gold-soft: rgba(226, 165, 63, 0.14);
+  --s-green: #34c77b;
+  --s-green-soft: rgba(52, 199, 123, 0.12);
+  --s-blue: #5b9df9;
+  --s-blue-soft: rgba(91, 157, 249, 0.12);
+  --s-red: #f1646c;
+  --s-red-soft: rgba(241, 100, 108, 0.1);
+
+  --s-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Redéfinition des tokens de marque DANS ce scope : les utilitaires
+     Tailwind v4 (text-text, text-muted, bg-bg, border-line, bg-accent…)
+     pointent sur var(--color-*) → ils s'adaptent automatiquement ici. */
+  --color-bg: var(--s-bg);
+  --color-surface: var(--s-card);
+  --color-text: var(--s-txt);
+  --color-muted: var(--s-mut);
+  --color-line: var(--s-line2);
+  --color-accent: var(--s-gold);
+  --color-accent-bright: #f0c878;
+  --color-accent-light: var(--s-gold-soft);
+  --color-gold: var(--s-gold);
+  --color-gold-soft: var(--s-gold-soft);
+  --color-gold-light: var(--s-gold-soft);
+  --color-ink: var(--s-bg2);
+  --color-on-ink: var(--s-txt);
+  --color-on-ink-muted: var(--s-mut);
+
+  background: radial-gradient(1200px 700px at 85% -10%, #0a1810 0%, #0b0c0e 55%);
+  color: var(--s-txt);
+}
+
+/* --- Overrides ciblés des sous-pages (terrains, clients, visites,
+       paramètres, aide) qui utilisent encore des utilitaires clairs en
+       dur. On garde la cohérence sombre sans réécrire chaque page. --- */
+.sara-shell .bg-white,
+.sara-shell .bg-surface { background-color: var(--s-card) !important; }
+.sara-shell .bg-stone-50,
+.sara-shell .bg-stone-100,
+.sara-shell .bg-stone-50\/50 { background-color: var(--s-card2) !important; }
+.sara-shell .border-stone-50,
+.sara-shell .border-stone-100,
+.sara-shell .border-stone-200,
+.sara-shell .border-line { border-color: var(--s-line) !important; }
+.sara-shell .divide-stone-50 > :not([hidden]) ~ :not([hidden]) { border-color: var(--s-line) !important; }
+.sara-shell .shadow-sm,
+.sara-shell .shadow,
+.sara-shell .shadow-md { box-shadow: none !important; }
+.sara-shell .text-ink,
+.sara-shell .text-text { color: var(--s-txt) !important; }
+.sara-shell .text-stone-500,
+.sara-shell .text-stone-600 { color: var(--s-mut) !important; }
+.sara-shell .hover\:bg-stone-50:hover,
+.sara-shell .hover\:bg-stone-100:hover,
+.sara-shell .hover\:bg-stone-50\/50:hover { background-color: var(--s-card2) !important; }
+
+/* ===== Composants du dashboard (portés du mockup, responsives) ===== */
+
+.sara-shell .s-mono { font-family: var(--s-mono); font-variant-numeric: tabular-nums; }
+
+/* Carte générique */
+.s-card {
+  background: var(--s-card);
+  border: 1px solid var(--s-line);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+/* En-tête de section */
+.s-sec-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+.s-sec-t { font-size: 14px; font-weight: 600; color: var(--s-txt); }
+.s-sec-s { font-size: 11.5px; color: var(--s-mut); }
+.s-link { font-size: 11.5px; color: var(--s-gold); font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+
+/* ---- KPI ---- */
+.s-kpi-top { display: flex; align-items: center; justify-content: space-between; }
+.s-kpi-lbl { font-size: 11.5px; color: var(--s-mut); font-weight: 500; }
+.s-kpi-ic { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; flex: none; }
+.s-kpi-ic svg { width: 16px; height: 16px; fill: none; stroke-width: 1.9; }
+.s-kpi-ic.s-i-blue { background: var(--s-blue-soft); color: var(--s-blue); }
+.s-kpi-ic.s-i-green { background: var(--s-green-soft); color: var(--s-green); }
+.s-kpi-ic.s-i-gold { background: var(--s-gold-soft); color: var(--s-gold); }
+.s-kpi-val { font-size: 26px; font-weight: 700; margin-top: 12px; letter-spacing: -0.5px; color: var(--s-txt); line-height: 1.1; }
+.s-kpi-sub { font-size: 11.5px; color: var(--s-mut); margin-top: 6px; display: flex; align-items: center; gap: 5px; }
+.s-up { color: var(--s-green); font-weight: 600; }
+
+/* ---- Table prospects ---- */
+.s-table { width: 100%; border-collapse: collapse; }
+.s-table th { text-align: left; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--s-mut2); font-weight: 600; padding: 0 10px 10px; }
+.s-table td { padding: 11px 10px; border-top: 1px solid var(--s-line); font-size: 12.5px; vertical-align: middle; color: var(--s-txt); }
+.s-pr { display: flex; align-items: center; gap: 10px; }
+.s-pr .s-nm { font-weight: 600; font-size: 12.5px; }
+.s-pr .s-ph { font-size: 10.5px; color: var(--s-mut); }
+
+/* Avatars */
+.s-av { border-radius: 50%; display: grid; place-items: center; font-weight: 700; color: #06210f; flex: none; }
+
+/* Badge foncier (sémantique — TF vert, Bail or/ambre, Délib rouge) */
+.s-stt { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 5px; margin-top: 3px; display: inline-block; }
+.s-stt.tf { background: var(--s-green-soft); color: var(--s-green); }
+.s-stt.bail { background: var(--s-gold-soft); color: var(--s-gold); }
+.s-stt.delib { background: var(--s-red-soft); color: var(--s-red); }
+
+/* Pills pipeline (statut commercial, neutre) */
+.s-pill { font-size: 10.5px; font-weight: 600; padding: 4px 10px; border-radius: 99px; white-space: nowrap; display: inline-block; }
+.s-pill.visit { background: var(--s-green-soft); color: var(--s-green); }
+.s-pill.nego { background: var(--s-gold-soft); color: var(--s-gold); }
+.s-pill.call { background: var(--s-blue-soft); color: var(--s-blue); }
+.s-pill.lost { background: var(--s-card2); color: var(--s-mut); }
+
+.s-score { font-size: 11px; font-weight: 600; }
+.s-score.hot { color: #ff8a5b; }
+.s-score.warm { color: var(--s-gold); }
+.s-score.cold { color: var(--s-mut); }
+
+/* ---- Activité Sara ---- */
+.s-sara-head { display: flex; align-items: center; gap: 10px; padding-bottom: 14px; margin-bottom: 14px; border-bottom: 1px solid var(--s-line); }
+.s-sara-head .s-av { width: 38px; height: 38px; background: linear-gradient(135deg, #34c77b, #1f8f55); font-size: 15px; position: relative; }
+.s-sara-head .s-av .s-on { position: absolute; right: 0; bottom: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--s-green); border: 2px solid var(--s-card); }
+.s-sara-head .s-nm { font-size: 14px; font-weight: 600; color: var(--s-txt); }
+.s-sara-head .s-st { font-size: 11px; color: var(--s-green); display: flex; align-items: center; gap: 5px; }
+.s-act { position: relative; padding: 0 0 14px 22px; }
+.s-act:last-child { padding-bottom: 0; }
+.s-act::before { content: ""; position: absolute; left: 5px; top: 4px; width: 9px; height: 9px; border-radius: 50%; background: var(--s-green); border: 2px solid var(--s-card); }
+.s-act::after { content: ""; position: absolute; left: 9px; top: 13px; bottom: -2px; width: 1.5px; background: var(--s-line2); }
+.s-act:last-child::after { display: none; }
+.s-act .s-t { font-size: 12.5px; font-weight: 500; color: var(--s-txt); }
+.s-act .s-t b { color: var(--s-green); }
+.s-act .s-ti { font-size: 10.5px; color: var(--s-mut2); margin-top: 2px; }
+
+/* ---- Graphe semaine ---- */
+.s-chart { display: flex; align-items: flex-end; gap: 14px; height: 118px; padding-top: 8px; }
+.s-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 7px; height: 100%; justify-content: flex-end; }
+.s-col .s-bar { width: 100%; max-width: 34px; border-radius: 6px 6px 0 0; background: linear-gradient(180deg, var(--s-gold), #a9761f); min-height: 4px; }
+.s-col .s-d { font-size: 10.5px; color: var(--s-mut); }
+.s-col .s-n { font-size: 10.5px; color: var(--s-txt); font-weight: 600; }
+
+/* ---- Terrains ---- */
+.s-terr-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--s-line); }
+.s-terr-row:first-of-type { border-top: none; }
+.s-terr-thumb { width: 46px; height: 38px; border-radius: 8px; flex: none; background: linear-gradient(135deg, #3a4a5c, #243240); position: relative; overflow: hidden; }
+.s-terr-thumb::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 30% 120%, rgba(226, 165, 63, 0.35), transparent 60%); }
+.s-terr-row .s-nm { font-size: 12.5px; font-weight: 600; color: var(--s-txt); display: flex; align-items: center; gap: 6px; }
+.s-terr-row .s-meta { font-size: 10.5px; color: var(--s-mut); margin-top: 1px; }
+.s-terr-row .s-price { margin-left: auto; text-align: right; }
+.s-terr-row .s-price .s-p { font-size: 12.5px; font-weight: 700; color: var(--s-txt); }
+.s-terr-row .s-price .s-c { font-size: 10px; color: var(--s-mut); }
+
+/* ---- Toggle « Sara répond automatiquement » ---- */
+.s-toggle { display: inline-flex; align-items: center; gap: 9px; font-size: 12.5px; font-weight: 600; color: var(--s-green); background: var(--s-green-soft); border: 1px solid rgba(52, 199, 123, 0.25); padding: 7px 13px; border-radius: 10px; }
+.s-toggle .s-sw { width: 30px; height: 17px; border-radius: 99px; background: var(--s-green); position: relative; }
+.s-toggle .s-sw::after { content: ""; position: absolute; right: 2px; top: 2px; width: 13px; height: 13px; border-radius: 50%; background: #06210f; }
+
+/* ---- Sidebar (desktop) ---- */
+.s-side { background: var(--s-bg2); border-right: 1px solid var(--s-line); }
+.s-space-lbl { font-size: 10px; color: var(--s-mut2); text-transform: uppercase; letter-spacing: 0.8px; }
+.s-nav-link { display: flex; align-items: center; gap: 11px; padding: 9px 11px; border-radius: 9px; color: var(--s-mut); font-size: 13.5px; font-weight: 500; }
+.s-nav-link svg { flex: none; }
+.s-nav-link:hover { background: var(--s-card); color: var(--s-txt); }
+.s-nav-link.s-active { background: var(--s-gold-soft); color: var(--s-gold); }
+.s-nav-link .s-ct { margin-left: auto; font-size: 11px; font-weight: 600; background: var(--s-card2); color: var(--s-mut); padding: 1px 7px; border-radius: 99px; }
+.s-nav-link.s-active .s-ct { background: rgba(226, 165, 63, 0.22); color: var(--s-gold); }
+.s-sara-status { background: var(--s-green-soft); border: 1px solid rgba(52, 199, 123, 0.22); border-radius: 11px; padding: 11px 12px; display: flex; align-items: center; gap: 10px; }
+.s-sara-status .s-av { width: 32px; height: 32px; background: linear-gradient(135deg, #34c77b, #1f8f55); font-size: 13px; position: relative; }
+.s-sara-status .s-av .s-on { position: absolute; right: -1px; bottom: -1px; width: 10px; height: 10px; border-radius: 50%; background: var(--s-green); border: 2px solid var(--s-bg2); }
+.s-sara-status .s-t { font-size: 12.5px; font-weight: 600; color: var(--s-txt); }
+.s-sara-status .s-s { font-size: 10.5px; color: var(--s-green); }
+
+/* ---- Topbar ---- */
+.s-topbar { background: var(--s-bg); border-bottom: 1px solid var(--s-line); }
+.s-icon-btn { width: 36px; height: 36px; border-radius: 9px; border: 1px solid var(--s-line); background: var(--s-card); display: grid; place-items: center; }
+.s-icon-btn svg { width: 17px; height: 17px; stroke: var(--s-mut); fill: none; stroke-width: 1.8; }
+
+/* ---- Nav mobile ---- */
+.s-mobnav { background: var(--s-bg2); border-top: 1px solid var(--s-line); }
+.s-mobnav a { color: var(--s-mut); }
+.s-mobnav a.s-active { color: var(--s-gold); }
+
+/* Le GlobalSearch (input clair) s'adapte au sombre */
+.sara-shell input,
+.sara-shell textarea { color: var(--s-txt); }
+.sara-shell input::placeholder { color: var(--s-mut2); }

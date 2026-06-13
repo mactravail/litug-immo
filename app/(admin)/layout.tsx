@@ -1,3 +1,4 @@
+import './admin-theme.css';
 import { ShieldCheck, LogOut } from 'lucide-react';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import { AdminMobileNav } from '@/components/admin/AdminMobileNav';
@@ -16,15 +17,15 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const pendingCount = await countPendingAccounts();
 
   return (
-    <div className="flex h-screen overflow-hidden bg-bg">
+    <div className="admin-shell flex h-screen overflow-hidden">
       <AdminSidebar adminName={ADMIN_USER_NAME} pendingCount={pendingCount} />
 
       <div className="flex-1 min-w-0 flex flex-col overflow-y-auto pb-20 lg:pb-0">
         {/* Trust strip — every sensitive action is traced in the audit log. */}
-        <header className="sticky top-0 z-40 bg-ink text-on-ink px-4 sm:px-6 py-2.5">
+        <header className="a-topbar sticky top-0 z-40 px-4 sm:px-6 py-2.5">
           <div className="max-w-6xl mx-auto flex items-center gap-3 text-xs">
-            <ShieldCheck size={13} className="text-gold shrink-0" />
-            <span className="text-on-ink-muted">
+            <ShieldCheck size={13} className="shrink-0" style={{ color: 'var(--a-gold)' }} />
+            <span style={{ color: 'var(--a-mut)' }}>
               Poste de commande Litug — chaque action sensible est tracée dans le journal d’audit.
             </span>
             {/* Déconnexion mobile : la sidebar (desktop) la porte déjà. */}

@@ -2,52 +2,55 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Wallet, ReceiptText, Camera, Users, FileText, LogOut } from 'lucide-react';
+import { Home, Wallet, ReceiptText, Camera, Users, FileText, LogOut, ChevronDown, ShieldCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { logout } from '@/app/(auth)/login/actions';
 
 const NAV = [
-  { href: '/projet',                label: 'Mon projet',        icon: Home },
-  { href: '/projet/epargne',        label: 'Compte épargne',    icon: Wallet },
+  { href: '/projet',                label: "Vue d'ensemble",    icon: Home },
   { href: '/projet/depenses',       label: 'Dépenses',          icon: ReceiptText },
-  { href: '/projet/chantier',       label: 'Suivi du chantier', icon: Camera },
-  { href: '/projet/contributions',  label: 'Contributions',     icon: Users },
+  { href: '/projet/chantier',       label: 'Photos du chantier', icon: Camera },
+  { href: '/projet/epargne',        label: 'Compte épargne',    icon: Wallet },
+  { href: '/projet/contributions',  label: 'Famille & financement', icon: Users },
   { href: '/projet/documents',      label: 'Documents',         icon: FileText },
 ];
 
 interface Props {
   ownerName: string;
   tierLabel: string;
+  projectName: string;
 }
 
 function initials(name: string) {
-  return name.split(' ').slice(0, 2).map(w => w[0]?.toUpperCase() ?? '').join('');
+  return name.split(' ').slice(0, 2).map((w) => w[0]?.toUpperCase() ?? '').join('');
 }
 
-export function MustafSidebar({ ownerName, tierLabel }: Props) {
+export function MustafSidebar({ ownerName, tierLabel, projectName }: Props) {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden lg:flex flex-col w-64 h-screen bg-white border-r border-stone-100 px-4 py-6 shrink-0">
+    <aside className="m-side hidden lg:flex flex-col w-64 h-screen px-4 py-5 shrink-0">
       {/* Logo */}
-      <div className="px-3 mb-8">
+      <div className="px-2 mb-5">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo.png" alt="Litug" className="h-12 w-auto" />
-        <p className="text-[11px] text-muted mt-1">Espace construction · Mustaf</p>
+        <img src="/logo.png" alt="Litug" className="h-9 w-auto invert" />
       </div>
 
-      <nav className="flex-1 space-y-1 overflow-y-auto">
+      {/* Sélecteur de projet */}
+      <div className="m-proj-switch mb-4">
+        <div className="m-lbl">Projet en cours</div>
+        <div className="m-nm">
+          <span className="truncate">{projectName}</span>
+          <ChevronDown size={14} className="shrink-0" style={{ color: 'var(--m-mut)' }} />
+        </div>
+      </div>
+
+      <div className="m-nav-h">Mustaf · Chantier</div>
+      <nav className="flex-1 space-y-0.5 overflow-y-auto">
         {NAV.map(({ href, label, icon: Icon }) => {
           const active = href === '/projet' ? pathname === '/projet' : pathname.startsWith(href);
           return (
-            <Link
-              key={href}
-              href={href}
-              className={cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors',
-                active ? 'bg-accent-light text-accent' : 'text-muted hover:bg-stone-50 hover:text-text',
-              )}
-            >
+            <Link key={href} href={href} className={cn('m-nav-link', active && 'm-active')}>
               <Icon size={17} />
               {label}
             </Link>
@@ -55,26 +58,35 @@ export function MustafSidebar({ ownerName, tierLabel }: Props) {
         })}
       </nav>
 
-      {/* Profil client */}
-      <div className="border-t border-stone-100 pt-4 mt-4 space-y-1">
-        <div className="flex items-center gap-3 px-3 py-2">
-          <div className="w-8 h-8 rounded-full bg-accent-light flex items-center justify-center text-accent text-xs font-bold shrink-0">
+      {/* Pied : confiance + profil */}
+      <div className="mt-auto pt-4 space-y-3">
+        <div className="m-trust-mini">
+          <div className="m-t">
+            <ShieldCheck size={15} />
+            Argent sécurisé
+          </div>
+          <div className="m-s">Bloqué chez le notaire séquestre — jamais chez Litug.</div>
+        </div>
+
+        <div className="flex items-center gap-2.5 px-1">
+          <div className="m-av" style={{ width: 34, height: 34, fontSize: 13, background: 'linear-gradient(135deg,#5B9DF9,#3a6fb0)' }}>
             {initials(ownerName)}
           </div>
-          <div className="min-w-0">
-            <p className="text-sm font-medium text-text truncate">{ownerName}</p>
-            <p className="text-[11px] text-muted">Formule {tierLabel}</p>
+          <div className="min-w-0 flex-1">
+            <p className="text-[13px] font-semibold truncate" style={{ color: 'var(--m-txt)' }}>{ownerName}</p>
+            <p className="text-[11px]" style={{ color: 'var(--m-mut)' }}>Formule {tierLabel}</p>
           </div>
+          <form action={logout}>
+            <button
+              type="submit"
+              aria-label="Se déconnecter"
+              className="m-icon-btn cursor-pointer"
+              style={{ width: 30, height: 30 }}
+            >
+              <LogOut />
+            </button>
+          </form>
         </div>
-        <form action={logout}>
-          <button
-            type="submit"
-            className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-muted hover:bg-stone-50 hover:text-red-500 transition-colors w-full cursor-pointer"
-          >
-            <LogOut size={16} />
-            Se déconnecter
-          </button>
-        </form>
       </div>
     </aside>
   );

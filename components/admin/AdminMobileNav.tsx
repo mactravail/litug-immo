@@ -18,7 +18,7 @@ export function AdminMobileNav({ pendingCount = 0 }: { pendingCount?: number }) 
   const pathname = usePathname();
 
   return (
-    <nav className="lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-stone-100 z-50">
+    <nav className="a-mobnav lg:hidden fixed bottom-0 inset-x-0 z-50">
       <div className="flex">
         {NAV.map(({ href, label, icon: Icon }) => {
           const active = href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
@@ -29,7 +29,7 @@ export function AdminMobileNav({ pendingCount = 0 }: { pendingCount?: number }) 
               href={href}
               className={cn(
                 'flex-1 flex flex-col items-center gap-1 py-3 text-[10px] font-medium transition-colors',
-                active ? 'text-accent' : 'text-muted',
+                active && 'a-active',
               )}
             >
               <span className="relative">

@@ -17,7 +17,7 @@ export function MobileNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-stone-100 z-50">
+    <nav className="s-mobnav lg:hidden fixed bottom-0 inset-x-0 z-50">
       <div className="flex">
         {NAV.map(({ href, label, icon: Icon }) => {
           const active = href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(href);
@@ -27,7 +27,7 @@ export function MobileNav() {
               href={href}
               className={cn(
                 'flex-1 flex flex-col items-center gap-1 py-3 text-[10px] font-medium transition-colors',
-                active ? 'text-accent' : 'text-muted'
+                active && 's-active'
               )}
             >
               <Icon size={20} />

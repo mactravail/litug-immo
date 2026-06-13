@@ -79,7 +79,7 @@ export function MustafMobileMenu({ ownerName, tierLabel }: Props) {
           échapper au contexte d'empilement du <header> sticky (sinon le menu
           reste piégé sous la barre de navigation du bas). */}
       {open && mounted && createPortal(
-        <div className="fixed inset-0 z-[100] lg:hidden" role="dialog" aria-modal="true">
+        <div className="mustaf-shell fixed inset-0 z-[100] lg:hidden" role="dialog" aria-modal="true">
           {/* Fond cliquable pour fermer */}
           <div
             className="absolute inset-0 bg-black/40"
@@ -93,7 +93,7 @@ export function MustafMobileMenu({ ownerName, tierLabel }: Props) {
             <div className="flex items-center justify-between mb-6">
               <div>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/logo.png" alt="Litug" className="h-10 w-auto" />
+                <img src="/logo.png" alt="Litug" className="h-10 w-auto invert" />
                 <p className="text-[11px] text-muted mt-1">Espace construction · Mustaf</p>
               </div>
               <button

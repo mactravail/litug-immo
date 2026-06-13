@@ -41,7 +41,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         businessName={seller?.businessName ?? 'Mon compte'}
         subscriptionStatus={seller?.subscriptionStatus ?? 'trial'}
       />
-      <div className="flex-1 flex flex-col overflow-y-auto pb-20 lg:pb-0">
+      <div className="flex-1 min-w-0 flex flex-col overflow-y-auto pb-20 lg:pb-0">
         {/* Top bar avec recherche */}
         <header className="sticky top-0 z-40 bg-bg/80 backdrop-blur-sm border-b border-stone-100 px-4 sm:px-6 py-3">
           <GlobalSearch items={searchItems} />

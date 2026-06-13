@@ -23,7 +23,7 @@ export default async function EmployeLayout({ children }: { children: React.Reac
         currentId={currentId}
       />
 
-      <div className="flex-1 flex flex-col overflow-y-auto pb-20 lg:pb-0">
+      <div className="flex-1 min-w-0 flex flex-col overflow-y-auto pb-20 lg:pb-0">
         {/* Bandeau confiance — l'employé ne voit que ce qui le concerne (prompt §2.1) */}
         <header className="sticky top-0 z-40 bg-ink text-on-ink px-4 sm:px-6 py-2.5">
           <div className="max-w-3xl mx-auto flex items-center gap-3 text-xs">

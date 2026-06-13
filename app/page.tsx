@@ -495,6 +495,7 @@ const ICONS: Record<string, string> = {
   camera:  "M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z M12 17a4 4 0 100-8 4 4 0 000 8z",
   alert:   "M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z M12 9v4 M12 17h.01",
   lock:    "M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2z M7 11V7a5 5 0 0110 0v4",
+  tiktok:  "M9 12a4 4 0 104 4V4a5 5 0 005 5",
 };
 
 function Icon({ name, size = 18, stroke = 2, className }: { name: string; size?: number; stroke?: number; className?: string }) {
@@ -1524,7 +1525,9 @@ function Contact({ t, lang }: { t: T; lang: Lang }) {
 /* FOOTER                                                              */
 /* ------------------------------------------------------------------ */
 function Footer({ t }: { t: T }) {
-  const socials = ["chat", "users", "send", "sparkle"] as const;
+  const socials = [
+    { name: "tiktok", href: "https://www.tiktok.com/@litug_groupe", label: "TikTok" },
+  ] as const;
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error" | "invalid">("idle");
   const resetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -1607,7 +1610,11 @@ function Footer({ t }: { t: T }) {
         <div className="footer-bottom">
           <span className="rights">{t.footer.rights}</span>
           <div className="socials">
-            {socials.map((s, i) => <a key={i} href="#top" aria-label="social"><Icon name={s} size={16} /></a>)}
+            {socials.map((s, i) => (
+              <a key={i} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label}>
+                <Icon name={s.name} size={16} />
+              </a>
+            ))}
           </div>
         </div>
       </div>

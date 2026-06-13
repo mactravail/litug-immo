@@ -21,21 +21,17 @@ export default function MentionsLegalesPage() {
 
       <main className="info-main">
         <div className="wrap info-prose">
-          <div className="info-note">
-            Les informations entre crochets <strong>[…]</strong> sont à compléter avec
-            les coordonnées officielles de la société avant la mise en ligne.
-          </div>
-
           <h2>1. Éditeur du site</h2>
           <p>
-            Le site <strong>litug.com</strong> est édité par <strong>[Raison sociale]</strong>,
-            [forme juridique] au capital de [montant] FCFA, immatriculée au registre du
-            commerce sous le numéro <strong>[RCCM / NINEA]</strong>.
+            Le site <strong>litug.com</strong> est édité par Litug, immatriculée au
+            registre du commerce sous le numéro <strong>SN MBR 2020 A 1863</strong> et
+            identifiée par le NINEA <strong>008249436</strong>.
           </p>
           <ul>
             <li>Site : <strong>litug.com</strong></li>
-            <li>Siège social : [adresse complète], Dakar, Sénégal</li>
-            <li>Directeur de la publication : [Nom du responsable]</li>
+            <li>Registre du commerce (RCCM) : <strong>SN MBR 2020 A 1863</strong></li>
+            <li>NINEA : <strong>008249436</strong></li>
+            <li>Siège social : Dakar, Sénégal</li>
             <li>E-mail : <a href="mailto:contact@litug.com">contact@litug.com</a></li>
             <li>Téléphone (Europe) : <a href="tel:+393291114442">+39 329 111 4442</a></li>
             <li>Téléphone (Sénégal) : <a href="tel:+221775008583">+221 77 500 85 83</a></li>
@@ -43,15 +39,15 @@ export default function MentionsLegalesPage() {
 
           <h2>2. Hébergement</h2>
           <p>
-            Le site est hébergé par <strong>[Hébergeur]</strong> (par ex. Hostinger /
-            Vercel), [adresse de l&apos;hébergeur].
+            Le site est hébergé par <strong>Vercel Inc.</strong>, 340 S Lemon Ave #4133,
+            Walnut, CA 91789, États-Unis — <a href="https://vercel.com">vercel.com</a>.
           </p>
 
           <h2>3. Propriété intellectuelle</h2>
           <p>
             L&apos;ensemble des contenus présents sur le site (textes, logos, marques,
             graphismes, photographies, interface) est la propriété exclusive de
-            <strong> [Raison sociale]</strong> ou de ses partenaires, et est protégé par
+            <strong> Litug</strong> ou de ses partenaires, et est protégé par
             les lois en vigueur sur la propriété intellectuelle. Toute reproduction ou
             utilisation sans autorisation écrite préalable est interdite.
           </p>

@@ -212,8 +212,11 @@ export function SelfBuildForm({ canceled, tier }: { canceled?: boolean; tier?: T
               </p>
             </div>
             <p className="pay-sim">
-              <ShieldCheck size={14} /> Mode test — carte de démonstration
-              <b> 4242 4242 4242 4242</b>, date future, n&apos;importe quel CVC.
+              <ShieldCheck size={14} />
+              <span>
+                Mode test — carte de démonstration
+                <b> 4242 4242 4242 4242</b>, date future, n&apos;importe quel CVC.
+              </span>
             </p>
           </>
         )}

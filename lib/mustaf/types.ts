@@ -75,6 +75,32 @@ export interface Deposit {
   note?: string;
 }
 
+export type RechargeStatus = 'pending' | 'validated' | 'rejected';
+
+/**
+ * A top-up *declared* by a family member ("j'ai envoyé X par Wave"). It does NOT
+ * raise the escrow balance: it waits in the admin's validation queue. Only once
+ * the back-office confirms the money was actually received does it become a real
+ * Deposit (status `validated`). Rejected requests never touch the balance.
+ * Trust rule (§3.4): money moves only after a human control, never automatically.
+ */
+export interface RechargeRequest {
+  id: string;
+  projectId: string;
+  contributorId: string;
+  contributorName: string; // denormalized
+  amount: number;
+  method: 'wave';          // simulé — Wave pour l'instant (§4/§12)
+  status: RechargeStatus;
+  note?: string;
+  requestedAt: string;
+  reviewedById?: string;
+  reviewedByName?: string;
+  reviewedAt?: string;
+  depositId?: string;      // set when validated → the deposit it created
+  rejectionReason?: string;
+}
+
 export interface ConstructionPhase {
   id: string;
   projectId: string;

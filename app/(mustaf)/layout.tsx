@@ -22,14 +22,14 @@ export default async function MustafLayout({ children }: { children: React.React
   const tierLabel = TIER_LABEL[project.subscriptionTier];
 
   return (
-    <div className="mustaf-shell flex h-screen overflow-hidden">
+    <div className="mustaf-shell min-h-screen lg:pl-64">
       <MustafSidebar
         ownerName={project.ownerName}
         tierLabel={tierLabel}
         projectName={project.landTitle.replace(/^Terrain TF\s*—\s*/, '')}
       />
 
-      <div className="flex-1 min-w-0 flex flex-col overflow-y-auto pb-20 lg:pb-0">
+      <div className="flex min-h-screen flex-col">
         {/* Topbar */}
         <header className="m-topbar sticky top-0 z-40 min-h-16 flex items-center justify-between px-4 sm:px-6 pt-3 pb-2.5">
           <div className="flex items-center gap-2.5 min-w-0">
@@ -55,7 +55,7 @@ export default async function MustafLayout({ children }: { children: React.React
         </header>
 
         <main className="flex-1">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-8 sm:pt-10 pb-6">{children}</div>
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-8 sm:pt-10 pb-24 lg:pb-12">{children}</div>
         </main>
       </div>
 

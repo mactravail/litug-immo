@@ -84,6 +84,23 @@ export async function validateAccountRequest(_prev: ActionState, formData: FormD
     });
     if (error) return { error: 'Validation impossible : ' + error.message };
 
+    // Abonnement unifié : on matérialise la ligne `subscriptions` (active) pour que
+    // le compte validé apparaisse comme abonné dans /admin/vendeurs. Idempotent
+    // (unique subject_type+subject_id). Best-effort : un échec ici n'annule pas la
+    // validation déjà actée sur le compte auth.
+    const isOwner = um.account_type === 'owner';
+    await admin.from('subscriptions').upsert(
+      {
+        subject_type: isOwner ? 'mustaf' : 'seller',
+        subject_id: userId,
+        tier: isOwner ? 'serenite' : 'Sara Standard',
+        status: 'active',
+        validated_by: actor.id,
+        validated_at: new Date().toISOString(),
+      },
+      { onConflict: 'subject_type,subject_id' },
+    );
+
     // Journal d'audit (insert-only) — qui/quoi/quand.
     await admin.from('audit_log').insert({
       actor_id: actor.id,
@@ -91,11 +108,12 @@ export async function validateAccountRequest(_prev: ActionState, formData: FormD
       target_type: 'user',
       target_id: userId,
       target_label: (um.full_name as string) || target?.user?.email || userId,
-      metadata: { type: um.account_type === 'owner' ? 'owner' : 'seller' },
+      metadata: { type: isOwner ? 'owner' : 'seller' },
     });
 
     revalidatePath('/admin/demandes');
     revalidatePath('/admin');
+    revalidatePath('/admin/vendeurs');
     revalidatePath('/admin/audit');
 
     // Prévenir l'intéressé que son espace est ouvert (best-effort : un échec
@@ -194,6 +212,41 @@ export async function releaseFunds(_prev: ActionState, formData: FormData): Prom
     return { ok: true };
   } catch (e) {
     return { error: e instanceof Error ? e.message : 'Déblocage impossible.' };
+  }
+}
+
+/**
+ * Valide ou refuse une recharge déclarée par une famille Mustaf. À la validation,
+ * la demande devient un vrai dépôt et le solde séquestre monte ; au refus, rien ne
+ * bouge. Le solde ne change donc JAMAIS sans cette action (§3.4). Tracé en audit.
+ */
+export async function reviewRecharge(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  try {
+    const id = (formData.get('id') as string) ?? '';
+    if (!id) return { error: 'Identifiant de recharge manquant.' };
+    const decision = formData.get('decision') as 'approve' | 'reject';
+    if (decision === 'approve') {
+      await getAdminProvider().validateRecharge(id);
+    } else if (decision === 'reject') {
+      // Motif obligatoire au refus : un préréglage (ex. « Argent non reçu ») + un
+      // commentaire libre facultatif. Le client verra ce motif dans son dashboard.
+      const preset = (formData.get('reasonPreset') as string)?.trim() || '';
+      const comment = (formData.get('comment') as string)?.trim() || '';
+      const reason = [preset, comment].filter(Boolean).join(' — ');
+      if (!reason) return { error: 'Indiquez un motif de refus.' };
+      await getAdminProvider().rejectRecharge(id, reason);
+    } else {
+      return { error: 'Décision invalide.' };
+    }
+    // Rafraîchit la file admin ET l'espace épargne du client (même donnée, deux portes).
+    revalidatePath('/admin');
+    revalidatePath('/admin/audit');
+    revalidatePath('/projet/epargne');
+    revalidatePath('/projet');
+    revalidatePath('/projet/contributions');
+    return { ok: true };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : 'Action impossible.' };
   }
 }
 

@@ -1,16 +1,30 @@
-import { Wallet, ArrowDownToLine } from 'lucide-react';
+import { Wallet, ArrowDownToLine, Clock, CheckCircle2, XCircle } from 'lucide-react';
 import { getMustafProvider } from '@/lib/mustaf/provider';
+import type { RechargeStatus } from '@/lib/mustaf/types';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { FundingBar } from '@/components/mustaf/FundingBar';
 import { EscrowNote } from '@/components/mustaf/Notices';
 import { formatFcfa, formatEur, formatDateShort } from '@/lib/utils';
+import RechargeForm from './RechargeForm';
+
+/** Présentation par statut d'une recharge déclarée (le client suit son sort). */
+const RECHARGE_UI: Record<RechargeStatus, { label: string; Icon: typeof Clock; iconWrap: string; badge: string }> = {
+  pending:   { label: 'En attente', Icon: Clock,        iconWrap: 'bg-amber-50 text-amber-600',     badge: 'text-amber-700 bg-amber-50 border-amber-100' },
+  validated: { label: 'Validée',    Icon: CheckCircle2, iconWrap: 'bg-emerald-50 text-emerald-600', badge: 'text-emerald-700 bg-emerald-50 border-emerald-100' },
+  rejected:  { label: 'Refusée',    Icon: XCircle,      iconWrap: 'bg-red-50 text-red-600',          badge: 'text-red-700 bg-red-50 border-red-100' },
+};
 
 export default async function EpargnePage() {
   const mp = getMustafProvider();
-  const [escrow, deposits] = await Promise.all([
+  const [escrow, deposits, members, rechargeRequests] = await Promise.all([
     mp.getEscrowSummary(),
     mp.getDeposits(),
+    mp.getMembers(),
+    mp.getRechargeRequests(),
   ]);
+  const pendingTotal = rechargeRequests
+    .filter(r => r.status === 'pending')
+    .reduce((s, r) => s + r.amount, 0);
 
   return (
     <div className="space-y-8">
@@ -37,9 +51,58 @@ export default async function EpargnePage() {
             <p className="font-semibold mt-0.5">{formatFcfa(escrow.totalReleased)}</p>
           </div>
         </div>
+        {pendingTotal > 0 && (
+          <div className="mt-4 flex items-center gap-2 rounded-xl bg-amber-500/10 border border-amber-400/20 px-3 py-2.5 text-xs text-amber-200">
+            <Clock size={14} className="shrink-0 text-amber-300" />
+            <span>
+              <span className="font-semibold">{formatFcfa(pendingTotal)}</span> en attente de validation —
+              non compté dans le solde tant que Litug n’a pas confirmé le virement.
+            </span>
+          </div>
+        )}
       </section>
 
       <EscrowNote custodianName={escrow.custodianName} />
+
+      {/* Suivi des recharges déclarées : en attente → validée (ajoutée au solde) ou refusée (motif) */}
+      {rechargeRequests.length > 0 && (
+        <section>
+          <h2 className="font-serif text-lg font-semibold text-text mb-4 flex items-center gap-2">
+            <Wallet size={17} className="text-accent" />
+            Suivi de mes recharges
+          </h2>
+          <div className="bg-white rounded-2xl border border-stone-100 shadow-sm divide-y divide-stone-50">
+            {rechargeRequests.map(r => {
+              const ui = RECHARGE_UI[r.status];
+              return (
+                <div key={r.id} className="flex items-center gap-3 px-4 py-3.5">
+                  <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${ui.iconWrap}`}>
+                    <ui.Icon size={16} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-text truncate">
+                      {r.contributorName} <span className="font-semibold">{formatFcfa(r.amount)}</span>
+                    </p>
+                    <p className="text-xs text-muted">
+                      {r.status === 'pending' && <>Déclarée le {formatDateShort(r.requestedAt)} · en cours de vérification</>}
+                      {r.status === 'validated' && <>Validée le {formatDateShort(r.reviewedAt ?? r.requestedAt)} · ajoutée à votre solde</>}
+                      {r.status === 'rejected' && (
+                        <>Refusée le {formatDateShort(r.reviewedAt ?? r.requestedAt)}{r.rejectionReason ? ` · ${r.rejectionReason}` : ''}</>
+                      )}
+                    </p>
+                  </div>
+                  <span className={`text-[11px] font-semibold rounded-full border px-2.5 py-1 shrink-0 ${ui.badge}`}>
+                    {ui.label}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* Recharger le compte par Wave (simulé — §4/§12) */}
+      <RechargeForm memberNames={members.map(m => m.displayName)} />
 
       {/* Objectif prochaine phase */}
       {escrow.nextPhase && (

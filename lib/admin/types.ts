@@ -7,7 +7,7 @@
    data layers.
    ============================================================ */
 
-import type { SubscriptionTier } from '@/lib/mustaf/types';
+import type { SubscriptionTier, RechargeRequest } from '@/lib/mustaf/types';
 
 /* --- Subscriptions (unified table: sellers + Mustaf clients) --- */
 
@@ -90,7 +90,9 @@ export type AuditAction =
   | 'resolve_incident'
   | 'escalate_incident'
   | 'log_prospect'
-  | 'submit_prospects';
+  | 'submit_prospects'
+  | 'validate_recharge'
+  | 'reject_recharge';
 
 export type AuditTargetType =
   | 'subscription'
@@ -105,7 +107,8 @@ export type AuditTargetType =
   | 'advance'
   | 'report'
   | 'incident'
-  | 'prospect';
+  | 'prospect'
+  | 'recharge';
 
 export interface AuditLogEntry {
   id: string;
@@ -147,6 +150,7 @@ export interface AdminOverview {
   };
   queue: {
     subsToValidate: Subscription[];
+    rechargesToValidate: RechargeRequest[];
     phasesAwaitingRelease: { projectId: string; projectName: string; phaseId: string; phaseLabel: string; amount: number }[];
     openAnomalies: number;
     reportsToReview: number;

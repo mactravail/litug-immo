@@ -7,14 +7,14 @@
    ============================================================ */
 
 import type {
-  ConstructionProject, ProjectMember, EscrowSubaccount, Deposit,
-  ConstructionPhase, Expense, MaterialOrder, Inspection, FundRelease,
+  ConstructionProject, ProjectMember, EscrowSubaccount, Deposit, RechargeRequest,
+  RechargeStatus, ConstructionPhase, Expense, MaterialOrder, Inspection, FundRelease,
   ConstructionMedia, ConstructionCompany, Anomaly, ProjectDocument,
   EscrowSummary, Participation, ProjectProgress,
 } from './types';
 import {
-  SEED_PROJECT, SEED_MEMBERS, SEED_ESCROW, SEED_DEPOSITS, SEED_PHASES,
-  SEED_EXPENSES, SEED_MATERIAL_ORDERS, SEED_INSPECTIONS, SEED_FUND_RELEASES,
+  SEED_PROJECT, SEED_MEMBERS, SEED_ESCROW, SEED_DEPOSITS, SEED_RECHARGE_REQUESTS,
+  SEED_PHASES, SEED_EXPENSES, SEED_MATERIAL_ORDERS, SEED_INSPECTIONS, SEED_FUND_RELEASES,
   SEED_MEDIA, SEED_COMPANY, SEED_ANOMALIES, SEED_DOCUMENTS,
 } from './seed';
 
@@ -26,6 +26,9 @@ export interface MustafProvider {
   getMembers(): Promise<ProjectMember[]>;
   getEscrow(): Promise<EscrowSubaccount>;
   getDeposits(): Promise<Deposit[]>;
+  getRechargeRequests(filter?: { status?: RechargeStatus }): Promise<RechargeRequest[]>;
+  /** Sum of recharges still awaiting validation (shown to the client, never in the balance). */
+  getPendingRechargeTotal(): Promise<number>;
   getPhases(): Promise<ConstructionPhase[]>;
   getExpenses(): Promise<Expense[]>;
   getMaterialOrders(): Promise<MaterialOrder[]>;
@@ -39,6 +42,13 @@ export interface MustafProvider {
   getEscrowSummary(): Promise<EscrowSummary>;
   getParticipation(): Promise<Participation[]>;
   getProgress(): Promise<ProjectProgress>;
+  // Mutations (simulated escrow — no real banking, mustaf.md §4/§12)
+  /** A family member declares a Wave top-up → a PENDING request (balance unchanged). */
+  requestRecharge(input: { contributorName: string; amount: number; note?: string }): Promise<RechargeRequest>;
+  /** Admin validates a pending recharge → it becomes a real deposit, balance rises. */
+  approveRecharge(id: string, reviewer: { id: string; name: string }): Promise<{ request: RechargeRequest; deposit: Deposit; balance: number }>;
+  /** Admin rejects a pending recharge → discarded, balance never moves. */
+  rejectRecharge(id: string, reviewer: { id: string; name: string }, reason?: string): Promise<RechargeRequest>;
 }
 
 const phasesByOrder = () => [...SEED_PHASES].sort((a, b) => a.order - b.order);
@@ -96,6 +106,14 @@ const mockProvider: MustafProvider = {
   async getDeposits() {
     return [...SEED_DEPOSITS].sort((a, b) => new Date(b.depositedAt).getTime() - new Date(a.depositedAt).getTime());
   },
+  async getRechargeRequests(filter) {
+    let rows = [...SEED_RECHARGE_REQUESTS];
+    if (filter?.status) rows = rows.filter(r => r.status === filter.status);
+    return rows.sort((a, b) => new Date(b.requestedAt).getTime() - new Date(a.requestedAt).getTime());
+  },
+  async getPendingRechargeTotal() {
+    return SEED_RECHARGE_REQUESTS.filter(r => r.status === 'pending').reduce((s, r) => s + r.amount, 0);
+  },
   async getPhases() { return phasesByOrder(); },
   async getExpenses() {
     return [...SEED_EXPENSES].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
@@ -112,6 +130,66 @@ const mockProvider: MustafProvider = {
   async getEscrowSummary() { return escrowSummary(); },
   async getParticipation() { return participation(); },
   async getProgress() { return progress(); },
+  // A Wave top-up is DECLARED, not credited: it creates a PENDING request that
+  // waits for admin validation. The balance does not move yet (§3.4). Match the
+  // contributor to a known family member by display name when possible.
+  async requestRecharge({ contributorName, amount, note }) {
+    const name = contributorName.trim();
+    const member = SEED_MEMBERS.find(
+      m => m.displayName.toLowerCase() === name.toLowerCase()
+    );
+    const request: RechargeRequest = {
+      id: `rch-${Date.now()}`,
+      projectId: SEED_PROJECT.id,
+      contributorId: member?.userId ?? `guest-${name.toLowerCase().replace(/\s+/g, '-')}`,
+      contributorName: name,
+      amount,
+      method: 'wave',
+      status: 'pending',
+      note: note?.trim() || 'Recharge Wave',
+      requestedAt: new Date().toISOString(),
+    };
+    SEED_RECHARGE_REQUESTS.push(request);
+    return request;
+  },
+
+  // Validation by the admin turns the pending request into a real deposit — the
+  // ONLY moment the escrow balance rises. Idempotent guard: only a pending request
+  // can be validated.
+  async approveRecharge(id, reviewer) {
+    const request = SEED_RECHARGE_REQUESTS.find(r => r.id === id);
+    if (!request) throw new Error('Demande de recharge introuvable.');
+    if (request.status !== 'pending') throw new Error('Cette recharge a déjà été traitée.');
+    const deposit: Deposit = {
+      id: `dep-${Date.now()}`,
+      projectId: request.projectId,
+      contributorId: request.contributorId,
+      contributorName: request.contributorName,
+      amount: request.amount,
+      depositedAt: new Date().toISOString(),
+      note: request.note || 'Recharge Wave (validée)',
+    };
+    SEED_DEPOSITS.push(deposit);
+    request.status = 'validated';
+    request.reviewedById = reviewer.id;
+    request.reviewedByName = reviewer.name;
+    request.reviewedAt = new Date().toISOString();
+    request.depositId = deposit.id;
+    return { request, deposit, balance: totalDeposited() - totalReleased() };
+  },
+
+  // Rejection discards the request — the balance never moves.
+  async rejectRecharge(id, reviewer, reason) {
+    const request = SEED_RECHARGE_REQUESTS.find(r => r.id === id);
+    if (!request) throw new Error('Demande de recharge introuvable.');
+    if (request.status !== 'pending') throw new Error('Cette recharge a déjà été traitée.');
+    request.status = 'rejected';
+    request.reviewedById = reviewer.id;
+    request.reviewedByName = reviewer.name;
+    request.reviewedAt = new Date().toISOString();
+    request.rejectionReason = reason?.trim() || undefined;
+    return request;
+  },
 };
 
 let _provider: MustafProvider | null = null;

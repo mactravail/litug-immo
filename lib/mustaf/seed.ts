@@ -6,7 +6,7 @@
    ============================================================ */
 
 import type {
-  ConstructionProject, ProjectMember, EscrowSubaccount, Deposit,
+  ConstructionProject, ProjectMember, EscrowSubaccount, Deposit, RechargeRequest,
   ConstructionPhase, Expense, MaterialOrder, Inspection, FundRelease,
   ConstructionMedia, ConstructionCompany, Anomaly, ProjectDocument,
 } from './types';
@@ -60,6 +60,17 @@ export const SEED_DEPOSITS: Deposit[] = [
   { id: 'dep-6', projectId: PROJECT_ID, contributorId: 'user-fatou', contributorName: 'Fatou Ndiaye', amount: 120_000, depositedAt: '2026-05-22T18:00:00Z' },
   { id: 'dep-7', projectId: PROJECT_ID, contributorId: OWNER_ID,     contributorName: 'Modou Fall',   amount: 150_000, depositedAt: '2026-06-03T07:40:00Z' },
   { id: 'dep-8', projectId: PROJECT_ID, contributorId: 'user-fatou', contributorName: 'Fatou Ndiaye', amount:  80_000, depositedAt: '2026-06-03T19:05:00Z', note: 'Tabaski' },
+];
+
+// Recharges déclarées par la famille, en attente de validation admin. Elles
+// n'entrent PAS dans le solde tant qu'elles ne sont pas validées (l'argent ne
+// bouge qu'après contrôle du virement Wave reçu — §3.4). Une demande de démo.
+export const SEED_RECHARGE_REQUESTS: RechargeRequest[] = [
+  {
+    id: 'rch-1', projectId: PROJECT_ID, contributorId: 'user-aicha', contributorName: 'Aïcha Sow',
+    amount: 200_000, method: 'wave', status: 'pending',
+    note: 'Recharge Wave', requestedAt: '2026-06-13T20:15:00Z',
+  },
 ];
 
 export const SEED_PHASES: ConstructionPhase[] = [

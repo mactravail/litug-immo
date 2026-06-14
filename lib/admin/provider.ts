@@ -31,7 +31,7 @@ import { getMustafProvider } from '@/lib/mustaf/provider';
 import { PHASE_STATUS_LABEL } from '@/lib/mustaf/labels';
 import type {
   Expense, ExpenseCategory, ConstructionMedia, PhaseStatus, MediaType,
-  Anomaly, AnomalyStatus,
+  Anomaly, AnomalyStatus, RechargeRequest, RechargeStatus,
 } from '@/lib/mustaf/types';
 import { SEED_ANOMALIES } from '@/lib/mustaf/seed';
 
@@ -99,6 +99,11 @@ export interface AdminProvider {
   addMedia(projectId: string, input: AddMediaInput): Promise<ConstructionMedia>;
   updatePhaseStatus(phaseId: string, status: PhaseStatus): Promise<void>;
   releaseFunds(phaseId: string, controllerId: string): Promise<void>;
+  // Recharges déclarées par la famille → validation/refus par l'admin (le solde ne
+  // bouge qu'à la validation). Délégué au provider Mustaf qui détient le dataset.
+  listRechargeRequests(filter?: { status?: RechargeStatus }): Promise<RechargeRequest[]>;
+  validateRecharge(id: string): Promise<RechargeRequest>;
+  rejectRecharge(id: string, reason?: string): Promise<RechargeRequest>;
   // Team & roles
   listTeam(): Promise<TeamMember[]>;
   assignRole(input: { displayName: string; role: TeamMember['role']; contact?: string }): Promise<TeamMember>;
@@ -194,12 +199,15 @@ function monthlySeries(): MonthlyPoint[] {
   });
 }
 
-const mockProvider: AdminProvider = {
+export const adminMockProvider: AdminProvider = {
   async getOverview() {
     const subs = SEED_SUBSCRIPTIONS;
     const phases = SEED_PHASES;
     const mp = getMustafProvider();
-    const project = await mp.getProject();
+    const [project, rechargesToValidate] = await Promise.all([
+      mp.getProject(),
+      mp.getRechargeRequests({ status: 'pending' }),
+    ]);
 
     const phasesAwaitingRelease = phases
       .filter(p => RELEASABLE.includes(p.status))
@@ -219,6 +227,7 @@ const mockProvider: AdminProvider = {
       },
       queue: {
         subsToValidate: subs.filter(s => s.status === 'pending'),
+        rechargesToValidate,
         phasesAwaitingRelease,
         openAnomalies: SEED_ANOMALIES.filter(a => a.status === 'open').length,
         reportsToReview: SEED_FIELD_REPORTS.filter(r => r.status === 'submitted').length,
@@ -489,6 +498,34 @@ const mockProvider: AdminProvider = {
     appendAudit({ actorId: controllerId, action: 'release_funds', targetType: 'phase', targetId: phaseId, targetLabel: phase.label, metadata: { amount: phase.estimate, inspector: inspection.inspectorName } });
   },
 
+  async listRechargeRequests(filter) {
+    return getMustafProvider().getRechargeRequests(filter);
+  },
+
+  // Validation : transforme la demande en dépôt réel (le solde monte). La logique
+  // de création du dépôt vit dans le provider Mustaf (propriétaire des dépôts) ; ici
+  // on ne fait qu'orchestrer + tracer l'action (§2, audit insert-only).
+  async validateRecharge(id) {
+    const { request, deposit } = await getMustafProvider().approveRecharge(id, { id: ADMIN_USER_ID, name: ADMIN_USER_NAME });
+    appendAudit({
+      action: 'validate_recharge', targetType: 'recharge', targetId: id,
+      targetLabel: `${request.contributorName} — recharge`,
+      metadata: { amount: request.amount, depositId: deposit.id, method: request.method },
+    });
+    return request;
+  },
+
+  // Refus : la demande est écartée, le solde ne bouge jamais.
+  async rejectRecharge(id, reason) {
+    const request = await getMustafProvider().rejectRecharge(id, { id: ADMIN_USER_ID, name: ADMIN_USER_NAME }, reason);
+    appendAudit({
+      action: 'reject_recharge', targetType: 'recharge', targetId: id,
+      targetLabel: `${request.contributorName} — recharge`,
+      metadata: { amount: request.amount, reason: reason ?? null },
+    });
+    return request;
+  },
+
   async listTeam() {
     return [...SEED_TEAM].sort((a, b) => a.role.localeCompare(b.role));
   },
@@ -709,10 +746,16 @@ let _provider: AdminProvider | null = null;
 
 export function getAdminProvider(): AdminProvider {
   if (_provider) return _provider;
-  // Mock-first: a './supabase-provider' can replace this later, switched by
-  // NEXT_PUBLIC_DATA_SOURCE exactly like the Sara/Mustaf providers.
-  _provider = mockProvider;
-  return _provider;
+  // Switchable like the Sara/Mustaf data layers. The Supabase provider serves the
+  // real subscriptions/team/audit/stats and delegates Mustaf (demo project kept)
+  // and Volet B (shared with the employee space, migrated in a later phase) to the mock.
+  if (process.env.NEXT_PUBLIC_DATA_SOURCE === 'supabase') {
+    const { supabaseAdminProvider } = require('./supabase-provider');
+    _provider = supabaseAdminProvider;
+  } else {
+    _provider = adminMockProvider;
+  }
+  return _provider!;
 }
 
 /** The acting admin for server actions (mock). Real impl reads auth.uid() + role. */

@@ -3,8 +3,9 @@ import { Store, HardHat, ClipboardCheck, Banknote, TriangleAlert, ArrowRight, Tr
 import { getAdminProvider } from '@/lib/admin/provider';
 import { StatCard } from '@/components/ui/StatCard';
 import { SubscriptionBadge } from '@/components/admin/SubscriptionBadge';
+import { RechargeReviewActions } from '@/components/admin/RechargeReviewActions';
 import { SUBJECT_TYPE_LABEL } from '@/lib/admin/labels';
-import { formatFcfa, formatEur } from '@/lib/utils';
+import { formatFcfa, formatEur, formatDateShort } from '@/lib/utils';
 
 export default async function AdminHomePage() {
   const ap = getAdminProvider();
@@ -70,6 +71,38 @@ export default async function AdminHomePage() {
                     >
                       Traiter <ArrowRight size={13} />
                     </Link>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* Recharges Mustaf à valider (le solde du client ne bouge qu'ici) */}
+        <div className="bg-white rounded-2xl border border-stone-100 shadow-sm overflow-hidden">
+          <div className="flex items-center justify-between px-5 py-3 border-b border-stone-100">
+            <h3 className="text-sm font-semibold text-text flex items-center gap-2">
+              <Wallet size={16} className="text-accent" />
+              Recharges à valider
+            </h3>
+            <span className="text-xs text-muted">{queue.rechargesToValidate.length}</span>
+          </div>
+          {queue.rechargesToValidate.length === 0 ? (
+            <p className="px-5 py-4 text-sm text-muted">Aucune recharge en attente.</p>
+          ) : (
+            <ul className="divide-y divide-stone-100">
+              {queue.rechargesToValidate.map(r => (
+                <li key={r.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-3">
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-text truncate">
+                      {r.contributorName} · <span className="font-semibold">{formatFcfa(r.amount)}</span>
+                    </p>
+                    <p className="text-[11px] text-muted">
+                      {formatEur(r.amount)} · Wave · déclarée le {formatDateShort(r.requestedAt)}
+                    </p>
+                  </div>
+                  <div className="shrink-0">
+                    <RechargeReviewActions id={r.id} contributorName={r.contributorName} amountLabel={formatFcfa(r.amount)} />
                   </div>
                 </li>
               ))}

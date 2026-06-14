@@ -84,6 +84,8 @@ export const AUDIT_ACTION_LABEL: Record<AuditAction, string> = {
   escalate_incident:   'a escaladé un problème',
   log_prospect:        'a enregistré une prospection',
   submit_prospects:    'a envoyé ses prospections au superviseur',
+  validate_recharge:   'a validé une recharge',
+  reject_recharge:     'a refusé une recharge',
 };
 
 /* --- Prospection commerciale --- */

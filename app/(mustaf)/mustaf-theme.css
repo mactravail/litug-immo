@@ -7,6 +7,15 @@
    Les couleurs de statut (vert/or/bleu/rouge) restent sémantiques.
    ============================================================ */
 
+/* Le <body> racine est partagé et porte `bg-bg` qui, HORS du scope
+   .mustaf-shell, vaut blanc (palette monochrome globale). L'espace Mustaf
+   scrolle avec la page : on teinte donc le body en sombre tant qu'un shell
+   Mustaf est monté, pour qu'aucun liseré blanc n'apparaisse (overscroll,
+   pied de page). Scopé via :has → n'affecte que /projet, jamais le reste. */
+body:has(.mustaf-shell) {
+  background: #0b0c0e;
+}
+
 .mustaf-shell {
   /* Palette sombre (mockup) */
   --m-bg: #0b0c0e;

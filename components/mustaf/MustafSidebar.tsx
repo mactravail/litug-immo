@@ -29,7 +29,7 @@ export function MustafSidebar({ ownerName, tierLabel, projectName }: Props) {
   const pathname = usePathname();
 
   return (
-    <aside className="m-side hidden lg:flex flex-col w-64 h-screen px-4 py-5 shrink-0">
+    <aside className="m-side hidden lg:flex flex-col fixed inset-y-0 left-0 z-30 w-64 h-screen px-4 py-5">
       {/* Logo */}
       <div className="px-2 mb-5">
         {/* eslint-disable-next-line @next/next/no-img-element */}

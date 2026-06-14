@@ -33,7 +33,7 @@ function shortDate(iso?: string) {
 
 export default async function MonProjetPage() {
   const mp = getMustafProvider();
-  const [account, project, escrow, progress, phases, expenses, media, participation] = await Promise.all([
+  const [account, project, escrow, progress, phases, expenses, media, participation, pendingTotal] = await Promise.all([
     getAccountOptional(),
     mp.getProject(),
     mp.getEscrowSummary(),
@@ -42,6 +42,7 @@ export default async function MonProjetPage() {
     mp.getExpenses(),
     mp.getMedia(),
     mp.getParticipation(),
+    mp.getPendingRechargeTotal(),
   ]);
 
   const current = progress.currentPhase;
@@ -113,6 +114,11 @@ export default async function MonProjetPage() {
           </div>
           <div className="m-kpi-val m-mono">{fmt(escrow.balance)}<span className="m-cur">FCFA</span></div>
           <div className="m-kpi-sub">{current ? `Prêt à financer : ${current.label}` : 'Projet terminé'}</div>
+          {pendingTotal > 0 && (
+            <div className="m-kpi-sub" style={{ color: 'var(--m-gold)' }}>
+              <Clock size={12} /> +{fmt(pendingTotal)} FCFA en attente de validation
+            </div>
+          )}
         </div>
       </section>
 
@@ -269,7 +275,7 @@ export default async function MonProjetPage() {
       </div>
 
       <p className="text-[11px] text-center" style={{ color: 'var(--m-mut2)' }}>
-        Tiers de confiance construction — chaque franc et chaque photo sont datés, tracés et vérifiés. Données de démonstration.
+        Tiers de confiance construction — chaque franc et chaque photo sont datés, tracés et vérifiés. Projet de démonstration (aucun chantier réel pour l’instant).
       </p>
     </div>
   );

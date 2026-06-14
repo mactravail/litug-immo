@@ -146,7 +146,7 @@ export default async function AdminStatistiquesPage() {
 
       <p className="flex items-start gap-2 text-[11px] text-muted">
         <ShieldCheck size={14} className="text-accent mt-0.5 shrink-0" />
-        Chiffres calculés sur les données de démonstration (mock). Tarifs d’abonnement éditables dans la config. Séquestre simulé, aucun vrai paiement.
+        Chiffres calculés sur les données réelles (abonnements, terrains, leads, visites) ; le volet construction (Mustaf) reste en démonstration. Tarifs d’abonnement éditables dans la config. Séquestre simulé, aucun vrai paiement.
       </p>
     </div>
   );

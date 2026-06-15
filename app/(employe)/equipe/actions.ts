@@ -5,6 +5,7 @@ import { cookies } from 'next/headers';
 import {
   startTask, endTask, addReceipt, submitReport, raiseIncident,
   addInvoice, addChantierMedia, createProspect, sendProspectsToSupervisor,
+  logWorkDay,
 } from '@/lib/employe/provider';
 import { getCurrentWorkerId, getCurrentProspectorId, WORKER_COOKIE, TEAM_ROLES } from '@/lib/employe/current';
 import { SEED_TEAM } from '@/lib/admin/seed';
@@ -127,12 +128,18 @@ export async function createProspectAction(_prev: ActionState, formData: FormDat
   try {
     const companyName = (formData.get('companyName') as string)?.trim();
     if (!companyName) return { error: 'Indique le nom de l’entreprise prospectée.' };
-    const outcome = (formData.get('outcome') as ProspectOutcome) || 'no_response';
-    const responded = outcome !== 'no_response';
+    const outcome = (formData.get('outcome') as ProspectOutcome) || 'to_contact';
+    // Réponse obtenue (a accepté / a refusé) ⇒ le moyen de contact est obligatoire.
+    const answered = outcome === 'interested' || outcome === 'refused';
     const contactMethod = (formData.get('contactMethod') as ProspectContactMethod) || undefined;
-    if (responded && !contactMethod) return { error: 'Indique comment le contact a eu lieu.' };
+    if (answered && !contactMethod) return { error: 'Indique comment le contact a eu lieu.' };
+    const followersRaw = formData.get('followers');
+    const followers = followersRaw != null && String(followersRaw).trim() !== '' ? Number(followersRaw) : undefined;
     createProspect(await getCurrentProspectorId(), {
       companyName,
+      contactName: (formData.get('contactName') as string)?.trim() || undefined,
+      contactPhone: (formData.get('contactPhone') as string)?.trim() || undefined,
+      followers,
       network: (formData.get('network') as ProspectNetwork) || 'other',
       outcome,
       contactMethod,
@@ -141,8 +148,29 @@ export async function createProspectAction(_prev: ActionState, formData: FormDat
       prospectedAt: (formData.get('prospectedAt') as string) || undefined,
     });
     revalidatePath('/equipe/prospection');
+    // La liste des entreprises vit dans la sidebar (layout) — on la rafraîchit aussi.
+    revalidatePath('/equipe', 'layout');
     revalidatePath('/admin/prospection');
     revalidatePath('/admin/audit');
+    return { ok: true };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : 'Enregistrement impossible.' };
+  }
+}
+
+/* --- Journée de travail (pointage prospecteur) --- */
+export async function logWorkDayAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  try {
+    const workDate = (formData.get('workDate') as string)?.trim();
+    if (!workDate) return { error: 'Indique la date du jour travaillé.' };
+    const hours = Number(formData.get('hours'));
+    if (!Number.isFinite(hours) || hours <= 0) return { error: 'Indique un nombre d’heures valide.' };
+    logWorkDay(await getCurrentProspectorId(), {
+      workDate,
+      hours,
+      note: (formData.get('note') as string)?.trim() || undefined,
+    });
+    revalidatePath('/equipe/journees');
     return { ok: true };
   } catch (e) {
     return { error: e instanceof Error ? e.message : 'Enregistrement impossible.' };

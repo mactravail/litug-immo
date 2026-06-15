@@ -342,8 +342,12 @@ export type ProspectNetwork =
 export type ProspectContactMethod =
   | 'message' | 'comment' | 'call' | 'whatsapp' | 'in_person' | 'other';
 
-/** Issue de la prise de contact. `no_response` = la personne n'a pas répondu. */
-export type ProspectOutcome = 'no_response' | 'interested' | 'refused';
+/**
+ * Étape de l'entreprise dans l'entonnoir de prospection — sert aussi de liste/onglet.
+ * `to_contact` = trouvée, à prospecter (pas encore appelée) ; `no_response` = prospectée,
+ * sans réponse / en attente ; `interested` = a accepté ; `refused` = a refusé.
+ */
+export type ProspectOutcome = 'to_contact' | 'no_response' | 'interested' | 'refused';
 
 /** `draft` = saisi par le prospecteur, pas encore transmis ; `sent` = envoyé au superviseur (visible admin). */
 export type ProspectStatus = 'draft' | 'sent';
@@ -353,15 +357,32 @@ export interface ProspectEntry {
   prospectorId: string;
   prospectorName: string;
   companyName: string;              // entreprise / vendeur prospecté
+  contactName?: string;             // nom de la personne au bout du fil
+  contactPhone?: string;            // numéro de téléphone de l'entreprise / du contact
+  followers?: number;               // nombre d'abonnés (audience) — sert à classer les prospects
   network: ProspectNetwork;
   outcome: ProspectOutcome;
-  contactMethod?: ProspectContactMethod;  // renseigné si la personne a répondu
+  contactMethod?: ProspectContactMethod;  // renseigné si la personne a été contactée
   concern?: string;                 // son souci / pourquoi elle refuse Sara
   notes?: string;                   // libre
   status: ProspectStatus;
   prospectedAt: string;             // jour de prospection (YYYY-MM-DD)
   createdAt: string;
   sentAt?: string;                  // horodatage de transmission au superviseur
+}
+
+/**
+ * Journée de travail d'un prospecteur — pointage manuel (date + heures faites ce
+ * jour-là). Une seule entrée par jour : ressaisir la date met à jour les heures.
+ */
+export interface ProspectorWorkDay {
+  id: string;
+  workerId: string;
+  workerName: string;
+  workDate: string;                 // jour travaillé (YYYY-MM-DD)
+  hours: number;                    // nombre d'heures travaillées ce jour-là
+  note?: string;                    // ce qui a été fait (optionnel)
+  createdAt: string;
 }
 
 /* --- View-models (derived) --- */

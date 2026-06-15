@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ListTodo, ClipboardCheck, Wrench, Wallet, ShieldCheck, Target } from 'lucide-react';
+import { ListTodo, ClipboardCheck, Wrench, Wallet, ShieldCheck, Target, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { TeamRole } from '@/lib/admin/types';
 
@@ -16,6 +16,7 @@ const FIELD_NAV = [
 
 const PROSPECT_NAV = [
   { href: '/equipe/prospection', label: 'Prospection', icon: Target },
+  { href: '/equipe/journees',    label: 'Journées',    icon: Clock },
   { href: '/equipe/securite',    label: 'Sécurité',    icon: ShieldCheck },
 ];
 

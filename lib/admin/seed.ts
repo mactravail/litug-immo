@@ -5,7 +5,7 @@
    ============================================================ */
 
 import type {
-  Subscription, TeamMember, AuditLogEntry, Invoice, ProspectEntry,
+  Subscription, TeamMember, AuditLogEntry, Invoice, ProspectEntry, ProspectorWorkDay,
   Task, CashAdvance, AdvanceReceipt, WorkSession, FieldReport, Incident,
 } from './types';
 import { SELLER_ID, SEED_SELLER } from '@/lib/data/seed';
@@ -80,30 +80,55 @@ export const SEED_PROSPECT_ENTRIES: ProspectEntry[] =
   _prospectStore.__litugProspects ?? (_prospectStore.__litugProspects = [
   {
     id: 'prosp-1', prospectorId: 'user-prosp-fatou', prospectorName: 'Fatou Ndoye',
-    companyName: 'Keur Massar Immobilier', network: 'facebook',
-    outcome: 'interested', contactMethod: 'message',
+    companyName: 'Keur Massar Immobilier', contactName: 'M. Diouf', contactPhone: '+221 77 111 22 33',
+    followers: 24_500, network: 'facebook', outcome: 'interested', contactMethod: 'message',
     notes: 'Vend 3 terrains à Keur Massar. Veut une démo de Sara cette semaine.',
     status: 'sent', prospectedAt: '2026-06-11', createdAt: '2026-06-11T16:20:00Z', sentAt: '2026-06-11T19:00:00Z',
   },
   {
     id: 'prosp-2', prospectorId: 'user-prosp-fatou', prospectorName: 'Fatou Ndoye',
-    companyName: 'Promoteur Diamniadio', network: 'instagram',
-    outcome: 'refused', contactMethod: 'comment',
+    companyName: 'Promoteur Diamniadio', contactName: 'Mme Sow', contactPhone: '+221 78 444 55 66',
+    followers: 8_200, network: 'instagram', outcome: 'refused', contactMethod: 'comment',
     concern: 'Pense que c’est trop cher et préfère vendre lui-même via WhatsApp.',
     status: 'sent', prospectedAt: '2026-06-11', createdAt: '2026-06-11T17:05:00Z', sentAt: '2026-06-11T19:00:00Z',
   },
   {
     id: 'prosp-3', prospectorId: 'user-prosp-fatou', prospectorName: 'Fatou Ndoye',
-    companyName: 'Saly Terrains & Co', network: 'tiktok',
-    outcome: 'no_response',
+    companyName: 'Saly Terrains & Co', contactPhone: '+221 76 777 88 99',
+    followers: 152_000, network: 'tiktok', outcome: 'no_response',
     status: 'sent', prospectedAt: '2026-06-11', createdAt: '2026-06-11T17:40:00Z', sentAt: '2026-06-11T19:00:00Z',
   },
   {
     id: 'prosp-4', prospectorId: 'user-prosp-fatou', prospectorName: 'Fatou Ndoye',
-    companyName: 'Mbour Foncier', network: 'whatsapp',
-    outcome: 'refused', contactMethod: 'whatsapp',
+    companyName: 'Mbour Foncier', contactName: 'Pape Gueye', contactPhone: '+221 70 222 33 44',
+    followers: 3_400, network: 'whatsapp', outcome: 'refused', contactMethod: 'whatsapp',
     concern: 'Peur de payer un abonnement sans être sûr de vendre. Veut des témoignages.',
     status: 'sent', prospectedAt: '2026-06-10', createdAt: '2026-06-10T15:10:00Z', sentAt: '2026-06-10T18:30:00Z',
+  },
+  // À prospecter : trouvée sur Marketplace, contact noté, pas encore appelée.
+  {
+    id: 'prosp-5', prospectorId: 'user-prosp-fatou', prospectorName: 'Fatou Ndoye',
+    companyName: 'Rufisque Immo Services', contactName: 'Aïssatou Ba', contactPhone: '+221 77 888 99 00',
+    followers: 47_800, network: 'marketplace', outcome: 'to_contact',
+    notes: 'Plusieurs annonces de terrains à Rufisque. À appeler en début de semaine.',
+    status: 'draft', prospectedAt: '2026-06-15', createdAt: '2026-06-15T09:30:00Z',
+  },
+]);
+
+/* --- Pointage des prospecteurs : leurs journées de travail (date + heures).
+   Même store globalThis que les prospections, pour survivre au HMR en dev. --- */
+const _workdayStore = globalThis as unknown as { __litugProspectorWorkDays?: ProspectorWorkDay[] };
+export const SEED_PROSPECTOR_WORKDAYS: ProspectorWorkDay[] =
+  _workdayStore.__litugProspectorWorkDays ?? (_workdayStore.__litugProspectorWorkDays = [
+  {
+    id: 'wd-1', workerId: 'user-prosp-fatou', workerName: 'Fatou Ndoye',
+    workDate: '2026-06-11', hours: 6, note: 'Démarchage Facebook + Instagram, 3 prospects.',
+    createdAt: '2026-06-11T19:05:00Z',
+  },
+  {
+    id: 'wd-2', workerId: 'user-prosp-fatou', workerName: 'Fatou Ndoye',
+    workDate: '2026-06-10', hours: 4.5, note: 'Relances WhatsApp.',
+    createdAt: '2026-06-10T18:40:00Z',
   },
 ]);
 

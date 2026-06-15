@@ -111,13 +111,23 @@ export const PROSPECT_CONTACT_LABEL: Record<ProspectContactMethod, string> = {
 };
 
 export const PROSPECT_OUTCOME_LABEL: Record<ProspectOutcome, string> = {
-  no_response: 'Pas de réponse',
-  interested:  'Intéressé(e)',
-  refused:     'Pas intéressé(e)',
+  to_contact:  'À prospecter',
+  no_response: 'Sans réponse',
+  interested:  'A accepté',
+  refused:     'A refusé',
+};
+
+/** Libellés courts pour les onglets / listes de l'entonnoir de prospection. */
+export const PROSPECT_OUTCOME_TAB_LABEL: Record<ProspectOutcome, string> = {
+  to_contact:  'À prospecter',
+  no_response: 'Prospectés',
+  interested:  'Ont accepté',
+  refused:     'Ont refusé',
 };
 
 /** Tailwind classes per outcome — semantic, not brand. */
 export const PROSPECT_OUTCOME_STYLE: Record<ProspectOutcome, string> = {
+  to_contact:  'bg-sky-50 text-sky-700 border-sky-200',
   no_response: 'bg-stone-100 text-stone-600 border-stone-200',
   interested:  'bg-emerald-50 text-emerald-700 border-emerald-200',
   refused:     'bg-amber-50 text-amber-700 border-amber-200',

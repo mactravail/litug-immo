@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ListTodo, ClipboardCheck, Wrench, Wallet, LogOut, ShieldCheck, Target, Menu, X } from 'lucide-react';
+import { ListTodo, ClipboardCheck, Wrench, Wallet, LogOut, ShieldCheck, Target, Clock, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { logout } from '@/app/(auth)/login/actions';
 import { TEAM_ROLE_LABEL } from '@/lib/admin/labels';
@@ -19,9 +19,10 @@ const FIELD_NAV = [
   { href: '/equipe/action',       label: 'Action métier',  icon: Wrench },
 ];
 
-/** Navigation prospecteur commercial — son seul métier, c'est la prospection. */
+/** Navigation prospecteur commercial — prospection + pointage de ses journées. */
 const PROSPECT_NAV = [
-  { href: '/equipe/prospection', label: 'Prospection', icon: Target },
+  { href: '/equipe/prospection', label: 'Prospection',  icon: Target },
+  { href: '/equipe/journees',    label: 'Mes journées', icon: Clock },
 ];
 
 function navFor(role: TeamRole) {

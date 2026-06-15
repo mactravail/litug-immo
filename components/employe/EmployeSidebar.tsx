@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ListTodo, ClipboardCheck, Wrench, Wallet, LogOut, ShieldCheck, Target } from 'lucide-react';
+import { ListTodo, ClipboardCheck, Wrench, Wallet, LogOut, ShieldCheck, Target, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { logout } from '@/app/(auth)/login/actions';
 import { TEAM_ROLE_LABEL } from '@/lib/admin/labels';
 import type { TeamRole } from '@/lib/admin/types';
 import { WorkerSwitcher } from './WorkerSwitcher';
+import { ProspectSidebarList, type SidebarProspect } from './ProspectSidebarList';
 
 /** Navigation terrain (chantier) — pour procurement / site_agent / inspector / controller. */
 const FIELD_NAV = [
@@ -17,9 +18,10 @@ const FIELD_NAV = [
   { href: '/equipe/action',      label: 'Action métier',  icon: Wrench },
 ];
 
-/** Navigation prospecteur commercial — son seul métier, c'est la prospection. */
+/** Navigation prospecteur commercial — prospection + pointage de ses journées. */
 const PROSPECT_NAV = [
-  { href: '/equipe/prospection', label: 'Prospection', icon: Target },
+  { href: '/equipe/prospection', label: 'Prospection',  icon: Target },
+  { href: '/equipe/journees',    label: 'Mes journées', icon: Clock },
 ];
 
 function navFor(role: TeamRole) {
@@ -31,9 +33,11 @@ interface Props {
   role: TeamRole;
   workers: { id: string; name: string; role: string }[];
   currentId: string;
+  /** Entreprises ajoutées par le prospecteur — alimentent la liste de la sidebar. */
+  prospects?: SidebarProspect[];
 }
 
-export function EmployeSidebar({ workerName, role, workers, currentId }: Props) {
+export function EmployeSidebar({ workerName, role, workers, currentId, prospects }: Props) {
   const pathname = usePathname();
 
   return (
@@ -44,7 +48,7 @@ export function EmployeSidebar({ workerName, role, workers, currentId }: Props) 
         <p className="text-[11px] text-muted mt-1">Espace équipe · Terrain</p>
       </div>
 
-      <nav className="flex-1 space-y-1 overflow-y-auto">
+      <nav className="shrink-0 space-y-1">
         {navFor(role).map(({ href, label, icon: Icon }) => {
           const active = href === '/equipe' ? pathname === '/equipe' : pathname.startsWith(href);
           return (
@@ -62,6 +66,15 @@ export function EmployeSidebar({ workerName, role, workers, currentId }: Props) 
           );
         })}
       </nav>
+
+      {/* Prospecteur : la liste de ses entreprises (recherche + classement par audience). */}
+      {role === 'prospector' ? (
+        <div className="flex-1 min-h-0 mt-4 pt-4 border-t border-stone-100 flex flex-col">
+          <ProspectSidebarList prospects={prospects ?? []} />
+        </div>
+      ) : (
+        <div className="flex-1" />
+      )}
 
       <div className="border-t border-stone-100 pt-4 mt-4 space-y-3">
         <div className="flex items-center gap-3 px-3">

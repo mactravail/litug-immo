@@ -12,6 +12,11 @@ export function formatFcfa(amount: number): string {
   }).format(amount) + ' FCFA';
 }
 
+/** Abonnés en notation compacte : 12 400 → « 12 k », 1 500 000 → « 1,5 M ». */
+export function formatFollowers(count: number): string {
+  return new Intl.NumberFormat('fr-FR', { notation: 'compact', maximumFractionDigits: 1 }).format(count);
+}
+
 export function formatEur(fcfa: number): string {
   const eur = fcfa / 655.957;
   return new Intl.NumberFormat('fr-FR', {

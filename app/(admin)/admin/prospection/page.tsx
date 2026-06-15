@@ -8,12 +8,13 @@ import {
   PROSPECT_NETWORK_LABEL, PROSPECT_CONTACT_LABEL,
   PROSPECT_OUTCOME_LABEL, PROSPECT_OUTCOME_STYLE,
 } from '@/lib/admin/labels';
-import { formatDate } from '@/lib/utils';
+import { formatDate, formatFollowers } from '@/lib/utils';
 import type { ProspectEntry } from '@/lib/admin/types';
 
 function summarize(entries: ProspectEntry[]) {
   return {
     total: entries.length,
+    toContact: entries.filter(e => e.outcome === 'to_contact').length,
     interested: entries.filter(e => e.outcome === 'interested').length,
     refused: entries.filter(e => e.outcome === 'refused').length,
     noResponse: entries.filter(e => e.outcome === 'no_response').length,
@@ -52,17 +53,17 @@ export default async function AdminProspectionPage() {
 
       {/* Synthèse globale */}
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="rounded-2xl border border-stone-100 bg-white p-4">
-          <p className="text-2xl font-bold text-text">{all.total}</p>
-          <p className="text-[11px] text-muted mt-0.5">Prospects contactés</p>
+        <div className="rounded-2xl border border-sky-200 bg-sky-50/50 p-4">
+          <p className="text-2xl font-bold text-sky-700">{all.toContact}</p>
+          <p className="text-[11px] text-muted mt-0.5">À prospecter</p>
         </div>
         <div className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-4">
           <p className="text-2xl font-bold text-emerald-700">{all.interested}</p>
-          <p className="text-[11px] text-muted mt-0.5">Intéressés</p>
+          <p className="text-[11px] text-muted mt-0.5">Ont accepté</p>
         </div>
         <div className="rounded-2xl border border-amber-200 bg-amber-50/50 p-4">
           <p className="text-2xl font-bold text-amber-700">{all.refused}</p>
-          <p className="text-[11px] text-muted mt-0.5">Pas intéressés</p>
+          <p className="text-[11px] text-muted mt-0.5">Ont refusé</p>
         </div>
         <div className="rounded-2xl border border-stone-100 bg-white p-4">
           <p className="text-2xl font-bold text-text">{all.noResponse}</p>
@@ -81,7 +82,7 @@ export default async function AdminProspectionPage() {
                 <div key={name} className="rounded-2xl border border-stone-100 bg-white shadow-sm p-4">
                   <p className="font-medium text-text">{name}</p>
                   <p className="text-[11px] text-muted mt-0.5">
-                    {s.total} prospect{s.total > 1 ? 's' : ''} · <span className="text-emerald-700">{s.interested} intéressé{s.interested > 1 ? 's' : ''}</span> · {s.refused} refus · {s.noResponse} sans réponse
+                    {s.total} prospect{s.total > 1 ? 's' : ''} · <span className="text-emerald-700">{s.interested} accepté{s.interested > 1 ? 's' : ''}</span> · {s.refused} refus · {s.toContact} à prospecter · {s.noResponse} sans réponse
                   </p>
                 </div>
               );
@@ -117,7 +118,17 @@ export default async function AdminProspectionPage() {
                 <tbody className="divide-y divide-stone-100">
                   {entries.map(e => (
                     <tr key={e.id} className="hover:bg-stone-50/50 align-top">
-                      <td className="px-5 py-3 font-medium text-text">{e.companyName}</td>
+                      <td className="px-5 py-3 text-text">
+                        <span className="font-medium">{e.companyName}</span>
+                        {(e.contactName || e.contactPhone) && (
+                          <span className="block text-[11px] text-muted mt-0.5">
+                            {[e.contactName, e.contactPhone].filter(Boolean).join(' · ')}
+                          </span>
+                        )}
+                        {e.followers != null && (
+                          <span className="block text-[11px] text-muted">{formatFollowers(e.followers)} abonnés</span>
+                        )}
+                      </td>
                       <td className="px-5 py-3 text-muted">{PROSPECT_NETWORK_LABEL[e.network]}</td>
                       <td className="px-5 py-3">
                         <span className={`inline-block text-[11px] font-medium px-2 py-0.5 rounded-full border ${PROSPECT_OUTCOME_STYLE[e.outcome]}`}>
@@ -145,6 +156,14 @@ export default async function AdminProspectionPage() {
                         {PROSPECT_NETWORK_LABEL[e.network]}
                         {e.contactMethod && <> · {PROSPECT_CONTACT_LABEL[e.contactMethod]}</>}
                       </p>
+                      {(e.contactName || e.contactPhone) && (
+                        <p className="text-[11px] text-muted mt-0.5">
+                          {[e.contactName, e.contactPhone].filter(Boolean).join(' · ')}
+                        </p>
+                      )}
+                      {e.followers != null && (
+                        <p className="text-[11px] text-muted">{formatFollowers(e.followers)} abonnés</p>
+                      )}
                     </div>
                     <span className={`shrink-0 text-[11px] font-medium px-2 py-0.5 rounded-full border ${PROSPECT_OUTCOME_STYLE[e.outcome]}`}>
                       {PROSPECT_OUTCOME_LABEL[e.outcome]}

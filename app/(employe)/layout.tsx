@@ -3,6 +3,7 @@ import { EmployeSidebar } from '@/components/employe/EmployeSidebar';
 import { EmployeMobileNav } from '@/components/employe/EmployeMobileNav';
 import { EmployeMobileMenu } from '@/components/employe/EmployeMobileMenu';
 import { getCurrentWorker, getCurrentWorkerId, selectableWorkers } from '@/lib/employe/current';
+import { listMyProspects } from '@/lib/employe/provider';
 import { TEAM_ROLE_LABEL } from '@/lib/admin/labels';
 
 /**
@@ -14,6 +15,11 @@ export default async function EmployeLayout({ children }: { children: React.Reac
   const [worker, currentId] = await Promise.all([getCurrentWorker(), getCurrentWorkerId()]);
   const workers = selectableWorkers().map(w => ({ id: w.id, name: w.displayName, role: TEAM_ROLE_LABEL[w.role] }));
 
+  // La sidebar du prospecteur affiche la liste de ses entreprises (recherche + classement).
+  const prospects = worker.role === 'prospector'
+    ? listMyProspects(worker.id).map(p => ({ id: p.id, companyName: p.companyName, followers: p.followers, outcome: p.outcome }))
+    : undefined;
+
   return (
     <div className="flex h-screen overflow-hidden bg-bg">
       <EmployeSidebar
@@ -21,6 +27,7 @@ export default async function EmployeLayout({ children }: { children: React.Reac
         role={worker.role}
         workers={workers}
         currentId={currentId}
+        prospects={prospects}
       />
 
       <div className="flex-1 min-w-0 flex flex-col overflow-y-auto pb-20 lg:pb-0">

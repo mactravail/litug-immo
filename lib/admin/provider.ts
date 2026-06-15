@@ -749,10 +749,26 @@ export function getAdminProvider(): AdminProvider {
   // Switchable like the Sara/Mustaf data layers. The Supabase provider serves the
   // real subscriptions/team/audit/stats and delegates Mustaf (demo project kept)
   // and Volet B (shared with the employee space, migrated in a later phase) to the mock.
-  if (process.env.NEXT_PUBLIC_DATA_SOURCE === 'supabase') {
+  //
+  // Repli gracieux : la source « supabase » lit via la clé service_role (serveur
+  // uniquement). Si cette clé — ou l'URL Supabase — manque (ex. variable absente
+  // sur Vercel), on retombe sur le mock AU LIEU de planter tout l'espace admin en
+  // 500. La vraie correction reste de définir SUPABASE_SERVICE_ROLE_KEY côté serveur.
+  const wantsSupabase = process.env.NEXT_PUBLIC_DATA_SOURCE === 'supabase';
+  const canUseSupabase =
+    wantsSupabase &&
+    !!process.env.SUPABASE_SERVICE_ROLE_KEY &&
+    !!process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+  if (canUseSupabase) {
     const { supabaseAdminProvider } = require('./supabase-provider');
     _provider = supabaseAdminProvider;
   } else {
+    if (wantsSupabase) {
+      console.warn(
+        '[admin] NEXT_PUBLIC_DATA_SOURCE=supabase mais SUPABASE_SERVICE_ROLE_KEY (ou NEXT_PUBLIC_SUPABASE_URL) est absente — repli sur les données mock. Définis la clé service_role côté serveur pour activer le vrai back-office.',
+      );
+    }
     _provider = adminMockProvider;
   }
   return _provider!;

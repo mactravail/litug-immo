@@ -1,9 +1,9 @@
 import './mustaf-theme.css';
-import { Bell } from 'lucide-react';
 import { MustafSidebar } from '@/components/mustaf/MustafSidebar';
 import { MustafMobileNav } from '@/components/mustaf/MustafMobileNav';
 import { MustafMobileMenu } from '@/components/mustaf/MustafMobileMenu';
 import { AnomalyButton } from '@/components/mustaf/AnomalyButton';
+import { NotificationBell } from '@/components/mustaf/NotificationBell';
 import { getMustafProvider } from '@/lib/mustaf/provider';
 import { TIER_LABEL } from '@/lib/mustaf/labels';
 
@@ -18,7 +18,7 @@ function initials(name: string) {
  */
 export default async function MustafLayout({ children }: { children: React.ReactNode }) {
   const mp = getMustafProvider();
-  const project = await mp.getProject();
+  const [project, notifications] = await Promise.all([mp.getProject(), mp.getNotifications()]);
   const tierLabel = TIER_LABEL[project.subscriptionTier];
 
   return (
@@ -42,9 +42,7 @@ export default async function MustafLayout({ children }: { children: React.React
           </div>
           <div className="flex items-center gap-2.5 shrink-0">
             <AnomalyButton variant="topbar" />
-            <div className="m-icon-btn hidden sm:grid">
-              <Bell />
-            </div>
+            <NotificationBell notifications={notifications} />
             <div
               className="m-av"
               style={{ width: 36, height: 36, fontSize: 13, background: 'linear-gradient(135deg,#E2A53F,#b07a1f)' }}

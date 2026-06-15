@@ -238,3 +238,18 @@ export interface ProjectProgress {
   phasesTotal: number;
   currentPhase?: ConstructionPhase;
 }
+
+/** A client-facing notification, derived from project events: a new chantier
+ *  photo/video, a new invoice, or a confirmed deposit. Mock-first: rebuilt on
+ *  each load from seed data; "unread" is tracked client-side (localStorage),
+ *  no per-user notification store yet. */
+export type NotificationKind = 'media' | 'invoice' | 'deposit';
+
+export interface ProjectNotification {
+  id: string;
+  kind: NotificationKind;
+  title: string;
+  body: string;
+  href: string;
+  createdAt: string;
+}

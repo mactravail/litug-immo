@@ -10,8 +10,9 @@ import type {
   ConstructionProject, ProjectMember, EscrowSubaccount, Deposit, RechargeRequest,
   RechargeStatus, ConstructionPhase, Expense, MaterialOrder, Inspection, FundRelease,
   ConstructionMedia, ConstructionCompany, Anomaly, ProjectDocument,
-  EscrowSummary, Participation, ProjectProgress,
+  EscrowSummary, Participation, ProjectProgress, ProjectNotification,
 } from './types';
+import { formatFcfa } from '@/lib/utils';
 import {
   SEED_PROJECT, SEED_MEMBERS, SEED_ESCROW, SEED_DEPOSITS, SEED_RECHARGE_REQUESTS,
   SEED_PHASES, SEED_EXPENSES, SEED_MATERIAL_ORDERS, SEED_INSPECTIONS, SEED_FUND_RELEASES,
@@ -42,6 +43,8 @@ export interface MustafProvider {
   getEscrowSummary(): Promise<EscrowSummary>;
   getParticipation(): Promise<Participation[]>;
   getProgress(): Promise<ProjectProgress>;
+  /** Client notifications, newest first — new photos, invoices, confirmed deposits. */
+  getNotifications(): Promise<ProjectNotification[]>;
   // Mutations (simulated escrow — no real banking, mustaf.md §4/§12)
   /** A family member declares a Wave top-up → a PENDING request (balance unchanged). */
   requestRecharge(input: { contributorName: string; amount: number; note?: string }): Promise<RechargeRequest>;
@@ -84,6 +87,50 @@ function participation(): Participation[] {
       .reduce((s, d) => s + d.amount, 0);
     return { member, total, pct: (total / deposited) * 100 };
   }).sort((a, b) => b.total - a.total);
+}
+
+/**
+ * Client notifications — derived from the events that matter to an owner watching
+ * from abroad: a new geolocated photo of THEIR plot, a new supplier invoice, or a
+ * deposit the back-office has confirmed. Mock-first: rebuilt from seed data, newest
+ * first. "Read" state lives in the browser (localStorage), no per-user store yet.
+ */
+function notifications(): ProjectNotification[] {
+  const phaseLabel = (phaseId: string) =>
+    SEED_PHASES.find(p => p.id === phaseId)?.label ?? 'votre chantier';
+
+  const fromMedia: ProjectNotification[] = SEED_MEDIA.map(m => ({
+    id: `ntf-media-${m.id}`,
+    kind: 'media',
+    title: m.type === 'video' ? 'Nouvelle vidéo du chantier' : 'Nouvelle photo du chantier',
+    body: `${phaseLabel(m.phaseId)}${m.caption ? ` — ${m.caption}` : ''}`,
+    href: '/projet/chantier',
+    createdAt: m.createdAt,
+  }));
+
+  const fromInvoices: ProjectNotification[] = SEED_EXPENSES
+    .filter(e => e.invoiceUrl)
+    .map(e => ({
+      id: `ntf-inv-${e.id}`,
+      kind: 'invoice',
+      title: 'Nouvelle facture disponible',
+      body: `${e.label} — ${formatFcfa(e.amount)}`,
+      href: '/projet/depenses',
+      createdAt: e.createdAt,
+    }));
+
+  const fromDeposits: ProjectNotification[] = SEED_DEPOSITS.map(d => ({
+    id: `ntf-dep-${d.id}`,
+    kind: 'deposit',
+    title: 'Dépôt confirmé',
+    body: `${d.contributorName} · ${formatFcfa(d.amount)} crédité sur le séquestre`,
+    href: '/projet/epargne',
+    createdAt: d.depositedAt,
+  }));
+
+  return [...fromMedia, ...fromInvoices, ...fromDeposits]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 20);
 }
 
 function progress(): ProjectProgress {
@@ -130,6 +177,7 @@ const mockProvider: MustafProvider = {
   async getEscrowSummary() { return escrowSummary(); },
   async getParticipation() { return participation(); },
   async getProgress() { return progress(); },
+  async getNotifications() { return notifications(); },
   // A Wave top-up is DECLARED, not credited: it creates a PENDING request that
   // waits for admin validation. The balance does not move yet (§3.4). Match the
   // contributor to a known family member by display name when possible.

@@ -55,7 +55,7 @@ export default async function DepensesPage() {
                       <FileText size={12} /> Voir la facture
                     </a>
                   )}
-                  <AnomalyButton />
+                  <AnomalyButton target="expense" />
                 </div>
               </div>
               <div className="text-right shrink-0">

@@ -47,7 +47,7 @@ export default async function ChantierPage() {
                   <MediaThumb media={m} />
                   <MetadataBadge media={m} />
                   <div className="pt-1 border-t border-stone-50">
-                    <AnomalyButton label="Signaler cette photo" />
+                    <AnomalyButton target="media" label="Signaler cette photo" />
                   </div>
                 </div>
               ))}

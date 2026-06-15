@@ -194,8 +194,97 @@ body:has(.mustaf-shell) {
 .m-badge-gold { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--m-gold-soft); color: var(--m-gold); border: 1px solid rgba(226, 165, 63, 0.25); }
 .m-btn-anom { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 600; color: var(--m-red); background: var(--m-red-soft); border: 1px solid rgba(241, 100, 108, 0.28); padding: 8px 13px; border-radius: 9px; cursor: pointer; }
 .m-btn-anom svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; }
-.m-icon-btn { width: 36px; height: 36px; border-radius: 9px; border: 1px solid var(--m-line); background: var(--m-card); display: grid; place-items: center; }
+/* Variante icône seule (mobile) : carré compact, juste le triangle d'alerte. */
+.m-btn-anom.m-btn-anom-icon { padding: 8px; }
+
+/* ---- Modale « Signaler une anomalie » (choix du type) ---- */
+.m-modal-backdrop {
+  position: fixed; inset: 0; z-index: 60;
+  background: rgba(5, 6, 8, 0.72);
+  -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  display: flex; align-items: flex-end; justify-content: center;
+}
+@media (min-width: 640px) { .m-modal-backdrop { align-items: center; padding: 20px; } }
+.m-modal {
+  width: 100%; max-width: 440px;
+  background: var(--m-card); border: 1px solid var(--m-line2);
+  border-radius: 18px 18px 0 0; padding: 16px 18px 20px;
+  box-shadow: 0 -12px 44px rgba(0, 0, 0, 0.5);
+  max-height: 90vh; overflow-y: auto;
+}
+@media (min-width: 640px) { .m-modal { border-radius: 16px; box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6); } }
+.m-modal-grip { width: 38px; height: 4px; border-radius: 99px; background: var(--m-line2); margin: 2px auto 14px; }
+@media (min-width: 640px) { .m-modal-grip { display: none; } }
+.m-modal-title { font-size: 16px; font-weight: 700; color: var(--m-txt); display: flex; align-items: center; gap: 9px; }
+.m-modal-title svg { width: 18px; height: 18px; stroke: var(--m-red); fill: none; stroke-width: 2; }
+.m-modal-sub { font-size: 12px; color: var(--m-mut); margin-top: 4px; }
+.m-opt {
+  width: 100%; text-align: left; display: flex; align-items: center; gap: 11px;
+  padding: 12px 13px; border-radius: 11px; cursor: pointer;
+  background: var(--m-card2); border: 1px solid var(--m-line);
+  color: var(--m-txt); font-size: 13.5px; font-weight: 500;
+  transition: border-color .12s ease, background .12s ease, color .12s ease;
+}
+.m-opt:hover { border-color: var(--m-line2); }
+.m-opt.m-opt-sel { border-color: var(--m-red); background: var(--m-red-soft); color: var(--m-red); }
+.m-opt-rd { width: 17px; height: 17px; border-radius: 50%; border: 2px solid var(--m-mut2); flex: none; display: grid; place-items: center; }
+.m-opt.m-opt-sel .m-opt-rd { border-color: var(--m-red); }
+.m-opt.m-opt-sel .m-opt-rd::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--m-red); }
+.m-ta {
+  width: 100%; background: var(--m-bg2); border: 1px solid var(--m-line);
+  border-radius: 10px; padding: 10px 12px; color: var(--m-txt); font-size: 13px;
+  resize: vertical; min-height: 62px; font-family: inherit;
+}
+.m-ta::placeholder { color: var(--m-mut2); }
+.m-ta:focus { outline: none; border-color: var(--m-line2); }
+.m-modal-send {
+  width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  background: var(--m-red); color: #fff; font-weight: 600; font-size: 13.5px;
+  padding: 12px; border-radius: 11px; cursor: pointer; border: none;
+}
+.m-modal-send svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; }
+.m-modal-send:disabled { opacity: 0.4; cursor: not-allowed; }
+.m-modal-cancel { width: 100%; text-align: center; color: var(--m-mut); font-size: 12.5px; font-weight: 500; padding: 4px; cursor: pointer; background: none; border: none; }
+.m-icon-btn { width: 36px; height: 36px; border-radius: 9px; border: 1px solid var(--m-line); background: var(--m-card); display: grid; place-items: center; cursor: pointer; position: relative; }
 .m-icon-btn svg { width: 17px; height: 17px; stroke: var(--m-mut); fill: none; stroke-width: 1.8; }
+
+/* ---- Cloche de notifications ---- */
+.m-notif { position: relative; }
+.m-notif-dot {
+  position: absolute; top: -4px; right: -4px; min-width: 16px; height: 16px;
+  padding: 0 4px; border-radius: 99px; background: var(--m-red); color: #fff;
+  font-size: 10px; font-weight: 700; line-height: 16px; text-align: center;
+  border: 2px solid var(--m-bg);
+}
+.m-notif-panel {
+  position: absolute; top: calc(100% + 9px); right: 0; z-index: 60;
+  width: min(360px, calc(100vw - 24px));
+  background: var(--m-card); border: 1px solid var(--m-line2);
+  border-radius: 14px; box-shadow: 0 18px 52px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+}
+.m-notif-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--m-line); }
+.m-notif-head .m-t { font-size: 13.5px; font-weight: 700; color: var(--m-txt); }
+.m-notif-mark { font-size: 11.5px; font-weight: 600; color: var(--m-gold); background: none; border: none; cursor: pointer; }
+.m-notif-mark:disabled { color: var(--m-mut2); cursor: default; }
+.m-notif-list { max-height: 60vh; overflow-y: auto; }
+.m-notif-item { display: flex; gap: 11px; padding: 11px 14px; cursor: pointer; border-bottom: 1px solid var(--m-line); text-decoration: none; }
+.m-notif-item:last-child { border-bottom: none; }
+.m-notif-item:hover { background: var(--m-card2); }
+.m-notif-item.m-new { background: rgba(226, 165, 63, 0.06); }
+.m-notif-ic { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; flex: none; }
+.m-notif-ic svg { width: 16px; height: 16px; fill: none; stroke-width: 1.9; }
+.m-notif-ic.m-media { background: var(--m-blue-soft); color: var(--m-blue); }
+.m-notif-ic.m-invoice { background: var(--m-gold-soft); color: var(--m-gold); }
+.m-notif-ic.m-deposit { background: var(--m-green-soft); color: var(--m-green); }
+.m-notif-tt { font-size: 12.5px; font-weight: 600; color: var(--m-txt); display: flex; align-items: center; gap: 6px; }
+.m-notif-bd { font-size: 11.5px; color: var(--m-mut); margin-top: 2px; line-height: 1.35; }
+.m-notif-tm { font-size: 10.5px; color: var(--m-mut2); margin-top: 3px; }
+.m-notif-new-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--m-gold); flex: none; }
+.m-notif-empty { padding: 28px 14px; text-align: center; font-size: 12.5px; color: var(--m-mut); }
+.m-notif-foot { display: flex; align-items: center; justify-content: center; gap: 7px; padding: 11px; font-size: 12px; font-weight: 600; color: var(--m-gold); border-top: 1px solid var(--m-line); text-decoration: none; }
+.m-notif-foot:hover { background: var(--m-card2); }
+.m-notif-foot svg { stroke: currentColor; fill: none; stroke-width: 2; }
 
 /* ---- Mobile bottom nav ---- */
 .m-mobnav { background: var(--m-bg2); border-top: 1px solid var(--m-line); }

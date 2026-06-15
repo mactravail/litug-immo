@@ -7,6 +7,14 @@ import { countPendingAccounts } from '@/lib/admin/pending-accounts';
 import { logout } from '@/app/(auth)/login/actions';
 
 /**
+ * Tout l'espace admin est rendu à la demande, jamais prérendu au build.
+ * Les pages lisent des données live, par requête et sous garde d'auth (audit,
+ * abonnements…) via le provider Supabase (clé service_role, dispo au runtime
+ * seulement). Les prérendre au build planterait le déploiement (clé absente).
+ */
+export const dynamic = 'force-dynamic';
+
+/**
  * Admin back-office — 3rd isolated route group (alongside the Sara seller
  * dashboard and the Mustaf client space). Desktop-first, responsive.
  * Access is reserved to role `admin` (proxy.ts + RLS once Supabase is wired;

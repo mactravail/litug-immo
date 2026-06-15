@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState, useState } from 'react';
-import { UserPlus, CheckCircle2, Copy, RefreshCw } from 'lucide-react';
+import { UserPlus, CheckCircle2, Copy, RefreshCw, Eye, EyeOff } from 'lucide-react';
 import { createEmployee } from '@/lib/admin/invite-employee';
 import { TEAM_ROLE_LABEL } from '@/lib/admin/labels';
 import type { TeamRole } from '@/lib/admin/types';
@@ -54,6 +54,9 @@ export function CreateEmployeeForm({ lockedRole }: { lockedRole?: TeamRole } = {
   const [state, action, pending] = useActionState(createEmployee, null);
   const [pwd, setPwd] = useState(generatePassword);
   const [copied, setCopied] = useState(false);
+  // Mot de passe provisoire visible par défaut (l'admin doit le lire pour le dicter) ;
+  // l'œil permet de le masquer si quelqu'un regarde par-dessus l'épaule.
+  const [showPwd, setShowPwd] = useState(true);
 
   if (state?.ok) {
     const block = `Espace Litug\nEmail : ${state.email}\nMot de passe provisoire : ${state.password}\nÀ changer à la première connexion.`;
@@ -132,7 +135,27 @@ export function CreateEmployeeForm({ lockedRole }: { lockedRole?: TeamRole } = {
       <div>
         <label className={LABEL} htmlFor="password">Mot de passe provisoire</label>
         <div className="flex gap-2">
-          <input id="password" name="password" type="text" required minLength={8} value={pwd} onChange={e => setPwd(e.target.value)} suppressHydrationWarning className={`${INPUT} font-mono`} />
+          <div className="relative flex-1">
+            <input
+              id="password"
+              name="password"
+              type={showPwd ? 'text' : 'password'}
+              required
+              minLength={8}
+              value={pwd}
+              onChange={e => setPwd(e.target.value)}
+              suppressHydrationWarning
+              className={`${INPUT} pr-10 font-mono`}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPwd(s => !s)}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-text cursor-pointer"
+              aria-label={showPwd ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+            >
+              {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+          </div>
           <button
             type="button"
             onClick={() => setPwd(generatePassword())}
@@ -141,6 +164,9 @@ export function CreateEmployeeForm({ lockedRole }: { lockedRole?: TeamRole } = {
             <RefreshCw size={13} /> Générer
           </button>
         </div>
+        <p className="text-[11px] text-muted mt-1">
+          8 caractères minimum, avec au moins une <strong>majuscule</strong>, une minuscule, un <strong>chiffre</strong> et un <strong>caractère spécial</strong> (ex. ! ? # $ % * . , : ; / =).
+        </p>
         <p className="text-[11px] text-muted mt-1">Vous le communiquez à l’employé. Il devra le changer à sa première connexion.</p>
       </div>
 

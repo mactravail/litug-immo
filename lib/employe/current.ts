@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    Employé connecté — résolution mock-first.
    En attendant l'auth Supabase, l'employé courant est lu d'un
    cookie (sélecteur de démo), avec un défaut sur le chef de
@@ -42,15 +42,12 @@ async function authedTeamRole(): Promise<TeamRole | null> {
 
 /**
  * Id de l'employé courant.
- * 1) Vrai utilisateur d'équipe connecté → membre seed de SON rôle (le bon dashboard).
+ * 1) Vrai utilisateur d'équipe connecté → son UUID Supabase réel.
  * 2) Sinon (démo anonyme) → cookie du sélecteur, défaut Baba.
  */
 export async function getCurrentWorkerId(): Promise<string> {
-  const role = await authedTeamRole();
-  if (role) {
-    const member = SEED_TEAM.find(t => t.role === role);
-    if (member) return member.id;
-  }
+  const realId = await getRealEmployeeId();
+  if (realId) return realId;
   const store = await cookies();
   const id = store.get(WORKER_COOKIE)?.value;
   if (id && SEED_TEAM.some(t => t.id === id && (TEAM_ROLES as readonly string[]).includes(t.role))) {
@@ -59,19 +56,50 @@ export async function getCurrentWorkerId(): Promise<string> {
   return DEFAULT_WORKER_ID;
 }
 
-/** L'employé courant (TeamMember). */
+/**
+ * UUID Supabase du vrai employé d'équipe connecté, ou `null` en mode démo.
+ * Fonctionne pour tous les rôles terrain (prospector, site_agent, etc.).
+ */
+export async function getRealEmployeeId(): Promise<string | null> {
+  const role = await authedTeamRole();
+  if (!role) return null;
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    return user?.id ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/** L'employé courant (TeamMember). Utilise le vrai profil Supabase si connecté. */
 export async function getCurrentWorker(): Promise<TeamMember> {
+  const realId = await getRealEmployeeId();
+  if (realId) {
+    const role = await authedTeamRole();
+    try {
+      const supabase = await createSupabaseServerClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      const meta = (user?.user_metadata ?? {}) as Record<string, unknown>;
+      return {
+        id: realId,
+        displayName: (meta.full_name as string) || user?.email?.split('@')[0] || 'Employé',
+        role: role!,
+        contact: (meta.phone as string) || user?.email || undefined,
+        assignedProjectIds: [],
+        status: 'active',
+        createdAt: user?.created_at ?? new Date().toISOString(),
+      };
+    } catch { /* repli sur seed */ }
+  }
   const id = await getCurrentWorkerId();
   return SEED_TEAM.find(t => t.id === id) ?? SEED_TEAM.find(t => t.id === DEFAULT_WORKER_ID)!;
 }
 
 /**
  * Le PROSPECTEUR courant — métier réservé au rôle `prospector`.
- * 1) Vrai prospecteur connecté, ou employé courant déjà prospecteur → lui.
- * 2) Sinon (démo où l'employé sélectionné est un agent terrain) → on retombe
- *    sur le prospecteur seed, pour que la page /equipe/prospection fonctionne
- *    même quand on y arrive directement par l'URL. En prod, `proxy.ts` garantit
- *    déjà que seul un prospecteur atteint cette route.
+ * 1) Vrai prospecteur connecté → son profil Supabase réel.
+ * 2) Sinon (démo) → prospecteur seed Fatou.
  */
 export async function getCurrentProspector(): Promise<TeamMember> {
   const current = await getCurrentWorker();
@@ -82,4 +110,15 @@ export async function getCurrentProspector(): Promise<TeamMember> {
 /** Id du prospecteur courant (voir {@link getCurrentProspector}). */
 export async function getCurrentProspectorId(): Promise<string> {
   return (await getCurrentProspector()).id;
+}
+
+/**
+ * UUID Supabase du vrai prospecteur connecté, ou `null` en mode démo anonyme.
+ * Quand cette fonction retourne un UUID, toutes les opérations de prospection
+ * doivent passer par le vrai Supabase (prospection-db.ts) au lieu du seed.
+ */
+export async function getRealProspectorId(): Promise<string | null> {
+  const role = await authedTeamRole();
+  if (role !== 'prospector') return null;
+  return getRealEmployeeId();
 }

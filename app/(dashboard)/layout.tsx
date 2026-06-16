@@ -2,6 +2,7 @@ import './sara-theme.css';
 import { Bell } from 'lucide-react';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { MobileNav } from '@/components/layout/MobileNav';
+import { MobileMenuDrawer } from '@/components/layout/MobileMenuDrawer';
 import { SubscriptionBanner } from '@/components/layout/SubscriptionBanner';
 import { PendingVerificationBanner } from '@/components/layout/PendingVerificationBanner';
 import { GlobalSearch } from '@/components/ui/GlobalSearch';
@@ -48,8 +49,15 @@ export default async function DashboardLayout({ children }: { children: React.Re
         visitsCount={visits.length}
       />
       <div className="flex-1 min-w-0 flex flex-col overflow-y-auto pb-20 lg:pb-0">
-        {/* Top bar : recherche + notifications */}
+        {/* Top bar : hamburger (mobile) + recherche + notifications */}
         <header className="s-topbar sticky top-0 z-40 px-4 sm:px-6 py-3 flex items-center gap-3">
+          <MobileMenuDrawer
+            businessName={seller?.businessName ?? 'Mon compte'}
+            subscriptionStatus={seller?.subscriptionStatus ?? 'trial'}
+            landsCount={lands.length}
+            leadsCount={leads.length}
+            visitsCount={visits.length}
+          />
           <div className="flex-1 min-w-0">
             <GlobalSearch items={searchItems} />
           </div>

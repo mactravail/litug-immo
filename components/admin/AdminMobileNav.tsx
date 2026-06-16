@@ -2,16 +2,15 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Inbox, Receipt, HardHat, Users, ClipboardCheck } from 'lucide-react';
+import { LayoutDashboard, Inbox, HardHat, Users, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const NAV = [
-  { href: '/admin',            label: 'Accueil',    icon: LayoutDashboard },
-  { href: '/admin/demandes',   label: 'Demandes',   icon: Inbox },
-  { href: '/admin/factures',   label: 'Factures',   icon: Receipt },
-  { href: '/admin/mustaf',     label: 'Mustaf',     icon: HardHat },
-  { href: '/admin/employes',   label: 'Employés',   icon: Users },
-  { href: '/admin/redditions', label: 'Redditions', icon: ClipboardCheck },
+  { href: '/admin',             label: 'Accueil',      icon: LayoutDashboard },
+  { href: '/admin/demandes',    label: 'Demandes',     icon: Inbox },
+  { href: '/admin/mustaf',      label: 'Mustaf',       icon: HardHat },
+  { href: '/admin/employes',    label: 'Employés',     icon: Users },
+  { href: '/admin/prospection', label: 'Prospection',  icon: Target },
 ];
 
 export function AdminMobileNav({ pendingCount = 0 }: { pendingCount?: number }) {

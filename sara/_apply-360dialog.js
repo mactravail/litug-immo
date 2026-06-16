@@ -7,17 +7,21 @@ const API = 'https://n8n.litug.com/api/v1';
 const KEY = process.env.N8N_API_KEY;
 const D360 = process.env.D360_KEY;
 const EL = process.env.EL_KEY; // ElevenLabs API key (Speech-to-Text)
-const TEST_SELLER = 'e2d3d883-08e8-4458-ba5d-48486b71a24e';
 const ALLOWLIST = process.env.ALLOWLIST || '__NONE__'; // intl numbers w/o +, comma-sep. __NONE__ = silence everyone.
 
-// 1) SAFETY allowlist: Sara only answers approved test senders. Others -> "Numéro inconnu" (no AI, no send).
+// 1) SAFETY allowlist + routing multi-vendeur via whatsapp_numbers.
+//    $1 = phone_number_id (numéro Sara côté 360dialog)  -> résout le seller_id
+//    $2 = from           (numéro acheteur)               -> vérifié contre l'allowlist
+//    Si le phone_number_id n'est pas dans whatsapp_numbers OU l'acheteur pas dans l'allowlist -> 0 ligne -> silence.
 const resolve = w.nodes.find(n => n.name === 'Résoudre le vendeur');
 resolve.parameters.query =
-  "-- TEST MODE (numero actif = anti-spam): Sara ne repond qu'aux numeros autorises.\n" +
-  "-- Pour ouvrir: remplace la liste ALLOWLIST par les numeros (intl sans +, separes par des virgules).\n" +
-  "select '" + TEST_SELLER + "'::uuid as seller_id\n" +
-  "where $1 = any(string_to_array('" + ALLOWLIST + "', ','));";
-resolve.parameters.options.queryReplacement = "={{ $('Extraire le message').item.json.from }}";
+  "-- Multi-tenant + allowlist. $1 = phone_number_id (Sara), $2 = from (acheteur).\n" +
+  "select wn.seller_id\n" +
+  "from whatsapp_numbers wn\n" +
+  "where wn.phone_number_id = $1\n" +
+  "  and $2 = any(string_to_array('" + ALLOWLIST + "', ','));";
+resolve.parameters.options.queryReplacement =
+  "={{ $('Extraire le message').item.json.phone_number_id }},={{ $('Extraire le message').item.json.from }}";
 
 // 2) Fan-out fix: terrains as ONE aggregated row (keeps the flow at 1 item end-to-end).
 const lands = w.nodes.find(n => n.name === 'Charger terrains');

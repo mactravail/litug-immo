@@ -2,8 +2,10 @@ import { ShieldCheck } from 'lucide-react';
 import { EmployeSidebar } from '@/components/employe/EmployeSidebar';
 import { EmployeMobileNav } from '@/components/employe/EmployeMobileNav';
 import { EmployeMobileMenu } from '@/components/employe/EmployeMobileMenu';
-import { getCurrentWorker, getCurrentWorkerId, selectableWorkers } from '@/lib/employe/current';
-import { listMyProspects } from '@/lib/employe/provider';
+import { getCurrentWorker, getCurrentWorkerId, selectableWorkers, getRealProspectorId } from '@/lib/employe/current';
+import { listMyProspects, countDraftProspects } from '@/lib/employe/provider';
+import { dbCountDrafts } from '@/lib/employe/prospection-db';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { TEAM_ROLE_LABEL } from '@/lib/admin/labels';
 
 /**
@@ -19,6 +21,18 @@ export default async function EmployeLayout({ children }: { children: React.Reac
   const prospects = worker.role === 'prospector'
     ? listMyProspects(worker.id).map(p => ({ id: p.id, companyName: p.companyName, followers: p.followers, outcome: p.outcome }))
     : undefined;
+
+  // Badge nav : nombre de prospections non envoyées au superviseur.
+  let draftCount = 0;
+  if (worker.role === 'prospector') {
+    const realId = await getRealProspectorId();
+    if (realId) {
+      const supabase = await createSupabaseServerClient();
+      draftCount = await dbCountDrafts(supabase, realId);
+    } else {
+      draftCount = countDraftProspects(worker.id);
+    }
+  }
 
   return (
     <div className="flex h-screen overflow-hidden bg-bg">
@@ -54,7 +68,7 @@ export default async function EmployeLayout({ children }: { children: React.Reac
         </main>
       </div>
 
-      <EmployeMobileNav role={worker.role} />
+      <EmployeMobileNav role={worker.role} draftCount={draftCount} />
     </div>
   );
 }

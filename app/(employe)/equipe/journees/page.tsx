@@ -1,12 +1,13 @@
-import { Clock, CalendarDays } from 'lucide-react';
-import { getCurrentProspector } from '@/lib/employe/current';
+﻿import { Clock, CalendarDays } from 'lucide-react';
+import { getCurrentProspector, getRealProspectorId } from '@/lib/employe/current';
 import { listMyWorkDays } from '@/lib/employe/provider';
+import { dbListWorkDays } from '@/lib/employe/prospection-db';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { WorkDayForm } from '@/components/employe/WorkDayForm';
 import { formatDate } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
-/** « 6 » → « 6h » ; « 4.5 » → « 4h30 ». */
 function formatHours(hours: number): string {
   const h = Math.floor(hours);
   const m = Math.round((hours - h) * 60);
@@ -15,14 +16,18 @@ function formatHours(hours: number): string {
 
 export default async function JourneesPage() {
   const worker = await getCurrentProspector();
-  const days = listMyWorkDays(worker.id);
-  const today = new Date().toISOString().slice(0, 10);
+  const realId = await getRealProspectorId();
+  const today  = new Date().toISOString().slice(0, 10);
+
+  const days = realId
+    ? await dbListWorkDays(await createSupabaseServerClient(), realId)
+    : listMyWorkDays(worker.id);
 
   const weekStart = new Date();
   weekStart.setDate(weekStart.getDate() - 6);
-  const weekAgo = weekStart.toISOString().slice(0, 10);
-  const monthStart = today.slice(0, 7) + '-01';
-  const hoursThisWeek = days.filter(d => d.workDate >= weekAgo).reduce((s, d) => s + d.hours, 0);
+  const weekAgo      = weekStart.toISOString().slice(0, 10);
+  const monthStart   = today.slice(0, 7) + '-01';
+  const hoursThisWeek  = days.filter(d => d.workDate >= weekAgo).reduce((s, d) => s + d.hours, 0);
   const hoursThisMonth = days.filter(d => d.workDate >= monthStart).reduce((s, d) => s + d.hours, 0);
 
   return (
@@ -30,7 +35,7 @@ export default async function JourneesPage() {
       <div>
         <h1 className="font-display text-2xl sm:text-3xl font-semibold text-text">Mes journées de travail</h1>
         <p className="text-muted text-sm mt-1">
-          Note chaque jour travaillé : la date et le nombre d’heures faites. Une saisie par jour.
+          Note chaque jour travaillé : la date et le nombre d'heures faites. Une saisie par jour.
         </p>
       </div>
 

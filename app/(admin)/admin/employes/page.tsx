@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { AlertTriangle, ArrowRight, UserPlus } from 'lucide-react';
+import { AlertTriangle, ArrowRight, TrendingUp, UserPlus } from 'lucide-react';
 import { getAdminProvider } from '@/lib/admin/provider';
 import { TEAM_ROLE_LABEL } from '@/lib/admin/labels';
 import { formatFcfa } from '@/lib/utils';
@@ -54,7 +54,17 @@ export default async function AdminEmployesPage() {
                   ) : <span className="text-[11px] text-emerald-700 font-medium">À jour</span>}
                 </td>
                 <td className="px-5 py-3 text-right">
-                  <Link href={`/admin/employes/${member.id}`} className="text-accent inline-flex"><ArrowRight size={16} /></Link>
+                  <div className="flex items-center justify-end gap-3">
+                    {member.role === 'prospector' && (
+                      <Link
+                        href={`/admin/employes/${member.id}/prospection`}
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-accent hover:text-accent-bright transition-colors"
+                      >
+                        <TrendingUp size={13} /> Prospection
+                      </Link>
+                    )}
+                    <Link href={`/admin/employes/${member.id}`} className="text-accent inline-flex"><ArrowRight size={16} /></Link>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -64,19 +74,37 @@ export default async function AdminEmployesPage() {
 
       {/* Mobile cards */}
       <div className="md:hidden space-y-3">
-        {employees.map(({ member, activeTasks, unreconciledAdvances, outstandingAmount }) => (
-          <Link key={member.id} href={`/admin/employes/${member.id}`} className="block bg-white rounded-2xl border border-stone-100 shadow-sm p-4">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="font-medium text-text">{member.displayName}</p>
-                <p className="text-[11px] text-muted">{TEAM_ROLE_LABEL[member.role]} · {activeTasks} tâche(s)</p>
+        {employees.map(({ member, activeTasks, unreconciledAdvances, outstandingAmount }) =>
+          member.role === 'prospector' ? (
+            <div key={member.id} className="bg-white rounded-2xl border border-stone-100 shadow-sm p-4 space-y-3">
+              <div className="flex items-start justify-between gap-3">
+                <Link href={`/admin/employes/${member.id}`} className="min-w-0">
+                  <p className="font-medium text-text">{member.displayName}</p>
+                  <p className="text-[11px] text-muted">{TEAM_ROLE_LABEL[member.role]}</p>
+                </Link>
+                <span className="text-[11px] text-muted shrink-0">Fiche →</span>
               </div>
-              {unreconciledAdvances > 0 ? (
-                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-red-600"><AlertTriangle size={12} /> {formatFcfa(outstandingAmount)}</span>
-              ) : <span className="text-[11px] text-emerald-700 font-medium">À jour</span>}
+              <Link
+                href={`/admin/employes/${member.id}/prospection`}
+                className="flex items-center justify-center gap-2 text-xs font-semibold bg-accent text-white rounded-xl px-3 py-2 hover:bg-accent-bright transition-colors"
+              >
+                <TrendingUp size={13} /> Voir les prospections
+              </Link>
             </div>
-          </Link>
-        ))}
+          ) : (
+            <Link key={member.id} href={`/admin/employes/${member.id}`} className="block bg-white rounded-2xl border border-stone-100 shadow-sm p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="font-medium text-text">{member.displayName}</p>
+                  <p className="text-[11px] text-muted">{TEAM_ROLE_LABEL[member.role]} · {activeTasks} tâche(s)</p>
+                </div>
+                {unreconciledAdvances > 0 ? (
+                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-red-600"><AlertTriangle size={12} /> {formatFcfa(outstandingAmount)}</span>
+                ) : <span className="text-[11px] text-emerald-700 font-medium">À jour</span>}
+              </div>
+            </Link>
+          )
+        )}
       </div>
     </div>
   );

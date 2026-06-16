@@ -1,15 +1,31 @@
 import Link from 'next/link';
-import { Store, HardHat, ClipboardCheck, Banknote, TriangleAlert, ArrowRight, TrendingUp, Wallet, Construction } from 'lucide-react';
+import { Store, HardHat, ClipboardCheck, Banknote, TriangleAlert, ArrowRight, TrendingUp, Wallet, Construction, Target } from 'lucide-react';
 import { getAdminProvider } from '@/lib/admin/provider';
 import { StatCard } from '@/components/ui/StatCard';
 import { SubscriptionBadge } from '@/components/admin/SubscriptionBadge';
 import { RechargeReviewActions } from '@/components/admin/RechargeReviewActions';
 import { SUBJECT_TYPE_LABEL } from '@/lib/admin/labels';
 import { formatFcfa, formatEur, formatDateShort } from '@/lib/utils';
+import type { ProspectEntry } from '@/lib/admin/types';
+
+function groupByProspector(entries: ProspectEntry[]) {
+  const map = new Map<string, { id: string; name: string; entries: ProspectEntry[] }>();
+  for (const e of entries) {
+    const cur = map.get(e.prospectorId) ?? { id: e.prospectorId, name: e.prospectorName, entries: [] };
+    cur.entries.push(e);
+    map.set(e.prospectorId, cur);
+  }
+  return [...map.values()];
+}
 
 export default async function AdminHomePage() {
   const ap = getAdminProvider();
-  const [overview, stats] = await Promise.all([ap.getOverview(), ap.getSiteStats()]);
+  const [overview, stats, prospectEntries] = await Promise.all([
+    ap.getOverview(),
+    ap.getSiteStats(),
+    ap.listProspectEntries({ status: 'sent' }),
+  ]);
+  const prospectors = groupByProspector(prospectEntries);
   const { queue } = overview;
 
   return (
@@ -38,6 +54,54 @@ export default async function AdminHomePage() {
         <StatCard label="Phases en attente de financement" value={overview.mustafByStatus.pendingFunding} icon={HardHat} variant="orange" />
         <StatCard label="Phases en cours" value={overview.mustafByStatus.inProgress} icon={ClipboardCheck} variant="blue" />
         <StatCard label="Phases terminées" value={overview.mustafByStatus.completed} icon={Banknote} variant="emerald" />
+      </section>
+
+      {/* Prospection commerciale */}
+      <section className="space-y-3">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="font-display text-lg font-semibold text-text flex items-center gap-2">
+            <Target size={17} className="text-accent" /> Prospection commerciale
+          </h2>
+          <Link href="/admin/prospection" className="text-xs font-semibold text-accent hover:text-accent-bright transition-colors">
+            Vue complète →
+          </Link>
+        </div>
+
+        {prospectors.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-stone-100 shadow-sm px-5 py-4 text-sm text-muted">
+            Aucun rendu-compte reçu.{' '}
+            <Link href="/admin/employes" className="underline hover:text-text transition-colors">
+              Créez un compte prospecteur
+            </Link>{' '}
+            pour commencer.
+          </div>
+        ) : (
+          <div className="grid sm:grid-cols-2 gap-3">
+            {prospectors.map(({ id, name, entries }) => {
+              const interested = entries.filter(e => e.outcome === 'interested').length;
+              const refused    = entries.filter(e => e.outcome === 'refused').length;
+              const total      = entries.length;
+              return (
+                <Link
+                  key={id}
+                  href={`/admin/employes/${id}/prospection`}
+                  className="flex items-center justify-between gap-4 bg-white rounded-2xl border border-stone-100 shadow-sm px-5 py-4 hover:border-accent/30 transition-colors"
+                >
+                  <div className="min-w-0">
+                    <p className="font-semibold text-text truncate">{name}</p>
+                    <p className="text-xs text-muted mt-0.5">
+                      {total} rendu{total > 1 ? 's' : ''}-compte
+                      {' · '}
+                      <span className="text-emerald-700">{interested} accepté{interested > 1 ? 's' : ''}</span>
+                      {refused > 0 && <> · {refused} refus</>}
+                    </p>
+                  </div>
+                  <ArrowRight size={16} className="text-accent shrink-0" />
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       {/* File des actions à faire */}

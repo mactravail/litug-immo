@@ -1,4 +1,4 @@
-'use server';
+﻿'use server';
 
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
@@ -7,7 +7,9 @@ import {
   addInvoice, addChantierMedia, createProspect, sendProspectsToSupervisor,
   logWorkDay,
 } from '@/lib/employe/provider';
-import { getCurrentWorkerId, getCurrentProspectorId, WORKER_COOKIE, TEAM_ROLES } from '@/lib/employe/current';
+import { getCurrentWorkerId, getCurrentProspectorId, getRealProspectorId, WORKER_COOKIE, TEAM_ROLES } from '@/lib/employe/current';
+import { dbCreateProspect, dbSendToSupervisor, dbLogWorkDay } from '@/lib/employe/prospection-db';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { SEED_TEAM } from '@/lib/admin/seed';
 import type { TaskPriority, ProspectNetwork, ProspectContactMethod, ProspectOutcome } from '@/lib/admin/types';
 import type { ExpenseCategory, MediaType } from '@/lib/mustaf/types';
@@ -127,34 +129,42 @@ export async function raiseIncidentAction(_prev: ActionState, formData: FormData
 export async function createProspectAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
   try {
     const companyName = (formData.get('companyName') as string)?.trim();
-    if (!companyName) return { error: 'Indique le nom de l’entreprise prospectée.' };
+    if (!companyName) return { error: "Indique le nom de l'entreprise prospectée." };
     const outcome = (formData.get('outcome') as ProspectOutcome) || 'to_contact';
-    // Réponse obtenue (a accepté / a refusé) ⇒ le moyen de contact est obligatoire.
     const answered = outcome === 'interested' || outcome === 'refused';
     const contactMethod = (formData.get('contactMethod') as ProspectContactMethod) || undefined;
     if (answered && !contactMethod) return { error: 'Indique comment le contact a eu lieu.' };
     const followersRaw = formData.get('followers');
     const followers = followersRaw != null && String(followersRaw).trim() !== '' ? Number(followersRaw) : undefined;
-    createProspect(await getCurrentProspectorId(), {
+
+    const input = {
       companyName,
-      contactName: (formData.get('contactName') as string)?.trim() || undefined,
-      contactPhone: (formData.get('contactPhone') as string)?.trim() || undefined,
+      contactName:   (formData.get('contactName') as string)?.trim()  || undefined,
+      contactPhone:  (formData.get('contactPhone') as string)?.trim() || undefined,
       followers,
-      network: (formData.get('network') as ProspectNetwork) || 'other',
+      network:       (formData.get('network') as ProspectNetwork) || 'other',
       outcome,
       contactMethod,
-      concern: (formData.get('concern') as string)?.trim() || undefined,
-      notes: (formData.get('notes') as string)?.trim() || undefined,
-      prospectedAt: (formData.get('prospectedAt') as string) || undefined,
-    });
+      concern:       (formData.get('concern') as string)?.trim()  || undefined,
+      notes:         (formData.get('notes') as string)?.trim()    || undefined,
+      prospectedAt:  (formData.get('prospectedAt') as string)     || undefined,
+    };
+
+    const realId = await getRealProspectorId();
+    if (realId) {
+      const supabase = await createSupabaseServerClient();
+      await dbCreateProspect(supabase, realId, input);
+    } else {
+      createProspect(await getCurrentProspectorId(), input);
+    }
+
     revalidatePath('/equipe/prospection');
-    // La liste des entreprises vit dans la sidebar (layout) — on la rafraîchit aussi.
     revalidatePath('/equipe', 'layout');
     revalidatePath('/admin/prospection');
     revalidatePath('/admin/audit');
     return { ok: true };
   } catch (e) {
-    return { error: e instanceof Error ? e.message : 'Enregistrement impossible.' };
+    return { error: e instanceof Error ? e.message : "Enregistrement impossible." };
   }
 }
 
@@ -164,24 +174,37 @@ export async function logWorkDayAction(_prev: ActionState, formData: FormData): 
     const workDate = (formData.get('workDate') as string)?.trim();
     if (!workDate) return { error: 'Indique la date du jour travaillé.' };
     const hours = Number(formData.get('hours'));
-    if (!Number.isFinite(hours) || hours <= 0) return { error: 'Indique un nombre d’heures valide.' };
-    logWorkDay(await getCurrentProspectorId(), {
-      workDate,
-      hours,
-      note: (formData.get('note') as string)?.trim() || undefined,
-    });
+    if (!Number.isFinite(hours) || hours <= 0) return { error: "Indique un nombre d'heures valide." };
+    const input = { workDate, hours, note: (formData.get('note') as string)?.trim() || undefined };
+
+    const realId = await getRealProspectorId();
+    if (realId) {
+      const supabase = await createSupabaseServerClient();
+      await dbLogWorkDay(supabase, realId, input);
+    } else {
+      logWorkDay(await getCurrentProspectorId(), input);
+    }
+
     revalidatePath('/equipe/journees');
+    revalidatePath('/equipe/prospection');
     return { ok: true };
   } catch (e) {
-    return { error: e instanceof Error ? e.message : 'Enregistrement impossible.' };
+    return { error: e instanceof Error ? e.message : "Enregistrement impossible." };
   }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- signature imposée par useActionState ; aucun champ requis pour l'envoi.
 export async function sendProspectsAction(_prev: ActionState, _formData: FormData): Promise<ActionState> {
   try {
-    sendProspectsToSupervisor(await getCurrentProspectorId());
+    const realId = await getRealProspectorId();
+    if (realId) {
+      const supabase = await createSupabaseServerClient();
+      await dbSendToSupervisor(supabase, realId);
+    } else {
+      sendProspectsToSupervisor(await getCurrentProspectorId());
+    }
     revalidatePath('/equipe/prospection');
+    revalidatePath('/equipe', 'layout');
     revalidatePath('/admin/prospection');
     revalidatePath('/admin/audit');
     return { ok: true };

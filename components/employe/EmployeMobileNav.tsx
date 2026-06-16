@@ -20,7 +20,7 @@ const PROSPECT_NAV = [
   { href: '/equipe/securite',    label: 'Sécurité',    icon: ShieldCheck },
 ];
 
-export function EmployeMobileNav({ role }: { role: TeamRole }) {
+export function EmployeMobileNav({ role, draftCount = 0 }: { role: TeamRole; draftCount?: number }) {
   const pathname = usePathname();
   const NAV = role === 'prospector' ? PROSPECT_NAV : FIELD_NAV;
 
@@ -29,6 +29,7 @@ export function EmployeMobileNav({ role }: { role: TeamRole }) {
       <div className="flex">
         {NAV.map(({ href, label, icon: Icon }) => {
           const active = href === '/equipe' ? pathname === '/equipe' : pathname.startsWith(href);
+          const showBadge = href === '/equipe/prospection' && draftCount > 0;
           return (
             <Link
               key={href}
@@ -38,7 +39,14 @@ export function EmployeMobileNav({ role }: { role: TeamRole }) {
                 active ? 'text-accent' : 'text-muted',
               )}
             >
-              <Icon size={20} />
+              <span className="relative">
+                <Icon size={20} />
+                {showBadge && (
+                  <span className="absolute -top-1.5 -right-2 min-w-[16px] h-4 flex items-center justify-center bg-red-500 text-white text-[9px] font-bold rounded-full px-1 leading-none">
+                    {draftCount > 9 ? '9+' : draftCount}
+                  </span>
+                )}
+              </span>
               {label}
             </Link>
           );

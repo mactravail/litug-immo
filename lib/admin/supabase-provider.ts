@@ -2,13 +2,14 @@
    Admin back-office — Supabase provider (vraie base).
    Branché quand NEXT_PUBLIC_DATA_SOURCE='supabase' (lib/admin/provider.ts).
 
-   Hybride assumé (Phase 1 — Admin Volet A) :
-   - RÉEL : abonnements (table `subscriptions`), équipe (`user_roles` + auth.users),
-     audit (`audit_log`), statistiques & accueil (subscriptions/lands/leads/visits).
-   - DÉLÉGUÉ AU MOCK : tout Mustaf (projet de démonstration conservé) et tout le
-     Volet B (tâches/avances/redditions/incidents — dataset partagé avec l'espace
-     employé, basculé dans une phase ultérieure). On part de `adminMockProvider` et
-     on ne SURCHARGE que les méthodes réelles.
+   100 % réel pour tout ce qui est dans Supabase :
+   - abonnements (`subscriptions`), équipe (`user_roles` + auth.users),
+     employés (user_roles → liste sans tâches/avances), audit (`audit_log`),
+     statistiques (subscriptions/lands/leads/visits), prospection (`prospect_entries`).
+   - Mustaf (construction) et Volet B (tâches/avances/redditions) :
+     pas encore en base → retournent des listes vides / zéros (aucune donnée fictive).
+     Le mock en fallback (adminMockProvider) est conservé uniquement pour les
+     méthodes non encore surchargées ici.
 
    Lectures transverses (tous les vendeurs/utilisateurs) via la clé service_role
    (back-office serveur de confiance), comme lib/admin/pending-accounts.ts.
@@ -23,11 +24,11 @@ import type { AdminProvider } from './provider';
 import type {
   Subscription, SubscriptionStatus, AuditLogEntry, AuditAction,
   TeamMember, TeamRole, AdminOverview, SiteStats, MonthlyPoint, BillableParty,
+  ProspectEntry, ProspectNetwork, ProspectOutcome, ProspectContactMethod,
+  EmployeeRow,
 } from './types';
 import { sellerPlanPrice, VERIFICATION_FEE } from './pricing';
 import { TEAM_ROLE_LABEL, SUBSCRIPTION_STATUS_LABEL } from './labels';
-import { getMustafProvider } from '@/lib/mustaf/provider';
-import { PHASE_STATUS_LABEL } from '@/lib/mustaf/labels';
 
 /** Un contact connu est-il un email exploitable pour pré-remplir une facture ? */
 const looksLikeEmail = (contact?: string): boolean =>
@@ -304,26 +305,98 @@ export const supabaseAdminProvider: AdminProvider = {
     }));
   },
 
-  /* ---------------- Accueil & statistiques (réel + Mustaf délégué au mock) ---------------- */
+  /* ---------------- Mustaf (pas encore dans Supabase) ---------------- */
+
+  async listMustafProjects() {
+    return [];
+  },
+
+  /* ---------------- Accueil & statistiques (100 % réel) ---------------- */
 
   async getOverview() {
-    const [subs, mock] = await Promise.all([this.listSubscriptions(), adminMockProvider.getOverview()]);
+    const subs = await this.listSubscriptions();
     return {
       sellersActive: subs.filter(s => s.subjectType === 'seller' && s.status === 'active').length,
       sellersPending: subs.filter(s => s.subjectType === 'seller' && s.status === 'pending').length,
-      // Mustaf (projet de démonstration) + file Volet B : encore servis par le mock.
-      mustafByStatus: mock.mustafByStatus,
+      mustafByStatus: { pendingFunding: 0, inProgress: 0, awaitingInspection: 0, completed: 0 },
       queue: {
         subsToValidate: subs.filter(s => s.status === 'pending'),
-        // Recharges Mustaf (projet de démonstration) : encore servies par le mock.
-        rechargesToValidate: mock.queue.rechargesToValidate,
-        phasesAwaitingRelease: mock.queue.phasesAwaitingRelease,
-        openAnomalies: mock.queue.openAnomalies,
-        reportsToReview: mock.queue.reportsToReview,
-        unreconciledAdvances: mock.queue.unreconciledAdvances,
-        openIncidents: mock.queue.openIncidents,
+        rechargesToValidate: [],
+        phasesAwaitingRelease: [],
+        openAnomalies: 0,
+        reportsToReview: 0,
+        unreconciledAdvances: 0,
+        openIncidents: 0,
       },
     } satisfies AdminOverview;
+  },
+
+  /* ---------------- Employés (réel : user_roles + auth.users) ---------------- */
+
+  async listEmployees() {
+    const members = await this.listTeam();
+    return members
+      .filter(m => m.role !== 'admin')
+      .map(member => ({
+        member,
+        activeTasks: 0,
+        unreconciledAdvances: 0,
+        outstandingAmount: 0,
+      } satisfies EmployeeRow))
+      .sort((a, b) => a.member.displayName.localeCompare(b.member.displayName));
+  },
+
+  async getEmployee(id) {
+    const members = await this.listTeam();
+    const member = members.find(m => m.id === id);
+    if (!member) return null;
+    return { member, tasks: [], sessions: [], totalHours: 0, advances: [] };
+  },
+
+  /* ---------------- Prospection commerciale (réel) ---------------- */
+
+  async listProspectEntries(filter) {
+    const admin = createSupabaseAdminClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let query: any = admin.from('prospect_entries').select('*');
+    if (filter?.prospectorId) query = query.eq('prospector_id', filter.prospectorId);
+    if (filter?.status) query = query.eq('status', filter.status);
+    const { data, error } = await query
+      .order('prospected_at', { ascending: false })
+      .order('created_at', { ascending: false });
+    if (error) throw new Error(error.message);
+
+    const rows = (data ?? []) as Record<string, unknown>[];
+
+    // Noms des prospecteurs depuis auth.users (user_metadata.full_name).
+    const prospectorIds = [...new Set(rows.map(r => r.prospector_id as string))];
+    const nameMap = new Map<string, string>();
+    if (prospectorIds.length) {
+      const usersList = await admin.auth.admin.listUsers({ page: 1, perPage: 200 });
+      for (const u of usersList.data?.users ?? []) {
+        const m = (u.user_metadata ?? {}) as Record<string, unknown>;
+        nameMap.set(u.id, (m.full_name as string) || u.email?.split('@')[0] || 'Prospecteur');
+      }
+    }
+
+    return rows.map(r => ({
+      id:            r.id as string,
+      prospectorId:  r.prospector_id as string,
+      prospectorName: nameMap.get(r.prospector_id as string) ?? 'Prospecteur',
+      companyName:   r.company_name as string,
+      contactName:   (r.contact_name as string | null) ?? undefined,
+      contactPhone:  (r.contact_phone as string | null) ?? undefined,
+      followers:     (r.followers as number | null) ?? undefined,
+      network:       r.network as ProspectNetwork,
+      outcome:       r.outcome as ProspectOutcome,
+      contactMethod: (r.contact_method as ProspectContactMethod | null) ?? undefined,
+      concern:       (r.concern as string | null) ?? undefined,
+      notes:         (r.notes as string | null) ?? undefined,
+      status:        r.status as ProspectEntry['status'],
+      prospectedAt:  r.prospected_at as string,
+      createdAt:     r.created_at as string,
+      sentAt:        (r.sent_at as string | null) ?? undefined,
+    } satisfies ProspectEntry));
   },
 
   async getSiteStats() {
@@ -338,21 +411,13 @@ export const supabaseAdminProvider: AdminProvider = {
     const leads = leadsRes.data ?? [];
     const visitsTotal = (visitsRes.data ?? []).length;
 
-    // --- Mustaf (projet de démonstration) — délégué au provider mock. ---
-    const mp = getMustafProvider();
-    const [phases, progress, escrow, expenses, mustafProjects] = await Promise.all([
-      mp.getPhases(), mp.getProgress(), mp.getEscrowSummary(), mp.getExpenses(), this.listMustafProjects(),
-    ]);
-    const phaseZero = expenses.filter(e => e.category === 'phase_zero').reduce((s, e) => s + e.amount, 0);
-    const mustafCommission = expenses.filter(e => e.category === 'management_fee').reduce((s, e) => s + e.amount, 0);
-
-    // --- Revenus ---
+    // --- Revenus (réels uniquement : Sara + vérifications) ---
     const sellerMrr = subs.filter(s => s.subjectType === 'seller' && s.status === 'active')
       .reduce((sum, s) => sum + sellerPlanPrice(String(s.tier)), 0);
     const verifiedDates = lands.filter(l => l.verification_status === 'verifie').map(l => (l.verified_at as string) ?? '');
     const verifiedLands = verifiedDates.length;
     const verification = verifiedLands * VERIFICATION_FEE;
-    const total = sellerMrr + phaseZero + mustafCommission + verification;
+    const total = sellerMrr + verification;
 
     // --- Abonnements ---
     const sold = subs.length;
@@ -370,16 +435,11 @@ export const supabaseAdminProvider: AdminProvider = {
     const leadsTotal = leads.length;
     const leadsConverted = leads.filter(l => l.status === 'converti').length;
 
-    const phaseStatusMap = new Map<string, number>();
-    phases.forEach(p => phaseStatusMap.set(p.status, (phaseStatusMap.get(p.status) ?? 0) + 1));
-
     return {
       revenue: {
-        sellerMrr, phaseZero, mustafCommission, verification, total,
+        sellerMrr, phaseZero: 0, mustafCommission: 0, verification, total,
         bySource: [
           { key: 'seller_subscriptions', label: 'Abonnements vendeurs (Sara)', amount: sellerMrr },
-          { key: 'phase_zero', label: 'Forfaits Phase 0', amount: phaseZero },
-          { key: 'mustaf_commission', label: 'Commissions Mustaf', amount: mustafCommission },
           { key: 'verification', label: 'Frais de vérification', amount: verification },
         ],
       },
@@ -402,15 +462,7 @@ export const supabaseAdminProvider: AdminProvider = {
         conversionRate: leadsTotal ? (leadsConverted / leadsTotal) * 100 : 0,
         visitsTotal,
       },
-      mustaf: {
-        projects: mustafProjects.length,
-        phasesByStatus: [...phaseStatusMap.entries()].map(([status, count]) => ({
-          label: PHASE_STATUS_LABEL[status as keyof typeof PHASE_STATUS_LABEL], count,
-        })),
-        progressPct: progress.pctComplete,
-        escrowBalance: escrow.balance,
-        totalDeposited: escrow.totalDeposited,
-      },
+      mustaf: { projects: 0, phasesByStatus: [], progressPct: 0, escrowBalance: 0, totalDeposited: 0 },
       monthly: monthlySeries(subs, verifiedDates),
     } satisfies SiteStats;
   },

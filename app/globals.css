@@ -10,6 +10,7 @@
    ============================================================ */
 
 :root {
+  color-scheme: light; /* Bloque le dark mode forcé du navigateur — palette monochrome claire uniquement */
   /* Monochrome palette — 6 gris : #000 #3a3a3a #737373 #d9d9d9 #dfdfdf #fff */
   --ink: #000000;
   --ink-soft: #3a3a3a;

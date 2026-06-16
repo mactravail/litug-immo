@@ -39,6 +39,7 @@ export const COMMON_FEATURES: string[] = [
   'Contribution familiale visible',
   'Gestion des permis',
   'Dashboard mobile',
+  'Cotisations à partir de 1 000 FCFA',
 ];
 
 export const TIERS: Tier[] = [
@@ -83,6 +84,7 @@ export const TIERS: Tier[] = [
       'Chef de chantier dédié',
       'Alertes en temps réel',
       'Gestion complète de bout en bout',
+      'Architecte italien disponible sur demande',
     ],
   },
 ];

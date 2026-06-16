@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
@@ -143,12 +143,12 @@ const I18N = {
       kicker: "Vendre vos terrains",
       badge: "Disponible 24h/24",
       title: "Sara, votre commerciale qui ne dort jamais",
-      desc: "Agent immobilier ou propriétaire de plusieurs terrains ? Sara est votre assistante IA sur WhatsApp : elle répond à chaque prospect, le qualifie (budget, zone, superficie) et ne vous transmet que les acheteurs sérieux — pendant que vous concluez.",
+      desc: "Pendant que vous travaillez. Pendant que vous dormez. Pendant que vous êtes en déplacement. Sara continue de répondre à vos prospects — instantanément, avec les informations que vous avez validées.",
       features: [
-        "Répond automatiquement, 24/7",
-        "Qualifie chaque client : budget, zone, superficie",
-        "N'envoie que des terrains au statut clair (TF, Bail, Délibération)",
-        "Envoie photos et fiches d'information",
+        "Prix du terrain, localisation et superficie",
+        "Documents disponibles et statut clair (TF, Bail, Délibération)",
+        "Modalités de paiement — paiement par tranche si applicable",
+        "Disponibilités pour les visites et toute info que vous choisissez",
         "Ne vous transfère que les prospects sérieux, prêts à acheter",
       ],
       cta: "Activer Sara",
@@ -156,30 +156,42 @@ const I18N = {
     mustaf: {
       kicker: "Construire sa maison",
       name: "Mustaf",
-      badge: "Construire en toute confiance",
-      title: "Gardez le contrôle de votre chantier, depuis n'importe où dans le monde",
-      desc: "Vous avez un terrain ? Mustaf gère votre chantier de A à Z — avec nos architectes italiens pour un look différent. Votre argent reste bloqué à la banque, les travaux n'avancent que phase par phase, et vous voyez chaque franc et chaque photo depuis votre tablette. Même si vous avez déjà commencé, vous pouvez continuer avec nous.",
+      badge: "La façon la plus sereine de construire",
+      title: "Commencez dès 1 000 FCFA",
+      desc: "Construire une maison ne devrait jamais être difficile. Avec Mustaf, que vous ayez déjà commencé votre chantier ou que vous ayez seulement le terrain, Mustaf s'adapte à votre projet phase par phase. C'est comme une tontine personnelle : déposez ce que vous pouvez, quand vous pouvez — 1 000 FCFA, 5 000 FCFA, 30 000 FCFA — jusqu'à financer la phase entière. Les travaux ne commencent que quand l'argent est là.",
+      example: "Exemple : si la fondation vous coûte 500 000 FCFA (maçon et tout compris), vous verrez sur votre tableau de bord chaque montant que vous y mettez — 1 000 FCFA, 15 000 FCFA… — jusqu'à atteindre la somme. Ce n'est qu'à ce moment que les travaux commencent.",
       services: [
-        "Argent bloqué à la banque, jamais chez nous",
+        "Seul ou en famille — une personne ou toute une famille peut financer le même projet",
+        "Un architecte dédié à votre projet — sénégalais ou italien, vous choisissez",
+        "Tableau de bord complet : factures, dépenses, travaux en cours et contributions visibles",
+        "À la fin du projet, vous savez exactement combien vous avez investi — à la pièce près",
         "Une phase ne démarre que lorsqu'elle est financée",
-        "Zéro marge sur les matériaux, factures à l'appui",
         "Inspecteur indépendant avant chaque paiement",
-        "Photos du chantier datées et géolocalisées",
-        "Toute la famille peut cotiser, participation visible",
       ],
       cta: "Voir les offres",
     },
     comment: {
       kicker: "Comment ça marche",
-      title: "Un processus simple et sécurisé",
-      steps: [
-        { n: "1", title: "Terrain vérifié", items: ["Vérification du titre à la Conservation Foncière", "Bornage et statut clair (TF, Bail…)", "Achat sécurisé via notaire séquestre"] },
-        { n: "2", title: "Préparation du projet", items: ["Étude du terrain", "Plan architectural + permis de construire", "Budget prévisionnel détaillé"] },
-        { n: "3", title: "Votre espace personnel", items: ["Accès à votre tableau de bord", "Toute la famille peut participer au financement"] },
-        { n: "4", title: "Financement progressif", items: ["Les fonds sont collectés étape par étape", "Fondation · Élévation · Toiture · Finitions"] },
-        { n: "5", title: "Exécution contrôlée", items: ["Inspecteur indépendant avant chaque paiement", "Chaque dépense enregistrée, chaque facture disponible"] },
-        { n: "6", title: "Livraison", items: ["Une retenue de garantie reste bloquée jusqu'à la livraison", "Remise des clés en toute sérénité"] },
-      ],
+      title: "Deux produits, un processus clair",
+      sara: {
+        label: "Sara — Vendre vos terrains",
+        tag: "Pour les vendeurs",
+        trial: "1er mois offert — testez Sara gratuitement, sans engagement. Décidez ensuite de continuer.",
+        steps: [
+          { n: "1", title: "Installation & setup", items: ["Payez le setup pour activer Sara sur votre WhatsApp", "1 mois offert pour tester sans engagement", "Sara répond instantanément à vos prospects 24h/24"] },
+          { n: "2", title: "Personnalisation", items: ["Configurez vos terrains, prix, conditions et modalités", "Sara adopte votre style et vos informations validées", "Ajustez à tout moment depuis votre espace vendeur"] },
+          { n: "3", title: "Dashboard vendeur", items: ["Suivez votre trafic, leads et conversions en temps réel", "Mettez en vente uniquement vos terrains vérifiés (titre contrôlé, propriétaire confirmé)", "Continuez si ça vous convient — ou arrêtez librement"] },
+        ],
+      },
+      mustaf: {
+        label: "Mustaf — Construire en confiance",
+        tag: "Pour les propriétaires",
+        steps: [
+          { n: "1", title: "Choisir votre offre", items: ["3 formules selon l'intensité de suivi souhaitée", "Phase 0 (plan, permis, étude du sol) — pour les projets qui démarrent", "Déjà en chantier ? On intègre votre projet là où il en est et on continue avec vous"] },
+          { n: "2", title: "Tableau de bord dédié", items: ["Dépenses ligne par ligne avec factures jointes", "Photos géolocalisées et horodatées du chantier", "Toute la famille peut contribuer — chaque dépôt visible et attribué"] },
+          { n: "3", title: "Procédure documentaire", items: ["Dépôt : plan architectural, étude du sol, devis par phase", "Paiement phase par phase — fondation → élévation → toiture → finitions", "Inspecteur indépendant avant chaque libération de fonds"] },
+        ],
+      },
     },
     dash: {
       kicker: "Le tableau de bord Mustaf",
@@ -201,7 +213,7 @@ const I18N = {
         { value: 80, prefix: "+", suffix: "%", label: "de temps économisé grâce à Sara" },
         { value: 70, prefix: "−", suffix: "%", label: "de faux prospects et d'arnaques évités" },
         { value: 100, prefix: "", suffix: "%", label: "des dépenses Mustaf tracées et justifiées" },
-        { value: 0, prefix: "", suffix: "%", label: "de marge sur les matériaux, factures visibles" },
+        { value: 1000, prefix: "", suffix: " FCFA", label: "suffisent pour démarrer votre maison avec Mustaf" },
       ],
     },
     preuves: {
@@ -239,12 +251,12 @@ const I18N = {
       kicker: "FAQ",
       title: "Les questions que vous vous posez",
       items: [
-        { q: "Puis-je utiliser Litug si j'ai déjà mon terrain ?", a: "Oui. Vous passez directement à Mustaf pour la construction, sans repayer l'achat du terrain." },
-        { q: "Puis-je utiliser Mustaf si j'ai déjà mes plans ?", a: "Oui. Vous ne paierez pas les prestations que vous possédez déjà." },
-        { q: "Ma famille peut-elle participer au financement ?", a: "Oui. Chaque membre peut contribuer directement au projet, et chaque versement est attribué et visible. (Il s'agit d'un relevé de contributions, pas d'un titre de propriété.)" },
-        { q: "Comment suivre les dépenses ?", a: "Toutes les dépenses sont visibles dans votre tableau de bord, facture à l'appui, en temps réel." },
-        { q: "Mon argent est-il en sécurité ?", a: "Oui. Il reste bloqué chez un tiers de confiance (notaire séquestre / banque partenaire) et n'est libéré qu'après vérification indépendante des travaux. Jamais chez nous." },
-        { q: "Comment savoir qu'un terrain n'est pas une arnaque ?", a: "Un terrain n'est marqué « Vérifié » qu'après un contrôle réel par notaire/géomètre à la Conservation Foncière. Le statut (TF, Bail, Délibération) est toujours affiché, jamais caché." },
+        { q: "Combien faut-il pour commencer avec Mustaf ?", a: "1 000 FCFA suffisent pour ouvrir votre projet et commencer à épargner. Mustaf fonctionne comme une tontine personnelle : vous déposez ce que vous pouvez, quand vous pouvez. Les travaux ne démarrent que lorsque la phase est entièrement financée — pas avant." },
+        { q: "Sara est-elle payante dès le départ ?", a: "Non. Vous payez uniquement l'installation (le setup) pour activer Sara sur votre WhatsApp, et vous bénéficiez d'un mois entier gratuitement pour tester. À la fin du mois, vous décidez librement de continuer ou d'arrêter — sans engagement." },
+        { q: "Puis-je rejoindre Mustaf si j'ai déjà mon terrain ou mes plans ?", a: "Oui. Si vous avez déjà le terrain, vous passez directement à la construction. Si vous avez déjà vos plans, permis ou une partie des documents, on s'adapte à votre avancement et vous ne payez pas ce que vous possédez déjà. Déjà en chantier ? On intègre votre projet là où il en est." },
+        { q: "Ma famille peut-elle participer au financement ?", a: "Oui. Plusieurs membres peuvent contribuer au même projet depuis un tableau de bord partagé. Chaque versement est attribué et visible. Il s'agit d'un relevé de contributions — pas d'un titre de propriété." },
+        { q: "Mon argent est-il en sécurité ?", a: "Oui. Il reste bloqué chez un tiers de confiance (notaire séquestre ou banque partenaire) et n'est libéré qu'après vérification indépendante des travaux. Jamais chez nous." },
+        { q: "Comment savoir qu'un terrain n'est pas une arnaque ?", a: "Un terrain n'est marqué « Vérifié » qu'après un contrôle réel par notaire/géomètre à la Conservation Foncière. Le statut (TF, Bail, Délibération) est toujours affiché, jamais caché. Les terrains en vente sur notre plateforme ont fait l'objet d'une vérification des titres et de l'identité du propriétaire." },
       ],
     },
     ctaFinal: {
@@ -336,7 +348,7 @@ const I18N = {
       more: [
         { t: "h", v: "The problems land sellers live with" },
         { t: "x", v: "Answering the same questions over and over:" },
-        { t: "p", v: "“What's the price?” · “Where is the land?” · “What papers do you have?” · “Can I pay in installments?” · “When can I visit?”" },
+        { t: "p", v: "'What\'s the price?' · 'Where is the land?' · 'What papers do you have?' · 'Can I pay in installments?' · 'When can I visit?'" },
         { t: "p", v: "Again. And again. And again." },
         { t: "x", v: "Getting dozens, even hundreds of messages every week." },
         { t: "x", v: "Replying late." },
@@ -399,7 +411,7 @@ const I18N = {
         { t: "h", v: "The greatest danger" },
         { t: "p", v: "It's not running out of money. It's wasting the money you already have." },
         { t: "p", v: "How many people earn enough to build… but spend their money on emergencies, pointless expenses, or projects that are never finished?" },
-        { t: "p", v: "While you wait for “the right moment,” your house isn't getting built." },
+        { t: "p", v: "While you wait for 'the right moment', your house isn't getting built." },
         { t: "h", v: "Your house shouldn't depend on:" },
         { t: "x", v: "A cousin." },
         { t: "x", v: "A brother." },
@@ -426,12 +438,12 @@ const I18N = {
       kicker: "Sell your land",
       badge: "Available 24/7",
       title: "Sara, the salesperson that never sleeps",
-      desc: "A real-estate agent or own several plots? Sara is your WhatsApp AI assistant: she answers every prospect, qualifies them (budget, area, size) and only forwards the serious buyers — while you close the deal.",
+      desc: "While you work. While you sleep. While you're on the move. Sara keeps answering your prospects — instantly, with the information you've validated.",
       features: [
-        "Replies automatically, 24/7",
-        "Qualifies every client: budget, area, size",
-        "Only sends land with a clear status (TF, Bail, Délibération)",
-        "Sends photos and info sheets",
+        "Land price, location and area",
+        "Available documents and clear status (TF, Bail, Délibération)",
+        "Payment terms — including instalment plans if applicable",
+        "Visit availability and any other info you choose to share",
         "Only forwards you serious, ready-to-buy leads",
       ],
       cta: "Activate Sara",
@@ -439,30 +451,42 @@ const I18N = {
     mustaf: {
       kicker: "Build a home",
       name: "Mustaf",
-      badge: "Build with confidence",
-      title: "Keep control of your build, from anywhere in the world",
-      desc: "Own land? Mustaf manages your whole build — with our Italian architects for a distinctive look. Your money stays locked at the bank, work only advances phase by phase, and you see every franc and every photo from your tablet. Even if you've already started, you can continue with us.",
+      badge: "The most serene way to build",
+      title: "Start from just 1,000 FCFA",
+      desc: "Building a home should never be difficult. With Mustaf, whether you've already started your build or you only have the land, Mustaf adapts to your project phase by phase. Think of it like a personal tontine: deposit what you can, when you can — 1,000 FCFA, 5,000 FCFA, 30,000 FCFA — until the phase is fully funded. Work only begins once the money is there.",
+      example: "Example: if your foundation costs 500,000 FCFA (mason and everything included), you'll see every amount you put in on your dashboard — 1,000 FCFA, 15,000 FCFA… — until you reach the total. Only then do the works begin.",
       services: [
-        "Money locked at the bank, never with us",
-        "A phase only starts once it's funded",
-        "Zero markup on materials, invoices included",
+        "Alone or as a family — one person or a whole family can fund the same project",
+        "A dedicated architect for your project — Senegalese or Italian, you choose",
+        "Full dashboard: invoices, expenses, ongoing work and contributions, all visible",
+        "At the end of the project, you know exactly how much you invested — down to the last franc",
+        "A phase only starts once it's fully funded",
         "Independent inspector before every payment",
-        "Dated, geolocated site photos",
-        "The whole family can contribute — participation shown",
       ],
       cta: "See the plans",
     },
     comment: {
       kicker: "How it works",
-      title: "A simple, secure process",
-      steps: [
-        { n: "1", title: "Verified land", items: ["Title check at the Conservation Foncière", "Boundaries and clear status (TF, Bail…)", "Secure purchase via notary escrow"] },
-        { n: "2", title: "Project prep", items: ["Land survey", "Architectural plan + building permit", "Detailed budget forecast"] },
-        { n: "3", title: "Your personal space", items: ["Access to your dashboard", "The whole family can join the financing"] },
-        { n: "4", title: "Progressive funding", items: ["Funds collected step by step", "Foundation · Walls · Roof · Finishing"] },
-        { n: "5", title: "Controlled execution", items: ["Independent inspector before every payment", "Every expense logged, every invoice available"] },
-        { n: "6", title: "Handover", items: ["A retention stays locked until handover", "Keys handed over with peace of mind"] },
-      ],
+      title: "Two products, one clear process",
+      sara: {
+        label: "Sara — Sell your land",
+        tag: "For sellers",
+        trial: "First month free — try Sara at no cost, no commitment. Then decide.",
+        steps: [
+          { n: "1", title: "Setup & install", items: ["Pay the setup fee to activate Sara on your WhatsApp", "First month free — test with no commitment", "Sara answers your prospects instantly, 24/7"] },
+          { n: "2", title: "Personalisation", items: ["Configure your plots, prices, terms and conditions", "Sara adopts your style and the information you validate", "Adjust anytime from your seller dashboard"] },
+          { n: "3", title: "Seller dashboard", items: ["Track your traffic, leads and conversions in real time", "List only verified plots for sale (title checked, owner confirmed)", "Continue if it works — or stop freely after the free month"] },
+        ],
+      },
+      mustaf: {
+        label: "Mustaf — Build with confidence",
+        tag: "For owners",
+        steps: [
+          { n: "1", title: "Choose your plan", items: ["3 plans depending on the level of oversight you need", "Phase 0 (plan, permit, soil survey) — for projects starting from scratch", "Already building? We plug into your site where it stands and carry on with you"] },
+          { n: "2", title: "Your dedicated dashboard", items: ["Expenses line by line with invoices attached", "Geolocated, timestamped site photos", "The whole family can contribute — every deposit visible and attributed"] },
+          { n: "3", title: "Document procedure", items: ["Submit: architectural plan, soil survey, per-phase estimates", "Pay phase by phase — foundation → walls → roof → finishes", "Independent inspector before every fund release"] },
+        ],
+      },
     },
     dash: {
       kicker: "The Mustaf dashboard",
@@ -484,7 +508,7 @@ const I18N = {
         { value: 80, prefix: "+", suffix: "%", label: "time saved thanks to Sara" },
         { value: 70, prefix: "−", suffix: "%", label: "fewer fake leads and scams" },
         { value: 100, prefix: "", suffix: "%", label: "of Mustaf expenses tracked and justified" },
-        { value: 0, prefix: "", suffix: "%", label: "markup on materials, invoices visible" },
+        { value: 1000, prefix: "", suffix: " FCFA", label: "is enough to start your home with Mustaf" },
       ],
     },
     preuves: {
@@ -522,12 +546,12 @@ const I18N = {
       kicker: "FAQ",
       title: "The questions you're asking",
       items: [
-        { q: "Can I use Litug if I already own my land?", a: "Yes. You go straight to Mustaf for the build, without paying again for the land." },
-        { q: "Can I use Mustaf if I already have my plans?", a: "Yes. You won't pay for services you already have." },
-        { q: "Can my family help finance the project?", a: "Yes. Each member can contribute directly, and every deposit is attributed and visible. (It's a record of contributions, not a property title.)" },
-        { q: "How do I track expenses?", a: "All expenses are visible in your dashboard, with invoices, in real time." },
+        { q: "How much do I need to start with Mustaf?", a: "1,000 FCFA is enough to open your project and start saving. Mustaf works like a personal tontine: deposit what you can, when you can. Work only begins once the phase is fully funded — never before." },
+        { q: "Is Sara free to start?", a: "No subscription on day one. You only pay the setup fee to activate Sara on your WhatsApp, and you get a full month free to test it. At the end of the month, you decide freely whether to continue or stop — no commitment." },
+        { q: "Can I join Mustaf if I already have my land or plans?", a: "Yes. If you already own the land, you go straight to construction. If you already have plans, a permit, or part of the documents, we adapt to where you are and you don't pay for what you already have. Already mid-build? We integrate your project as it stands." },
+        { q: "Can my family help finance the project?", a: "Yes. Multiple members can contribute to the same project from a shared dashboard. Every deposit is attributed and visible. It's a record of contributions — not a property title." },
         { q: "Is my money safe?", a: "Yes. It stays locked with a trusted third party (notary escrow / partner bank) and is only released after independent verification of the work. Never with us." },
-        { q: "How do I know a plot isn't a scam?", a: "A plot is only marked “Verified” after a real check by a notary/surveyor at the Conservation Foncière. The status (TF, Bail, Délibération) is always shown, never hidden." },
+        { q: "How do I know a plot isn't a scam?", a: "A plot is only marked \"Verified\" after a real check by a notary/surveyor at the Conservation Foncière. The status (TF, Bail, Délibération) is always shown, never hidden. Every plot listed on our platform has had its title and owner identity verified." },
       ],
     },
     ctaFinal: {
@@ -1222,6 +1246,7 @@ function Mustaf({ t, lang }: { t: T; lang: Lang }) {
           <span className="agent-badge"><Icon name="home" size={14} />{t.mustaf.badge}</span>
           <h2><span className="nm">{t.mustaf.name}</span> — {t.mustaf.title}</h2>
           <p className="agent-desc">{t.mustaf.desc}</p>
+          <p className="mustaf-example">{t.mustaf.example}</p>
           <ul className="agent-list">
             {t.mustaf.services.map((s, i) => (
               <li key={i}><span className="tick"><Icon name="check" size={14} stroke={2.5} /></span>{s}</li>
@@ -1263,18 +1288,45 @@ function Comment({ t }: { t: T }) {
           <span className="eyebrow">{t.comment.kicker}</span>
           <h2 className="section-title">{t.comment.title}</h2>
         </div>
-        <div className="steps-grid">
-          {t.comment.steps.map((s, i) => (
-            <article className="stepcard reveal" key={i}>
-              <div className="step-n">{s.n}</div>
-              <h3>{s.title}</h3>
-              <ul>
-                {s.items.map((it, j) => (
-                  <li key={j}><Icon name="check" size={13} stroke={2.5} />{it}</li>
-                ))}
-              </ul>
-            </article>
-          ))}
+        <div className="comment-dual">
+          {/* ── Sara panel ── */}
+          <div className="comment-panel reveal">
+            <div className="comment-panel-head">
+              <span className="cpanel-tag">{t.comment.sara.tag}</span>
+              <h3>{t.comment.sara.label}</h3>
+              <p className="comment-trial">{t.comment.sara.trial}</p>
+            </div>
+            {t.comment.sara.steps.map((s, i) => (
+              <article className="stepcard" key={i}>
+                <div className="step-n">{s.n}</div>
+                <h3>{s.title}</h3>
+                <ul>
+                  {s.items.map((it, j) => (
+                    <li key={j}><Icon name="check" size={13} stroke={2.5} />{it}</li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+
+          {/* ── Mustaf panel ── */}
+          <div className="comment-panel reveal">
+            <div className="comment-panel-head mustaf-head">
+              <span className="cpanel-tag">{t.comment.mustaf.tag}</span>
+              <h3>{t.comment.mustaf.label}</h3>
+            </div>
+            {t.comment.mustaf.steps.map((s, i) => (
+              <article className="stepcard" key={i}>
+                <div className="step-n">{s.n}</div>
+                <h3>{s.title}</h3>
+                <ul>
+                  {s.items.map((it, j) => (
+                    <li key={j}><Icon name="check" size={13} stroke={2.5} />{it}</li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
         </div>
       </div>
     </section>

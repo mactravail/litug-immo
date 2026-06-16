@@ -1,49 +1,48 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Check, ShieldCheck, Sparkles, ArrowRight, Info, Settings } from 'lucide-react';
+import { ShieldCheck, Settings } from 'lucide-react';
 import '../landing.css';
 import './offer.css';
 import SiteHeader from '../components/SiteHeader';
+import PricingCards from './PricingCards';
 
 export const metadata: Metadata = {
   title: 'Activer Sara — Offre & tarifs | Litug',
   description:
-    "L'abonnement à Sara, l'agent IA WhatsApp qui répond à tes clients 24/7, qualifie les prospects et alimente ton tableau de bord vendeur.",
+    "Deux formules pour activer Sara, l'agent IA WhatsApp qui qualifie tes prospects 24h/24 : essai sans abonnement, ou tout compris avec prix garanti 2 ans.",
 };
-
-const INCLUDED = [
-  'Agent IA WhatsApp disponible 24h/24, 7j/7',
-  'Réponses automatiques et instantanées à chaque client',
-  'Qualification automatique : budget, zone, superficie, type de terrain',
-  'Envoi automatique des photos et des fiches d’information',
-  'Transfert vers toi uniquement des prospects sérieux',
-  'Tableau de bord vendeur : terrains, clients, visites',
-  'Collecte de témoignages liés à des transactions réelles',
-];
 
 const SETUP = [
   'Configuration de ton numéro WhatsApp Business officiel',
   'Paramétrage et personnalisation de Sara à ton activité',
   'Import de tes premiers terrains',
-  'Formation à la prise en main',
+  'Formation à la prise en main du tableau de bord',
 ];
 
 const FAQ = [
   {
-    q: 'Que comprend exactement l’abonnement mensuel ?',
-    a: 'L’accès complet à Sara (l’agent IA WhatsApp) et à ton tableau de bord vendeur pour gérer tes terrains, tes clients et tes visites. Le tarif est mensuel, sans engagement de durée.',
+    q: "Que comprend l'essai gratuit ?",
+    a: "Tu paies une seule fois les frais de mise en service (100 000 FCFA). En retour, tu accèdes à Sara, à ton tableau de bord vendeur, et tu peux charger et vendre tes terrains sur la plateforme — sans abonnement mensuel.",
   },
   {
-    q: 'À quoi sert le frais d’installation unique ?',
-    a: 'Il couvre la mise en service : connexion de ton numéro WhatsApp Business officiel, personnalisation de Sara à ton activité, import de tes premiers terrains et formation. Il n’est facturé qu’une seule fois.',
+    q: "Quelle est la différence avec l'abonnement Tout compris ?",
+    a: "L'abonnement Tout compris engage un tarif mensuel (modulable sur 1 mois, 6 mois ou 1 an). La différence principale : ton tarif est garanti pendant 2 ans. Si Sara augmente ses prix demain, toi tu restes au tarif souscrit aujourd'hui pendant toute cette période.",
   },
   {
-    q: 'Utilisez-vous une automatisation WhatsApp non officielle ?',
-    a: 'Non. Sara fonctionne uniquement via l’API WhatsApp Business officielle, pour ne jamais risquer le bannissement de ton numéro.',
+    q: "Comment fonctionne la garantie de prix pendant 2 ans ?",
+    a: "Dès que tu souscris un abonnement, le tarif en vigueur est figé pour ton compte pendant 2 ans. Si Litug revoit ses prix à la hausse, ton abonnement continue au même montant jusqu'à l'échéance. C'est notre engagement envers les premiers adoptants.",
   },
   {
-    q: 'Comment se passe l’activation ?',
-    a: 'Tu crées ton compte vendeur, puis notre équipe te contacte pour la mise en service de Sara sur ton numéro. Tu commences à recevoir des prospects qualifiés dès que tout est en place.',
+    q: "Quelle formule choisir : mensuelle, 6 mois ou annuelle ?",
+    a: "La formule annuelle offre la plus grande réduction (-20%) et garantit ton prix sur 12 mois. La formule 6 mois est un bon compromis (-10%). La formule mensuelle reste la plus flexible — mais le tarif peut évoluer à chaque renouvellement.",
+  },
+  {
+    q: "Utilisez-vous une automatisation WhatsApp non officielle ?",
+    a: "Non. Sara fonctionne uniquement via l'API WhatsApp Business officielle, pour ne jamais risquer le bannissement de ton numéro.",
+  },
+  {
+    q: "Comment se passe l'activation ?",
+    a: "Tu crées ton compte lors du paiement, puis notre équipe te contacte sous 24 h pour la mise en service de Sara sur ton numéro. Tu commences à recevoir des prospects qualifiés dès que tout est en place.",
   },
 ];
 
@@ -54,74 +53,30 @@ export default function SaraOfferPage() {
 
       {/* Hero */}
       <header className="wrap offer-hero">
-        <span className="eyebrow">Agent terrain IA · Abonnement vendeur</span>
+        <span className="eyebrow">Agent terrain IA · Deux formules</span>
         <h1>
           Active <span className="accent">Sara</span> et ne rate plus jamais un client
         </h1>
         <p>
-          Une offre unique, claire et sans engagement. Sara répond, qualifie et te transfère
-          uniquement les prospects sérieux — pendant que tu te concentres sur la vente.
+          Commence avec l&apos;essai gratuit ou engage-toi maintenant et verrouille ton tarif 2 ans —
+          même si nos prix augmentent.
         </p>
       </header>
 
-      {/* Offre + carte tarif */}
+      {/* Deux offres */}
       <section className="section wrap" style={{ paddingTop: 0 }}>
-        <div className="offer-grid">
-          {/* Ce qui est inclus */}
-          <div className="offer-included">
-            <h2>Tout ce que Sara fait pour toi</h2>
-            <ul className="offer-list">
-              {INCLUDED.map((item, i) => (
-                <li key={i}>
-                  <span className="tick"><Check size={14} strokeWidth={2.5} /></span>
-                  {item}
-                </li>
-              ))}
-            </ul>
+        <PricingCards />
+      </section>
 
-            <div className="offer-sub">
-              <h3><Settings size={16} /> Inclus dans la mise en service (setup)</h3>
-              <ul>
-                {SETUP.map((item, i) => (
-                  <li key={i}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Carte tarif */}
-          <aside className="price-card">
-            <span className="price-badge"><Sparkles size={14} /> Offre unique</span>
-            <p className="price-name">Abonnement <span>Sara</span></p>
-
-            <div className="price-amount">
-              <span className="num">50 000</span>
-              <span className="unit">FCFA / mois</span>
-            </div>
-            <p className="price-eur">≈ 76 € par mois · sans engagement</p>
-
-            <div className="price-setup">
-              <span className="lbl">
-                Mise en service
-                <small>Frais d&apos;installation unique</small>
-              </span>
-              <span className="amt">
-                100 000 FCFA
-                <small>≈ 152 € · une seule fois</small>
-              </span>
-            </div>
-
-            <Link className="btn btn-primary btn-lg" href="/sara/paiement">
-              Activer Sara <ArrowRight size={17} className="arr" />
-            </Link>
-            <Link className="secondary" href="/#contact">Parler à un conseiller d&apos;abord</Link>
-
-            <p className="price-note">
-              <Info size={15} />
-              Après la création de ton compte, notre équipe te contacte pour la mise en service
-              de Sara sur ton numéro WhatsApp officiel.
-            </p>
-          </aside>
+      {/* Mise en service */}
+      <section className="section wrap" style={{ paddingTop: 0 }}>
+        <div className="offer-setup-box">
+          <h2><Settings size={18} /> Inclus dans les deux offres : la mise en service</h2>
+          <ul className="setup-list">
+            {SETUP.map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
+          </ul>
         </div>
       </section>
 
@@ -138,10 +93,13 @@ export default function SaraOfferPage() {
         </div>
       </section>
 
-      {/* Pied */}
+      {/* Footer */}
       <footer className="offer-foot">
         <p>
-          <ShieldCheck size={15} style={{ display: 'inline', verticalAlign: '-2px', marginRight: 6, color: 'var(--green)' }} />
+          <ShieldCheck
+            size={15}
+            style={{ display: 'inline', verticalAlign: '-2px', marginRight: 6, color: 'var(--green)' }}
+          />
           WhatsApp Business officiel · Plateforme bâtie sur la confiance.
         </p>
         <p style={{ marginTop: 10 }}>

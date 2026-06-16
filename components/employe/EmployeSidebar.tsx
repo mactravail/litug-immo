@@ -2,26 +2,26 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ListTodo, ClipboardCheck, Wrench, Wallet, LogOut, ShieldCheck, Target, Clock } from 'lucide-react';
+import { ListTodo, ClipboardCheck, Wrench, Wallet, LogOut, ShieldCheck, Target, Clock, UserCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { logout } from '@/app/(auth)/login/actions';
 import { TEAM_ROLE_LABEL } from '@/lib/admin/labels';
 import type { TeamRole } from '@/lib/admin/types';
-import { WorkerSwitcher } from './WorkerSwitcher';
 import { ProspectSidebarList, type SidebarProspect } from './ProspectSidebarList';
 
 /** Navigation terrain (chantier) — pour procurement / site_agent / inspector / controller. */
 const FIELD_NAV = [
-  { href: '/equipe',             label: 'Mes tâches',     icon: ListTodo },
-  { href: '/equipe/portefeuille', label: 'Mon argent',    icon: Wallet },
-  { href: '/equipe/redditions',  label: 'Mes redditions', icon: ClipboardCheck },
-  { href: '/equipe/action',      label: 'Action métier',  icon: Wrench },
+  { href: '/equipe',              label: 'Mes tâches',     icon: ListTodo },
+  { href: '/equipe/portefeuille', label: 'Mon argent',     icon: Wallet },
+  { href: '/equipe/redditions',   label: 'Mes redditions', icon: ClipboardCheck },
+  { href: '/equipe/action',       label: 'Action métier',  icon: Wrench },
 ];
 
 /** Navigation prospecteur commercial — prospection + pointage de ses journées. */
 const PROSPECT_NAV = [
   { href: '/equipe/prospection', label: 'Prospection',  icon: Target },
   { href: '/equipe/journees',    label: 'Mes journées', icon: Clock },
+  { href: '/equipe/mon-compte',  label: 'Mon compte',   icon: UserCircle },
 ];
 
 function navFor(role: TeamRole) {
@@ -31,13 +31,13 @@ function navFor(role: TeamRole) {
 interface Props {
   workerName: string;
   role: TeamRole;
-  workers: { id: string; name: string; role: string }[];
-  currentId: string;
   /** Entreprises ajoutées par le prospecteur — alimentent la liste de la sidebar. */
   prospects?: SidebarProspect[];
+  /** Nombre de virements en attente de confirmation (badge rouge sur Mon compte). */
+  pendingTransfers?: number;
 }
 
-export function EmployeSidebar({ workerName, role, workers, currentId, prospects }: Props) {
+export function EmployeSidebar({ workerName, role, prospects, pendingTransfers = 0 }: Props) {
   const pathname = usePathname();
 
   return (
@@ -51,6 +51,7 @@ export function EmployeSidebar({ workerName, role, workers, currentId, prospects
       <nav className="shrink-0 space-y-1">
         {navFor(role).map(({ href, label, icon: Icon }) => {
           const active = href === '/equipe' ? pathname === '/equipe' : pathname.startsWith(href);
+          const showBadge = href === '/equipe/mon-compte' && pendingTransfers > 0;
           return (
             <Link
               key={href}
@@ -61,7 +62,12 @@ export function EmployeSidebar({ workerName, role, workers, currentId, prospects
               )}
             >
               <Icon size={17} />
-              {label}
+              <span className="flex-1">{label}</span>
+              {showBadge && (
+                <span className="min-w-[18px] h-[18px] flex items-center justify-center bg-red-500 text-white text-[9px] font-bold rounded-full px-1 leading-none">
+                  {pendingTransfers > 9 ? '9+' : pendingTransfers}
+                </span>
+              )}
             </Link>
           );
         })}
@@ -86,8 +92,6 @@ export function EmployeSidebar({ workerName, role, workers, currentId, prospects
             <p className="text-[11px] text-muted">{TEAM_ROLE_LABEL[role]}</p>
           </div>
         </div>
-
-        <WorkerSwitcher workers={workers} currentId={currentId} />
 
         <Link
           href="/equipe/securite"

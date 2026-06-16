@@ -25,7 +25,7 @@ import type {
   Subscription, SubscriptionStatus, AuditLogEntry, AuditAction,
   TeamMember, TeamRole, AdminOverview, SiteStats, MonthlyPoint, BillableParty,
   ProspectEntry, ProspectNetwork, ProspectOutcome, ProspectContactMethod,
-  EmployeeRow,
+  EmployeeRow, ProspectorWorkDay, ProspectorTransfer,
 } from './types';
 import { sellerPlanPrice, VERIFICATION_FEE } from './pricing';
 import { TEAM_ROLE_LABEL, SUBSCRIPTION_STATUS_LABEL } from './labels';
@@ -355,12 +355,15 @@ export const supabaseAdminProvider: AdminProvider = {
 
   /* ---------------- Prospection commerciale (réel) ---------------- */
 
-  async countSentProspectEntries() {
+  async countSentProspectEntries(since) {
     const admin = createSupabaseAdminClient();
-    const { count, error } = await admin
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let query: any = admin
       .from('prospect_entries')
       .select('id', { count: 'exact', head: true })
       .eq('status', 'sent');
+    if (since) query = query.gt('created_at', since);
+    const { count, error } = await query;
     if (error) return 0;
     return count ?? 0;
   },
@@ -407,6 +410,82 @@ export const supabaseAdminProvider: AdminProvider = {
       createdAt:     r.created_at as string,
       sentAt:        (r.sent_at as string | null) ?? undefined,
     } satisfies ProspectEntry));
+  },
+
+  // Journées de travail (lecture admin cross-prospecteurs via service_role).
+  async listProspectorWorkDays(prospectorId) {
+    const admin = createSupabaseAdminClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let query: any = admin.from('prospector_work_days').select('*');
+    if (prospectorId) query = query.eq('worker_id', prospectorId);
+    const { data, error } = await query.order('work_date', { ascending: false });
+    if (error) return [];
+    return (data ?? []).map((r: Record<string, unknown>) => ({
+      id:        r.id as string,
+      workerId:  r.worker_id as string,
+      workerName: (r.worker_name as string | null) ?? '',
+      workDate:  r.work_date as string,
+      hours:     Number(r.hours),
+      note:      (r.note as string | null) ?? undefined,
+      createdAt: r.created_at as string,
+    } satisfies ProspectorWorkDay));
+  },
+
+  // Virements admin → prospecteur (table prospector_transfers, migration 010).
+  async listProspectorTransfers(prospectorId) {
+    const admin = createSupabaseAdminClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let query: any = admin.from('prospector_transfers').select('*');
+    if (prospectorId) query = query.eq('prospector_id', prospectorId);
+    const { data, error } = await query.order('sent_at', { ascending: false });
+    if (error) return [];
+    return (data ?? []).map((r: Record<string, unknown>) => ({
+      id:             r.id as string,
+      prospectorId:   r.prospector_id as string,
+      prospectorName: (r.prospector_name as string) ?? '',
+      amount:         Number(r.amount),
+      motif:          r.motif as string,
+      sentAt:         r.sent_at as string,
+      status:         r.status as ProspectorTransfer['status'],
+      confirmedAt:    (r.confirmed_at as string | null) ?? undefined,
+      deniedAt:       (r.denied_at as string | null) ?? undefined,
+      denialReason:   (r.denial_reason as string | null) ?? undefined,
+    } satisfies ProspectorTransfer));
+  },
+
+  async sendTransferToProspector({ prospectorId, prospectorName, amount, motif }) {
+    if (!prospectorId) throw new Error('Prospecteur manquant.');
+    if (amount <= 0) throw new Error('Montant invalide.');
+    if (!motif.trim()) throw new Error('Indique le motif du paiement.');
+    const actor = await currentActor();
+    const admin = createSupabaseAdminClient();
+    const { data, error } = await admin
+      .from('prospector_transfers')
+      .insert({
+        prospector_id:   prospectorId,
+        prospector_name: prospectorName,
+        amount,
+        motif:           motif.trim(),
+        status:          'pending',
+      })
+      .select()
+      .single();
+    if (error) throw new Error(error.message);
+    await appendAudit({
+      actorId: actor.id, actorName: actor.name,
+      action: 'send_transfer', targetType: 'team_member',
+      targetId: prospectorId, targetLabel: prospectorName,
+      metadata: { amount, motif: motif.trim() },
+    });
+    return {
+      id:             data.id as string,
+      prospectorId:   data.prospector_id as string,
+      prospectorName: data.prospector_name as string,
+      amount:         Number(data.amount),
+      motif:          data.motif as string,
+      sentAt:         data.sent_at as string,
+      status:         'pending' as const,
+    } satisfies ProspectorTransfer;
   },
 
   async getSiteStats() {

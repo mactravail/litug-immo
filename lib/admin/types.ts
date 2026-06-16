@@ -75,6 +75,7 @@ export type AuditAction =
   | 'revoke_sub'
   | 'change_tier'
   | 'add_invoice'
+  | 'send_transfer'
   | 'issue_invoice'
   | 'add_media'
   | 'update_phase_status'
@@ -108,7 +109,8 @@ export type AuditTargetType =
   | 'report'
   | 'incident'
   | 'prospect'
-  | 'recharge';
+  | 'recharge'
+  | 'team_member';
 
 export interface AuditLogEntry {
   id: string;
@@ -383,6 +385,23 @@ export interface ProspectorWorkDay {
   hours: number;                    // nombre d'heures travaillées ce jour-là
   note?: string;                    // ce qui a été fait (optionnel)
   createdAt: string;
+}
+
+/**
+ * Virement envoyé par l'admin à un prospecteur (frais de connexion, transport, etc.).
+ * L'employé doit confirmer ou nier la réception — traçabilité anti-fraude.
+ */
+export interface ProspectorTransfer {
+  id: string;
+  prospectorId: string;
+  prospectorName: string;
+  amount: number;                    // FCFA
+  motif: string;                     // raison (ex. "Connexion internet semaine 24")
+  sentAt: string;                    // quand l'admin a envoyé
+  status: 'pending' | 'confirmed' | 'denied';
+  confirmedAt?: string;
+  deniedAt?: string;
+  denialReason?: string;             // pourquoi l'employé nie avoir reçu
 }
 
 /* --- View-models (derived) --- */

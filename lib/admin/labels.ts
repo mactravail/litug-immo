@@ -86,6 +86,7 @@ export const AUDIT_ACTION_LABEL: Record<AuditAction, string> = {
   submit_prospects:    'a envoyé ses prospections au superviseur',
   validate_recharge:   'a validé une recharge',
   reject_recharge:     'a refusé une recharge',
+  send_transfer:       'a envoyé un virement à un prospecteur',
 };
 
 /* --- Prospection commerciale --- */

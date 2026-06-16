@@ -5,6 +5,7 @@ import { AdminMobileNav } from '@/components/admin/AdminMobileNav';
 import { ADMIN_USER_NAME, getAdminProvider } from '@/lib/admin/provider';
 import { countPendingAccounts } from '@/lib/admin/pending-accounts';
 import { logout } from '@/app/(auth)/login/actions';
+import { cookies } from 'next/headers';
 
 /**
  * Tout l'espace admin est rendu à la demande, jamais prérendu au build.
@@ -22,9 +23,11 @@ export const dynamic = 'force-dynamic';
  */
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const ap = getAdminProvider();
+  const jar = await cookies();
+  const lastSeenProspection = jar.get('prospection_last_seen')?.value;
   const [pendingCount, prospectionCount] = await Promise.all([
     countPendingAccounts(),
-    ap.countSentProspectEntries(),
+    ap.countSentProspectEntries(lastSeenProspection),
   ]);
 
   return (

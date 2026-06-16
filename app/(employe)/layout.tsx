@@ -2,9 +2,8 @@ import { ShieldCheck } from 'lucide-react';
 import { EmployeSidebar } from '@/components/employe/EmployeSidebar';
 import { EmployeMobileNav } from '@/components/employe/EmployeMobileNav';
 import { EmployeMobileMenu } from '@/components/employe/EmployeMobileMenu';
-import { getCurrentWorker, getCurrentWorkerId, selectableWorkers, getRealProspectorId } from '@/lib/employe/current';
-import { listMyProspects, countDraftProspects } from '@/lib/employe/provider';
-import { dbCountDrafts } from '@/lib/employe/prospection-db';
+import { getCurrentWorker, getRealProspectorId } from '@/lib/employe/current';
+import { listMyProspects, countPendingTransfers } from '@/lib/employe/provider';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { TEAM_ROLE_LABEL } from '@/lib/admin/labels';
 
@@ -14,34 +13,25 @@ import { TEAM_ROLE_LABEL } from '@/lib/admin/labels';
  * (sélecteur de démo) ; pas de garde d'auth pour l'instant.
  */
 export default async function EmployeLayout({ children }: { children: React.ReactNode }) {
-  const [worker, currentId] = await Promise.all([getCurrentWorker(), getCurrentWorkerId()]);
-  const workers = selectableWorkers().map(w => ({ id: w.id, name: w.displayName, role: TEAM_ROLE_LABEL[w.role] }));
+  const worker = await getCurrentWorker();
 
   // La sidebar du prospecteur affiche la liste de ses entreprises (recherche + classement).
   const prospects = worker.role === 'prospector'
     ? listMyProspects(worker.id).map(p => ({ id: p.id, companyName: p.companyName, followers: p.followers, outcome: p.outcome }))
     : undefined;
 
-  // Badge nav : nombre de prospections non envoyées au superviseur.
-  let draftCount = 0;
-  if (worker.role === 'prospector') {
-    const realId = await getRealProspectorId();
-    if (realId) {
-      const supabase = await createSupabaseServerClient();
-      draftCount = await dbCountDrafts(supabase, realId);
-    } else {
-      draftCount = countDraftProspects(worker.id);
-    }
-  }
+  // Badge nav : virements en attente de confirmation (Mon compte).
+  const pendingTransfers = worker.role === 'prospector'
+    ? countPendingTransfers(worker.id)
+    : 0;
 
   return (
     <div className="flex h-screen overflow-hidden bg-bg">
       <EmployeSidebar
         workerName={worker.displayName}
         role={worker.role}
-        workers={workers}
-        currentId={currentId}
         prospects={prospects}
+        pendingTransfers={pendingTransfers}
       />
 
       <div className="flex-1 min-w-0 flex flex-col overflow-y-auto pb-20 lg:pb-0">
@@ -52,8 +42,6 @@ export default async function EmployeLayout({ children }: { children: React.Reac
             <EmployeMobileMenu
               workerName={worker.displayName}
               role={worker.role}
-              workers={workers}
-              currentId={currentId}
             />
             {/* Desktop : bandeau de confiance (la sidebar porte la navigation). */}
             <ShieldCheck size={13} className="text-gold shrink-0 hidden lg:block" />
@@ -68,7 +56,7 @@ export default async function EmployeLayout({ children }: { children: React.Reac
         </main>
       </div>
 
-      <EmployeMobileNav role={worker.role} draftCount={draftCount} />
+      <EmployeMobileNav role={worker.role} pendingTransfers={pendingTransfers} />
     </div>
   );
 }

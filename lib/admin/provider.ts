@@ -14,12 +14,14 @@ import type {
   TeamMember, AdminOverview, MustafProjectRow, SiteStats, MonthlyPoint,
   Task, TaskPriority, CashAdvance, AdvanceReceipt, FieldReport, Incident,
   IncidentStatus, EmployeeRow, AdvanceReconciliation, ReportReview, WorkSession,
-  Invoice, BillableParty, InvoiceRecipientType, ProspectEntry,
+  Invoice, BillableParty, InvoiceRecipientType, ProspectEntry, ProspectorTransfer,
+  ProspectorWorkDay,
 } from './types';
 import {
   SEED_SUBSCRIPTIONS, SEED_TEAM, SEED_AUDIT, ADMIN_USER_ID, ADMIN_USER_NAME,
   SEED_TASKS, SEED_CASH_ADVANCES, SEED_ADVANCE_RECEIPTS, SEED_WORK_SESSIONS,
   SEED_FIELD_REPORTS, SEED_INCIDENTS, SEED_INVOICES, SEED_PROSPECT_ENTRIES,
+  SEED_PROSPECTOR_TRANSFERS, SEED_PROSPECTOR_WORKDAYS,
 } from './seed';
 import { sellerPlanPrice, VERIFICATION_FEE } from './pricing';
 import { TEAM_ROLE_LABEL, SUBSCRIPTION_STATUS_LABEL } from './labels';
@@ -128,7 +130,13 @@ export interface AdminProvider {
   escalateIncident(id: string): Promise<Incident>;
   // Prospection commerciale (lecture admin)
   listProspectEntries(filter?: { prospectorId?: string; status?: ProspectEntry['status'] }): Promise<ProspectEntry[]>;
-  countSentProspectEntries(): Promise<number>;
+  // `since` = ISO timestamp : ne compte que les entrées créées APRÈS cette date (badge "nouvelles seulement").
+  countSentProspectEntries(since?: string): Promise<number>;
+  // Journées de travail des prospecteurs
+  listProspectorWorkDays(prospectorId?: string): Promise<ProspectorWorkDay[]>;
+  // Virements admin → prospecteur
+  listProspectorTransfers(prospectorId?: string): Promise<ProspectorTransfer[]>;
+  sendTransferToProspector(input: { prospectorId: string; prospectorName: string; amount: number; motif: string }): Promise<ProspectorTransfer>;
 }
 
 export interface RecordInvoiceInput {
@@ -742,8 +750,50 @@ export const adminMockProvider: AdminProvider = {
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   },
 
-  async countSentProspectEntries() {
-    return SEED_PROSPECT_ENTRIES.filter(p => p.status === 'sent').length;
+  async countSentProspectEntries(since) {
+    return SEED_PROSPECT_ENTRIES.filter(p =>
+      p.status === 'sent' && (!since || p.createdAt > since),
+    ).length;
+  },
+
+  async listProspectorWorkDays(prospectorId) {
+    let rows = [...SEED_PROSPECTOR_WORKDAYS];
+    if (prospectorId) rows = rows.filter(d => d.workerId === prospectorId);
+    return rows.sort((a, b) => b.workDate.localeCompare(a.workDate));
+  },
+
+  async listProspectorTransfers(prospectorId) {
+    let rows = [...SEED_PROSPECTOR_TRANSFERS];
+    if (prospectorId) rows = rows.filter(t => t.prospectorId === prospectorId);
+    return rows.sort((a, b) => new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime());
+  },
+
+  async sendTransferToProspector({ prospectorId, prospectorName, amount, motif }) {
+    if (!prospectorId) throw new Error('Prospecteur manquant.');
+    if (amount <= 0) throw new Error('Montant invalide.');
+    if (!motif.trim()) throw new Error('Indique le motif du paiement.');
+    // Résolution du nom : SEED_TEAM si mock connu, sinon le nom transmis par l'UI.
+    const knownName = SEED_TEAM.find(m => m.id === prospectorId)?.displayName;
+    const resolvedName = knownName ?? prospectorName;
+    const transfer: ProspectorTransfer = {
+      id: `xfer-${Date.now()}`,
+      prospectorId,
+      prospectorName: resolvedName,
+      amount,
+      motif: motif.trim(),
+      sentAt: new Date().toISOString(),
+      status: 'pending',
+    };
+    SEED_PROSPECTOR_TRANSFERS.unshift(transfer);
+    SEED_AUDIT.unshift({
+      id: `audit-xfer-${Date.now()}`,
+      actorId: ADMIN_USER_ID, actorName: ADMIN_USER_NAME,
+      action: 'send_transfer', targetType: 'team_member',
+      targetId: prospectorId, targetLabel: resolvedName,
+      metadata: { amount, motif: motif.trim() },
+      createdAt: new Date().toISOString(),
+    });
+    return transfer;
   },
 };
 

@@ -16,14 +16,15 @@
 import {
   SEED_TASKS, SEED_CASH_ADVANCES, SEED_ADVANCE_RECEIPTS,
   SEED_WORK_SESSIONS, SEED_FIELD_REPORTS, SEED_INCIDENTS, SEED_AUDIT, SEED_TEAM,
-  SEED_PROSPECT_ENTRIES, SEED_PROSPECTOR_WORKDAYS,
+  SEED_PROSPECT_ENTRIES, SEED_PROSPECTOR_WORKDAYS, SEED_PROSPECTOR_TRANSFERS,
 } from '@/lib/admin/seed';
 import { SEED_EXPENSES, SEED_MEDIA, SEED_PROJECT } from '@/lib/mustaf/seed';
 import { SEED_WORKER_PAYMENTS } from './seed';
 import type {
   Task, CashAdvance, AdvanceReceipt, WorkSession, FieldReport, Incident,
   AdvanceReconciliation, TaskPriority, AuditAction, AuditTargetType,
-  ProspectEntry, ProspectNetwork, ProspectContactMethod, ProspectOutcome, ProspectorWorkDay,
+  ProspectEntry, ProspectNetwork, ProspectContactMethod, ProspectOutcome,
+  ProspectorWorkDay, ProspectorTransfer,
 } from '@/lib/admin/types';
 import type { Expense, ExpenseCategory, ConstructionMedia, MediaType } from '@/lib/mustaf/types';
 import type { MyTaskRow, MyTaskDetail, WalletSummary, WorkerPayment } from './types';
@@ -363,6 +364,40 @@ export function logWorkDay(workerId: string, input: { workDate: string; hours: n
   };
   SEED_PROSPECTOR_WORKDAYS.unshift(day);
   return day;
+}
+
+/* ---------------- Virements admin → prospecteur ---------------- */
+
+/** Mes virements reçus (frais de connexion, transport, etc.), plus récents d'abord. */
+export function listMyTransfers(workerId: string): ProspectorTransfer[] {
+  return SEED_PROSPECTOR_TRANSFERS
+    .filter(t => t.prospectorId === workerId)
+    .sort((a, b) => new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime());
+}
+
+/** Combien de virements en attente de confirmation pour ce prospecteur. */
+export function countPendingTransfers(workerId: string): number {
+  return SEED_PROSPECTOR_TRANSFERS.filter(t => t.prospectorId === workerId && t.status === 'pending').length;
+}
+
+export function confirmTransfer(workerId: string, transferId: string): ProspectorTransfer {
+  const t = SEED_PROSPECTOR_TRANSFERS.find(t => t.id === transferId && t.prospectorId === workerId);
+  if (!t) throw new Error('Virement introuvable.');
+  if (t.status !== 'pending') throw new Error('Ce virement a déjà été traité.');
+  t.status = 'confirmed';
+  t.confirmedAt = new Date().toISOString();
+  return t;
+}
+
+export function denyTransfer(workerId: string, transferId: string, reason?: string): ProspectorTransfer {
+  const t = SEED_PROSPECTOR_TRANSFERS.find(t => t.id === transferId && t.prospectorId === workerId);
+  if (!t) throw new Error('Virement introuvable.');
+  if (t.status !== 'pending') throw new Error('Ce virement a déjà été traité.');
+  t.status = 'denied';
+  t.deniedAt = new Date().toISOString();
+  t.denialReason = reason?.trim() || undefined;
+  appendAudit(workerId, 'submit_prospects', 'prospect', transferId, t.motif, { amount: t.amount, reason, denied: true });
+  return t;
 }
 
 /* ---------------- Actions métier selon le rôle ---------------- */

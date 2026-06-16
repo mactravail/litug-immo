@@ -5,10 +5,10 @@ import { cookies } from 'next/headers';
 import {
   startTask, endTask, addReceipt, submitReport, raiseIncident,
   addInvoice, addChantierMedia, createProspect, sendProspectsToSupervisor,
-  logWorkDay,
+  logWorkDay, confirmTransfer, denyTransfer,
 } from '@/lib/employe/provider';
 import { getCurrentWorkerId, getCurrentProspectorId, getRealProspectorId, WORKER_COOKIE, TEAM_ROLES } from '@/lib/employe/current';
-import { dbCreateProspect, dbSendToSupervisor, dbLogWorkDay } from '@/lib/employe/prospection-db';
+import { dbCreateProspect, dbSendToSupervisor, dbLogWorkDay, dbConfirmTransfer, dbDenyTransfer } from '@/lib/employe/prospection-db';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { SEED_TEAM } from '@/lib/admin/seed';
 import type { TaskPriority, ProspectNetwork, ProspectContactMethod, ProspectOutcome } from '@/lib/admin/types';
@@ -187,6 +187,7 @@ export async function logWorkDayAction(_prev: ActionState, formData: FormData): 
 
     revalidatePath('/equipe/journees');
     revalidatePath('/equipe/prospection');
+    revalidatePath('/admin/prospection');
     return { ok: true };
   } catch (e) {
     return { error: e instanceof Error ? e.message : "Enregistrement impossible." };
@@ -210,6 +211,48 @@ export async function sendProspectsAction(_prev: ActionState, _formData: FormDat
     return { ok: true };
   } catch (e) {
     return { error: e instanceof Error ? e.message : 'Envoi impossible.' };
+  }
+}
+
+/* --- Virements admin → prospecteur : confirmation de réception --- */
+
+export async function confirmTransferAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  try {
+    const transferId = formData.get('transferId') as string;
+    const realId = await getRealProspectorId();
+    if (realId) {
+      const supabase = await createSupabaseServerClient();
+      await dbConfirmTransfer(supabase, transferId);
+    } else {
+      const workerId = await getCurrentProspectorId();
+      confirmTransfer(workerId, transferId);
+    }
+    revalidatePath('/equipe/mon-compte');
+    revalidatePath('/admin/prospection');
+    return { ok: true };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : 'Action impossible.' };
+  }
+}
+
+export async function denyTransferAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  try {
+    const transferId = formData.get('transferId') as string;
+    const reason = (formData.get('reason') as string)?.trim() || undefined;
+    const realId = await getRealProspectorId();
+    if (realId) {
+      const supabase = await createSupabaseServerClient();
+      await dbDenyTransfer(supabase, transferId, reason);
+    } else {
+      const workerId = await getCurrentProspectorId();
+      denyTransfer(workerId, transferId, reason);
+    }
+    revalidatePath('/equipe/mon-compte');
+    revalidatePath('/admin/prospection');
+    revalidatePath('/admin/audit');
+    return { ok: true };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : 'Action impossible.' };
   }
 }
 

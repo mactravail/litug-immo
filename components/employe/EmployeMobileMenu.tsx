@@ -4,12 +4,11 @@ import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ListTodo, ClipboardCheck, Wrench, Wallet, LogOut, ShieldCheck, Target, Clock, Menu, X } from 'lucide-react';
+import { ListTodo, ClipboardCheck, Wrench, Wallet, LogOut, ShieldCheck, Target, Clock, Menu, X, UserCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { logout } from '@/app/(auth)/login/actions';
 import { TEAM_ROLE_LABEL } from '@/lib/admin/labels';
 import type { TeamRole } from '@/lib/admin/types';
-import { WorkerSwitcher } from './WorkerSwitcher';
 
 /** Navigation terrain (chantier) — procurement / site_agent / inspector / controller. */
 const FIELD_NAV = [
@@ -23,6 +22,7 @@ const FIELD_NAV = [
 const PROSPECT_NAV = [
   { href: '/equipe/prospection', label: 'Prospection',  icon: Target },
   { href: '/equipe/journees',    label: 'Mes journées', icon: Clock },
+  { href: '/equipe/mon-compte',  label: 'Mon compte',   icon: UserCircle },
 ];
 
 function navFor(role: TeamRole) {
@@ -32,16 +32,13 @@ function navFor(role: TeamRole) {
 interface Props {
   workerName: string;
   role: TeamRole;
-  workers: { id: string; name: string; role: string }[];
-  currentId: string;
 }
 
 /**
- * Menu hamburger mobile pour l'espace équipe — remplace le bandeau de texte
- * dans l'en-tête. Donne accès à tous les menus + Sécurité + sélecteur de démo
- * + profil + déconnexion (la sidebar desktop porte déjà ce rôle, donc `lg:hidden`).
+ * Menu hamburger mobile pour l'espace équipe — donne accès à tous les menus,
+ * Sécurité, profil et déconnexion (la sidebar desktop porte déjà ce rôle, donc `lg:hidden`).
  */
-export function EmployeMobileMenu({ workerName, role, workers, currentId }: Props) {
+export function EmployeMobileMenu({ workerName, role }: Props) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -152,7 +149,7 @@ export function EmployeMobileMenu({ workerName, role, workers, currentId }: Prop
               </Link>
             </nav>
 
-            {/* Profil + sélecteur de démo + déconnexion */}
+            {/* Profil + déconnexion */}
             <div className="border-t border-stone-100 pt-4 mt-4 space-y-3">
               <div className="flex items-center gap-3 px-3">
                 <div className="w-8 h-8 rounded-full bg-ink flex items-center justify-center text-on-ink text-xs font-bold shrink-0">
@@ -163,8 +160,6 @@ export function EmployeMobileMenu({ workerName, role, workers, currentId }: Prop
                   <p className="text-[11px] text-muted">{TEAM_ROLE_LABEL[role]}</p>
                 </div>
               </div>
-
-              <WorkerSwitcher workers={workers} currentId={currentId} />
 
               <form action={logout}>
                 <button

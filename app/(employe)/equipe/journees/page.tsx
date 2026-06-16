@@ -1,9 +1,10 @@
 ﻿import { Clock, CalendarDays } from 'lucide-react';
 import { getCurrentProspector, getRealProspectorId } from '@/lib/employe/current';
-import { listMyWorkDays } from '@/lib/employe/provider';
-import { dbListWorkDays } from '@/lib/employe/prospection-db';
+import { listMyWorkDays, countDraftProspects } from '@/lib/employe/provider';
+import { dbListWorkDays, dbCountDrafts } from '@/lib/employe/prospection-db';
 import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { WorkDayForm } from '@/components/employe/WorkDayForm';
+import { SendToSupervisor } from '@/components/employe/SendToSupervisor';
 import { formatDate } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
@@ -19,9 +20,17 @@ export default async function JourneesPage() {
   const realId = await getRealProspectorId();
   const today  = new Date().toISOString().slice(0, 10);
 
-  const days = realId
-    ? await dbListWorkDays(await createSupabaseServerClient(), realId)
-    : listMyWorkDays(worker.id);
+  let days, draftCount: number;
+  if (realId) {
+    const supabase = await createSupabaseServerClient();
+    [days, draftCount] = await Promise.all([
+      dbListWorkDays(supabase, realId),
+      dbCountDrafts(supabase, realId),
+    ]);
+  } else {
+    days       = listMyWorkDays(worker.id);
+    draftCount = countDraftProspects(worker.id);
+  }
 
   const weekStart = new Date();
   weekStart.setDate(weekStart.getDate() - 6);
@@ -62,6 +71,9 @@ export default async function JourneesPage() {
         </p>
         <WorkDayForm today={today} />
       </section>
+
+      {/* Envoyer les prospections au superviseur */}
+      <SendToSupervisor draftCount={draftCount} />
 
       {/* Historique */}
       <section className="space-y-3">

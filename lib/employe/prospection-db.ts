@@ -9,7 +9,7 @@
  */
 
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { ProspectEntry, ProspectorWorkDay, ProspectNetwork, ProspectContactMethod, ProspectOutcome } from '@/lib/admin/types';
+import type { ProspectEntry, ProspectorWorkDay, ProspectorTransfer, ProspectNetwork, ProspectContactMethod, ProspectOutcome } from '@/lib/admin/types';
 
 /* ------------------------------------------------------------------ */
 /* Mappeurs DB → types internes                                        */
@@ -169,6 +169,74 @@ export async function dbSendToSupervisor(
  * Un seul enregistrement par jour — la contrainte UNIQUE (worker_id, work_date)
  * est gérée avec upsert.
  */
+/* ------------------------------------------------------------------ */
+/* Virements reçus (prospector_transfers)                             */
+/* ------------------------------------------------------------------ */
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapTransfer(row: Record<string, any>): ProspectorTransfer {
+  return {
+    id:             row.id,
+    prospectorId:   row.prospector_id,
+    prospectorName: row.prospector_name ?? '',
+    amount:         Number(row.amount),
+    motif:          row.motif,
+    sentAt:         row.sent_at,
+    status:         row.status as ProspectorTransfer['status'],
+    confirmedAt:    row.confirmed_at ?? undefined,
+    deniedAt:       row.denied_at ?? undefined,
+    denialReason:   row.denial_reason ?? undefined,
+  };
+}
+
+export async function dbListMyTransfers(
+  supabase: SupabaseClient,
+  userId: string,
+): Promise<ProspectorTransfer[]> {
+  const { data, error } = await supabase
+    .from('prospector_transfers')
+    .select('*')
+    .eq('prospector_id', userId)
+    .order('sent_at', { ascending: false });
+  if (error) throw new Error(error.message);
+  return (data ?? []).map(mapTransfer);
+}
+
+export async function dbConfirmTransfer(
+  supabase: SupabaseClient,
+  transferId: string,
+): Promise<ProspectorTransfer> {
+  const now = new Date().toISOString();
+  const { data, error } = await supabase
+    .from('prospector_transfers')
+    .update({ status: 'confirmed', confirmed_at: now })
+    .eq('id', transferId)
+    .eq('status', 'pending')
+    .select()
+    .single();
+  if (error) throw new Error(error.message);
+  if (!data) throw new Error('Virement introuvable ou déjà traité.');
+  return mapTransfer(data);
+}
+
+export async function dbDenyTransfer(
+  supabase: SupabaseClient,
+  transferId: string,
+  reason?: string,
+): Promise<ProspectorTransfer> {
+  const now = new Date().toISOString();
+  const { data, error } = await supabase
+    .from('prospector_transfers')
+    .update({ status: 'denied', denied_at: now, denial_reason: reason ?? null })
+    .eq('id', transferId)
+    .eq('status', 'pending')
+    .select()
+    .single();
+  if (error) throw new Error(error.message);
+  if (!data) throw new Error('Virement introuvable ou déjà traité.');
+  return mapTransfer(data);
+}
+
 export async function dbLogWorkDay(
   supabase: SupabaseClient,
   userId: string,

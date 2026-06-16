@@ -6,7 +6,7 @@
 
 import type {
   Subscription, TeamMember, AuditLogEntry, Invoice, ProspectEntry, ProspectorWorkDay,
-  Task, CashAdvance, AdvanceReceipt, WorkSession, FieldReport, Incident,
+  ProspectorTransfer, Task, CashAdvance, AdvanceReceipt, WorkSession, FieldReport, Incident,
 } from './types';
 import { SELLER_ID, SEED_SELLER } from '@/lib/data/seed';
 import { SEED_PROJECT } from '@/lib/mustaf/seed';
@@ -129,6 +129,22 @@ export const SEED_PROSPECTOR_WORKDAYS: ProspectorWorkDay[] =
     id: 'wd-2', workerId: 'user-prosp-fatou', workerName: 'Fatou Ndoye',
     workDate: '2026-06-10', hours: 4.5, note: 'Relances WhatsApp.',
     createdAt: '2026-06-10T18:40:00Z',
+  },
+]);
+
+/* --- Virements admin → prospecteur (frais connexion, transport, etc.) --- */
+const _transferStore = globalThis as unknown as { __litugProspectorTransfers?: ProspectorTransfer[] };
+export const SEED_PROSPECTOR_TRANSFERS: ProspectorTransfer[] =
+  _transferStore.__litugProspectorTransfers ?? (_transferStore.__litugProspectorTransfers = [
+  {
+    id: 'xfer-1', prospectorId: 'user-prosp-fatou', prospectorName: 'Fatou Ndoye',
+    amount: 10_000, motif: 'Connexion internet semaine 24',
+    sentAt: '2026-06-14T10:00:00Z', status: 'confirmed', confirmedAt: '2026-06-14T11:30:00Z',
+  },
+  {
+    id: 'xfer-2', prospectorId: 'user-prosp-fatou', prospectorName: 'Fatou Ndoye',
+    amount: 5_000, motif: 'Transport Dakar – Pikine (prospection terrain)',
+    sentAt: '2026-06-15T09:00:00Z', status: 'pending',
   },
 ]);
 

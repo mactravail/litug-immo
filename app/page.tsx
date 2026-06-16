@@ -18,40 +18,113 @@ const I18N = {
     nav: { terrains: "Terrains", comment: "Comment ça marche", garanties: "Nos garanties", tarifs: "Tarifs", blog: "Blog", login: "Se connecter", cta: "Réserver un entretien" },
     hero: {
       badge: "Vol. Arnaque. Gaspillage · Plus jamais",
-      title_1: "Achetez votre terrain.",
-      title_2: "Construisez sereinement.",
-      sub: "De l'achat du terrain vérifié jusqu'à la remise des clés, Litug vous accompagne avec un suivi financier transparent et un contrôle total de votre projet — depuis l'étranger.",
+      title_1: "Vendez plus de terrains.",
+      title_2: "Construisez sans stress.",
+      sub: "Qui vous a dit qu'il fallait des millions pour commencer à construire votre maison ? Avec Litug, commencez votre projet dès 1 000 FCFA et gardez le contrôle total sur chaque dépense, où que vous soyez dans le monde.",
       cta_primary: "Je veux construire ma maison",
       cta_secondary: "Je vends des terrains",
       proof: "Déjà utilisé par des vendeurs, architectes et professionnels de l'immobilier",
-      checks: ["Budget maîtrisé", "Dépenses vérifiables", "Suivi en temps réel", "Tiers de confiance"],
+      checks: [
+        "Commencez à partir de 1 000 FCFA",
+        "Chaque franc est tracé et justifié",
+        "Suivi des travaux en temps réel",
+        "Votre maison avance, même à distance",
+      ],
     },
+    reassure: [
+      "Dépenses et factures accessibles à tout moment",
+      "Budget sous contrôle du début à la fin",
+      "Tableau de bord personnel et sécurisé",
+      "Participation de toute la famille au projet",
+    ],
     marquee: { label: "Des professionnels nous font déjà confiance" },
     probleme: {
-      kicker: "Le problème",
-      title: "Vous avez peur que votre argent disparaisse avant que votre projet n'aboutisse ?",
-      intro: "Vous n'êtes pas seul. Chaque année, des milliers de Sénégalais vivant à l'étranger :",
-      points: [
-        "Achètent un terrain qui se révèle déjà vendu, faux ou inexistant",
-        "Envoient de l'argent sans savoir comment il est utilisé",
-        "Découvrent des dépassements de budget imprévus",
-        "Reçoivent peu ou pas d'informations sur l'avancement du chantier",
-        "Perdent des années à cause d'une mauvaise gestion",
+      tag: "Sans Sara",
+      title: "Combien de ventes perdez-vous sans même le savoir ?",
+      head: [
+        { t: "p", v: "Chaque jour, des acheteurs vous écrivent." },
+        { t: "p", v: "Chaque jour, certains repartent sans réponse." },
+        { t: "p", v: "Chaque jour, certains achètent ailleurs." },
+        { t: "p", v: "Et vous ne le saurez jamais." },
+        { t: "x", v: "Vous perdez des acheteurs parce qu'un concurrent a répondu avant vous." },
+        { t: "x", v: "Vous manquez des appels pendant que vous travaillez." },
+        { t: "x", v: "Des dizaines de messages chaque semaine — et certains restent sans réponse." },
       ],
-      outro: "Acheter et construire à distance ne devrait pas être une source de stress.",
+      more: [
+        { t: "h", v: "Les problèmes des vendeurs de terrains" },
+        { t: "x", v: "Répondre toujours aux mêmes questions :" },
+        { t: "p", v: "« Quel est le prix ? » · « Où se trouve le terrain ? » · « Quels papiers avez-vous ? » · « Peut-on payer par tranche ? » · « Quand puis-je visiter ? »" },
+        { t: "p", v: "Encore. Et encore. Et encore." },
+        { t: "x", v: "Recevoir des dizaines, voire des centaines de messages chaque semaine." },
+        { t: "x", v: "Répondre tardivement." },
+        { t: "x", v: "Oublier certains prospects." },
+        { t: "x", v: "Répondre différemment selon votre humeur ou votre disponibilité." },
+        { t: "x", v: "Passer des heures sur WhatsApp." },
+        { t: "x", v: "Répondre à des personnes alors que le terrain est déjà vendu." },
+        { t: "h", v: "Pendant que vous dormez…" },
+        { t: "p", v: "Vos prospects continuent à chercher." },
+        { t: "p", v: "Vos concurrents continuent à répondre." },
+        { t: "p", v: "Vos concurrents continuent à vendre." },
+        { t: "h", v: "Le coût caché" },
+        { t: "p", v: "Chaque prospect perdu est une vente potentielle perdue." },
+        { t: "p", v: "Et une seule vente perdue peut représenter des centaines de milliers, voire des millions de FCFA." },
+        { t: "h", v: "Embaucher un commercial ?" },
+        { t: "x", v: "Salaire mensuel." },
+        { t: "x", v: "Charges." },
+        { t: "x", v: "Horaires limités." },
+        { t: "x", v: "Congés." },
+        { t: "x", v: "Maladie." },
+        { t: "x", v: "Seulement 8 heures par jour." },
+        { t: "x", v: "Seulement 5 ou 6 jours par semaine." },
+        { t: "p", v: "Et malgré cela, certains prospects restent sans réponse." },
+        { t: "h", v: "La vérité" },
+        { t: "p", v: "Aujourd'hui, ce ne sont pas toujours les meilleurs terrains qui se vendent. Ce sont souvent les vendeurs qui répondent le plus vite." },
+        { t: "p", v: "Et dans l'immobilier, quelques minutes peuvent faire la différence entre une vente gagnée et une vente perdue." },
+      ],
     },
     agitation: {
-      kicker: "Le vrai coût",
-      title: "Le vrai coût d'une arnaque ou d'une mauvaise gestion ne se limite pas à l'argent.",
-      intro: "C'est aussi :",
-      points: [
-        "Un titre foncier contesté des années plus tard",
-        "Des retards de plusieurs mois sur le chantier",
-        "Des conflits familiaux autour de l'argent envoyé",
-        "Des matériaux de mauvaise qualité, des travaux à refaire",
-        "Des rêves reportés, encore et encore",
+      tag: "Sans Mustaf",
+      title: "Combien de Sénégalais de la diaspora ont envoyé de l'argent pendant des années…",
+      head: [
+        { t: "p", v: "…pour revenir au pays et découvrir que la maison n'existe pas ?" },
+        { t: "p", v: "Ou qu'elle est à moitié construite. Ou que l'argent a disparu." },
+        { t: "x", v: "Vous envoyez de l'argent." },
+        { t: "x", v: "On vous dit que les travaux avancent." },
+        { t: "x", v: "On vous envoie quelques photos." },
+        { t: "x", v: "On vous rassure." },
+        { t: "x", v: "Vous continuez à payer." },
+        { t: "p", v: "Puis un jour vous revenez… et vous découvrez la vérité." },
       ],
-      outro: "Pendant que vous travaillez dur à l'étranger, votre projet mérite un suivi professionnel.",
+      more: [
+        { t: "h", v: "Les problèmes que vivent chaque jour des milliers de familles" },
+        { t: "x", v: "Argent envoyé à des proches qui disparaît sans explication." },
+        { t: "x", v: "Dépenses impossibles à vérifier." },
+        { t: "x", v: "Factures inexistantes." },
+        { t: "x", v: "Matériaux achetés à des prix gonflés." },
+        { t: "x", v: "Ouvriers payés mais absents du chantier." },
+        { t: "x", v: "Travaux qui durent des années." },
+        { t: "x", v: "Entreprises qui promettent tout avant le paiement et deviennent injoignables après." },
+        { t: "x", v: "Chantiers abandonnés." },
+        { t: "x", v: "Budgets dépassés de plusieurs millions." },
+        { t: "x", v: "Conflits familiaux à cause de l'argent." },
+        { t: "x", v: "Impossible de savoir où est réellement passé votre argent." },
+        { t: "h", v: "Et pendant ce temps…" },
+        { t: "p", v: "Vous continuez à payer un loyer." },
+        { t: "p", v: "Vous continuez à rêver de votre maison." },
+        { t: "p", v: "Vous continuez à attendre." },
+        { t: "p", v: "Chaque année passe. Et votre projet reste au même point." },
+        { t: "h", v: "Le plus grand danger" },
+        { t: "p", v: "Ce n'est pas de manquer d'argent. C'est de gaspiller l'argent que vous avez déjà." },
+        { t: "p", v: "Combien de personnes gagnent suffisamment pour construire… mais dépensent leur argent dans des urgences, des dépenses inutiles ou des projets jamais terminés ?" },
+        { t: "p", v: "Pendant que vous attendez « le bon moment », votre maison ne se construit pas." },
+        { t: "h", v: "Votre maison ne devrait pas dépendre :" },
+        { t: "x", v: "D'un cousin." },
+        { t: "x", v: "D'un frère." },
+        { t: "x", v: "D'un maçon." },
+        { t: "x", v: "D'une promesse." },
+        { t: "x", v: "D'une photo WhatsApp." },
+        { t: "p", v: "Votre maison mérite mieux." },
+      ],
     },
     parcours: {
       kicker: "La solution · Deux produits, une même promesse",
@@ -228,40 +301,113 @@ const I18N = {
     nav: { terrains: "Land", comment: "How it works", garanties: "Our guarantees", tarifs: "Pricing", blog: "Blog", login: "Log in", cta: "Book a call" },
     hero: {
       badge: "Vol? arnaque? · Basta",
-      title_1: "Buy your land and build your home in Senegal",
-      title_2: "without losing your money, your time or your peace of mind.",
-      sub: "From a verified plot to the handover of the keys, Litug supports you with transparent financial tracking and full control of your project — from abroad.",
+      title_1: "Sell more land.",
+      title_2: "Build without the stress.",
+      sub: "Who told you it takes millions to start building your home? With Litug, start your project from just 1,000 FCFA and keep full control over every expense, wherever you are in the world.",
       cta_primary: "I want to build my home",
       cta_secondary: "I sell land",
       proof: "Already used by sellers, architects and real-estate professionals",
-      checks: ["Budget under control", "Verifiable expenses", "Real-time tracking", "Trusted third party"],
+      checks: [
+        "Start from just 1,000 FCFA",
+        "Every franc tracked and justified",
+        "Real-time work tracking",
+        "Your home moves forward, even from afar",
+      ],
     },
+    reassure: [
+      "Expenses and invoices available anytime",
+      "Budget under control from start to finish",
+      "Your own secure dashboard",
+      "The whole family can take part",
+    ],
     marquee: { label: "Trusted by professionals across the country" },
     probleme: {
-      kicker: "The problem",
-      title: "Afraid your money will vanish before your project is finished?",
-      intro: "You're not alone. Every year, thousands of Senegalese living abroad:",
-      points: [
-        "Buy land that turns out to be already sold, fake or non-existent",
-        "Send money without knowing how it's used",
-        "Discover unexpected budget overruns",
-        "Get little or no information on the site's progress",
-        "Lose years to poor management",
+      tag: "Without Sara",
+      title: "How many sales are you losing without even knowing?",
+      head: [
+        { t: "p", v: "Every day, buyers message you." },
+        { t: "p", v: "Every day, some leave without a reply." },
+        { t: "p", v: "Every day, some buy elsewhere." },
+        { t: "p", v: "And you'll never know." },
+        { t: "x", v: "You lose buyers because a competitor replied before you." },
+        { t: "x", v: "You miss calls while you're at work." },
+        { t: "x", v: "Dozens of messages every week — and some go unanswered." },
       ],
-      outro: "Buying and building from afar shouldn't be a source of stress.",
+      more: [
+        { t: "h", v: "The problems land sellers live with" },
+        { t: "x", v: "Answering the same questions over and over:" },
+        { t: "p", v: "“What's the price?” · “Where is the land?” · “What papers do you have?” · “Can I pay in installments?” · “When can I visit?”" },
+        { t: "p", v: "Again. And again. And again." },
+        { t: "x", v: "Getting dozens, even hundreds of messages every week." },
+        { t: "x", v: "Replying late." },
+        { t: "x", v: "Forgetting some prospects." },
+        { t: "x", v: "Replying differently depending on your mood or availability." },
+        { t: "x", v: "Spending hours on WhatsApp." },
+        { t: "x", v: "Replying to people when the land is already sold." },
+        { t: "h", v: "While you sleep…" },
+        { t: "p", v: "Your prospects keep searching." },
+        { t: "p", v: "Your competitors keep replying." },
+        { t: "p", v: "Your competitors keep selling." },
+        { t: "h", v: "The hidden cost" },
+        { t: "p", v: "Every lost prospect is a potential sale lost." },
+        { t: "p", v: "And a single lost sale can mean hundreds of thousands — even millions of FCFA." },
+        { t: "h", v: "Hire a salesperson?" },
+        { t: "x", v: "Monthly salary." },
+        { t: "x", v: "Payroll costs." },
+        { t: "x", v: "Limited hours." },
+        { t: "x", v: "Holidays." },
+        { t: "x", v: "Sick days." },
+        { t: "x", v: "Only 8 hours a day." },
+        { t: "x", v: "Only 5 or 6 days a week." },
+        { t: "p", v: "And even then, some prospects still go unanswered." },
+        { t: "h", v: "The truth" },
+        { t: "p", v: "Today, it isn't always the best land that sells. It's often the sellers who reply the fastest." },
+        { t: "p", v: "And in real estate, a few minutes can be the difference between a sale won and a sale lost." },
+      ],
     },
     agitation: {
-      kicker: "The real cost",
-      title: "The real cost of a scam or poor management isn't just money.",
-      intro: "It's also:",
-      points: [
-        "A land title disputed years later",
-        "Months of delays on the build",
-        "Family conflicts over the money sent",
-        "Poor-quality materials, work to redo",
-        "Dreams postponed, again and again",
+      tag: "Without Mustaf",
+      title: "How many in the diaspora have sent money for years…",
+      head: [
+        { t: "p", v: "…only to come home and find the house doesn't exist?" },
+        { t: "p", v: "Or that it's half-built. Or that the money is gone." },
+        { t: "x", v: "You send money." },
+        { t: "x", v: "You're told the work is progressing." },
+        { t: "x", v: "You're sent a few photos." },
+        { t: "x", v: "You're reassured." },
+        { t: "x", v: "You keep paying." },
+        { t: "p", v: "Then one day you come back… and you discover the truth." },
       ],
-      outro: "While you work hard abroad, your project deserves professional oversight.",
+      more: [
+        { t: "h", v: "The problems thousands of families live every day" },
+        { t: "x", v: "Money sent to relatives that vanishes without explanation." },
+        { t: "x", v: "Expenses impossible to verify." },
+        { t: "x", v: "Invoices that don't exist." },
+        { t: "x", v: "Materials bought at inflated prices." },
+        { t: "x", v: "Workers paid but absent from the site." },
+        { t: "x", v: "Work that drags on for years." },
+        { t: "x", v: "Companies that promise everything before payment and vanish after." },
+        { t: "x", v: "Abandoned sites." },
+        { t: "x", v: "Budgets overrun by millions." },
+        { t: "x", v: "Family conflicts over money." },
+        { t: "x", v: "No way to know where your money really went." },
+        { t: "h", v: "And meanwhile…" },
+        { t: "p", v: "You keep paying rent." },
+        { t: "p", v: "You keep dreaming of your house." },
+        { t: "p", v: "You keep waiting." },
+        { t: "p", v: "Year after year passes. And your project stays exactly where it was." },
+        { t: "h", v: "The greatest danger" },
+        { t: "p", v: "It's not running out of money. It's wasting the money you already have." },
+        { t: "p", v: "How many people earn enough to build… but spend their money on emergencies, pointless expenses, or projects that are never finished?" },
+        { t: "p", v: "While you wait for “the right moment,” your house isn't getting built." },
+        { t: "h", v: "Your house shouldn't depend on:" },
+        { t: "x", v: "A cousin." },
+        { t: "x", v: "A brother." },
+        { t: "x", v: "A mason." },
+        { t: "x", v: "A promise." },
+        { t: "x", v: "A WhatsApp photo." },
+        { t: "p", v: "Your house deserves better." },
+      ],
     },
     parcours: {
       kicker: "The solution · Two products, one promise",
@@ -898,6 +1044,24 @@ function Hero({ t, lang }: { t: T; lang: Lang }) {
 }
 
 /* ------------------------------------------------------------------ */
+/* REASSURE — bande de confiance sous le hero                          */
+/* ------------------------------------------------------------------ */
+function Reassure({ t }: { t: T }) {
+  const ref = useReveal();
+  return (
+    <section className="reassure-sec" ref={ref}>
+      <div className="wrap reassure-grid reveal">
+        {t.reassure.map((r, i) => (
+          <div className="reassure-item" key={i}>
+            <span className="tick"><Icon name="check" size={14} stroke={2.5} /></span>{r}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /* MARQUEE                                                             */
 /* ------------------------------------------------------------------ */
 function Marquee({ t }: { t: T }) {
@@ -919,33 +1083,55 @@ function Marquee({ t }: { t: T }) {
 /* ------------------------------------------------------------------ */
 /* PROBLEME + AGITATION                                                */
 /* ------------------------------------------------------------------ */
-function Probleme({ t }: { t: T }) {
+type PainRow = { t: string; v: string };
+type PainData = { tag: string; title: string; head: PainRow[]; more: PainRow[] };
+
+function PainRows({ rows }: { rows: PainRow[] }) {
+  return (
+    <>
+      {rows.map((r, i) => {
+        if (r.t === "h") return <h3 className="pain-h" key={i}>{r.v}</h3>;
+        if (r.t === "x") return (
+          <div className="pain-x" key={i}>
+            <span className="cross"><Icon name="x" size={13} stroke={2.5} /></span>
+            <span>{r.v}</span>
+          </div>
+        );
+        return <p className="pain-p" key={i}>{r.v}</p>;
+      })}
+    </>
+  );
+}
+
+function PainBlock({ data, alt, moreLabel, lessLabel }: { data: PainData; alt?: boolean; moreLabel: string; lessLabel: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className={`pain-block reveal${alt ? " alt" : ""}`}>
+      <span className="eyebrow">{data.tag}</span>
+      <h2 className="section-title">{data.title}</h2>
+      <div className="pain-rows">
+        <PainRows rows={data.head} />
+        <div className={`pain-extra${open ? " open" : ""}`} aria-hidden={!open}>
+          <div className="pain-extra-inner"><PainRows rows={data.more} /></div>
+        </div>
+      </div>
+      <button type="button" className="pain-more" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
+        {open ? lessLabel : moreLabel}
+        <Icon name="arrow" size={15} className={`pain-more-ic${open ? " up" : ""}`} />
+      </button>
+    </div>
+  );
+}
+
+function Probleme({ t, lang }: { t: T; lang: Lang }) {
   const ref = useReveal();
+  const moreLabel = lang === "fr" ? "Voir plus" : "See more";
+  const lessLabel = lang === "fr" ? "Voir moins" : "See less";
   return (
     <section className="section pain" id="probleme" ref={ref}>
       <div className="wrap pain-inner">
-        <div className="pain-block reveal">
-          <span className="eyebrow">{t.probleme.kicker}</span>
-          <h2 className="section-title">{t.probleme.title}</h2>
-          <p className="section-sub">{t.probleme.intro}</p>
-          <ul className="pain-list">
-            {t.probleme.points.map((p, i) => (
-              <li key={i}><span className="cross"><Icon name="x" size={13} stroke={2.5} /></span>{p}</li>
-            ))}
-          </ul>
-          <p className="pain-outro">{t.probleme.outro}</p>
-        </div>
-        <div className="pain-block alt reveal">
-          <span className="eyebrow">{t.agitation.kicker}</span>
-          <h2 className="section-title">{t.agitation.title}</h2>
-          <p className="section-sub">{t.agitation.intro}</p>
-          <ul className="pain-list">
-            {t.agitation.points.map((p, i) => (
-              <li key={i}><span className="cross"><Icon name="x" size={13} stroke={2.5} /></span>{p}</li>
-            ))}
-          </ul>
-          <p className="pain-outro">{t.agitation.outro}</p>
-        </div>
+        <PainBlock data={t.probleme} moreLabel={moreLabel} lessLabel={lessLabel} />
+        <PainBlock data={t.agitation} alt moreLabel={moreLabel} lessLabel={lessLabel} />
       </div>
     </section>
   );
@@ -1642,8 +1828,9 @@ export default function LandingPage() {
       <Nav t={t} lang={lang} setLang={setLang} />
       <main>
         <Hero t={t} lang={lang} />
+        <Reassure t={t} />
         <Marquee t={t} />
-        <Probleme t={t} />
+        <Probleme t={t} lang={lang} />
         <Parcours t={t} lang={lang} />
         <Sara t={t} lang={lang} />
         <Mustaf t={t} lang={lang} />

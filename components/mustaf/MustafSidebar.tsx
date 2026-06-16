@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Home, Wallet, ReceiptText, Camera, Users, FileText, LogOut, ChevronDown, ShieldCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { logout } from '@/app/(auth)/login/actions';
+import { MustafThemeToggle } from './MustafThemeToggle';
 
 const NAV = [
   { href: '/projet',                label: "Vue d'ensemble",    icon: Home },
@@ -58,8 +59,10 @@ export function MustafSidebar({ ownerName, tierLabel, projectName }: Props) {
         })}
       </nav>
 
-      {/* Pied : confiance + profil */}
+      {/* Pied : thème + confiance + profil */}
       <div className="mt-auto pt-4 space-y-3">
+        <MustafThemeToggle />
+
         <div className="m-trust-mini">
           <div className="m-t">
             <ShieldCheck size={15} />

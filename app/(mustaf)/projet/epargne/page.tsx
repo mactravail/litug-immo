@@ -33,27 +33,27 @@ export default async function EpargnePage() {
         breadcrumbs={[{ label: 'Mon projet', href: '/projet' }, { label: 'Compte épargne' }]}
       />
 
-      {/* Solde */}
-      <section className="bg-ink text-on-ink rounded-2xl p-6 shadow-sm">
-        <div className="flex items-center gap-2 text-on-ink-muted text-sm">
-          <Wallet size={16} className="text-gold" />
+      {/* Solde — version claire : carte blanche, palette monochrome du projet */}
+      <section className="bg-white rounded-2xl border border-stone-100 p-6 shadow-sm">
+        <div className="flex items-center gap-2 text-muted text-sm">
+          <Wallet size={16} className="text-accent" />
           Solde du compte séquestre
         </div>
-        <p className="font-display text-3xl sm:text-4xl font-semibold tracking-tight mt-2 break-words">{formatFcfa(escrow.balance)}</p>
-        <p className="text-on-ink-muted text-sm mt-1">{formatEur(escrow.balance)}</p>
-        <div className="mt-4 pt-4 border-t border-line-on-ink grid grid-cols-2 gap-4 text-sm">
+        <p className="font-display text-3xl sm:text-4xl font-semibold tracking-tight mt-2 break-words text-text">{formatFcfa(escrow.balance)}</p>
+        <p className="text-muted text-sm mt-1">{formatEur(escrow.balance)}</p>
+        <div className="mt-4 pt-4 border-t border-stone-100 grid grid-cols-2 gap-4 text-sm">
           <div>
-            <p className="text-on-ink-muted text-xs">Total versé</p>
-            <p className="font-semibold mt-0.5">{formatFcfa(escrow.totalDeposited)}</p>
+            <p className="text-muted text-xs">Total versé</p>
+            <p className="font-semibold mt-0.5 text-text">{formatFcfa(escrow.totalDeposited)}</p>
           </div>
           <div>
-            <p className="text-on-ink-muted text-xs">Déjà débloqué (phases payées)</p>
-            <p className="font-semibold mt-0.5">{formatFcfa(escrow.totalReleased)}</p>
+            <p className="text-muted text-xs">Déjà débloqué (phases payées)</p>
+            <p className="font-semibold mt-0.5 text-text">{formatFcfa(escrow.totalReleased)}</p>
           </div>
         </div>
         {pendingTotal > 0 && (
-          <div className="mt-4 flex items-center gap-2 rounded-xl bg-amber-500/10 border border-amber-400/20 px-3 py-2.5 text-xs text-amber-200">
-            <Clock size={14} className="shrink-0 text-amber-300" />
+          <div className="mt-4 flex items-center gap-2 rounded-xl bg-amber-50 border border-amber-100 px-3 py-2.5 text-xs text-amber-700">
+            <Clock size={14} className="shrink-0 text-amber-600" />
             <span>
               <span className="font-semibold">{formatFcfa(pendingTotal)}</span> en attente de validation —
               non compté dans le solde tant que Litug n’a pas confirmé le virement.

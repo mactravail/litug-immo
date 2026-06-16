@@ -290,3 +290,57 @@ body:has(.mustaf-shell) {
 .m-mobnav { background: var(--m-bg2); border-top: 1px solid var(--m-line); }
 .m-mobnav a { color: var(--m-mut); }
 .m-mobnav a.m-active { color: var(--m-gold); }
+
+/* ---- Bascule de thème (sombre / clair), dans le menu de gauche ---- */
+.m-theme { display: flex; align-items: center; gap: 4px; background: var(--m-card); border: 1px solid var(--m-line); border-radius: 11px; padding: 4px; }
+.m-theme button { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 7px 8px; border-radius: 8px; color: var(--m-mut); background: none; border: none; cursor: pointer; transition: background .12s ease, color .12s ease; }
+.m-theme button svg { width: 14px; height: 14px; stroke-width: 2; }
+.m-theme button:hover { color: var(--m-txt); }
+.m-theme button.m-theme-on { background: var(--m-gold-soft); color: var(--m-gold); }
+.m-theme button.m-theme-on:hover { color: var(--m-gold); }
+
+/* ============================================================
+   MODE CLAIR — activé par la classe `mustaf-light` sur <html>
+   (bascule dans le menu de gauche). On se contente de redéfinir
+   la palette --m-* : toutes les cartes, la sidebar, la topbar et
+   les composants .m-* en héritent automatiquement. Les couleurs
+   de statut (or/vert/bleu/rouge) sont assombries juste assez pour
+   rester lisibles sur fond clair. Charte monochrome du projet :
+   surfaces blanches, texte quasi-noir, lignes grises.
+   ============================================================ */
+html.mustaf-light body:has(.mustaf-shell) { background: #f4f4f2; }
+
+html.mustaf-light .mustaf-shell {
+  --m-bg: #f4f4f2;          /* fond de page — blanc cassé (paper) */
+  --m-bg2: #ffffff;         /* sidebar / topbar / champs */
+  --m-card: #ffffff;        /* cartes */
+  --m-card2: #f1f1ef;       /* surfaces secondaires, pistes de barres */
+  --m-line: rgba(0, 0, 0, 0.08);
+  --m-line2: rgba(0, 0, 0, 0.13);
+  --m-txt: #1c2026;         /* texte quasi-noir */
+  --m-mut: #5b6470;
+  --m-mut2: #8a929c;
+  --m-gold: #9c6f17;        /* or assombri → lisible sur blanc */
+  --m-gold-soft: rgba(226, 165, 63, 0.16);
+  --m-green: #1f9d57;
+  --m-green-soft: rgba(52, 199, 123, 0.13);
+  --m-blue: #2f6fd6;
+  --m-blue-soft: rgba(91, 157, 249, 0.12);
+  --m-red: #d23a43;
+  --m-red-soft: rgba(241, 100, 108, 0.1);
+
+  --color-accent-bright: #b8841f;
+  --color-ink: #1c2026;     /* boutons CTA `bg-ink text-white` restent sombres */
+  --color-on-ink: var(--m-txt);        /* topbar claire → texte sombre */
+  --color-on-ink-muted: var(--m-mut);
+
+  background: radial-gradient(1200px 700px at 80% -10%, #fbf6ea 0%, #f4f4f2 55%);
+  color: var(--m-txt);
+}
+
+/* Le logo est inversé (blanc) pour le fond sombre — on rétablit l'original
+   sur la sidebar/menu clairs. */
+html.mustaf-light .mustaf-shell .invert { filter: none !important; }
+/* Le hamburger mobile passe en `hover:text-white` (pensé pour topbar sombre) :
+   sur topbar claire on le ramène au texte sombre. */
+html.mustaf-light .mustaf-shell .hover\:text-white:hover { color: var(--m-txt) !important; }

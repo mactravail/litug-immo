@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import { Home, Wallet, ReceiptText, Camera, Users, FileText, LogOut, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { logout } from '@/app/(auth)/login/actions';
+import { MustafThemeToggle } from './MustafThemeToggle';
 
 const NAV = [
   { href: '/projet',                label: 'Mon projet',        icon: Home },
@@ -128,8 +129,11 @@ export function MustafMobileMenu({ ownerName, tierLabel }: Props) {
               })}
             </nav>
 
-            {/* Profil + déconnexion */}
-            <div className="border-t border-stone-100 pt-4 mt-4 space-y-1">
+            {/* Thème + profil + déconnexion */}
+            <div className="border-t border-stone-100 pt-4 mt-4 space-y-3">
+              <MustafThemeToggle />
+            </div>
+            <div className="space-y-1">
               <div className="flex items-center gap-3 px-3 py-2">
                 <div className="w-8 h-8 rounded-full bg-accent-light flex items-center justify-center text-accent text-xs font-bold shrink-0">
                   {initials(ownerName)}

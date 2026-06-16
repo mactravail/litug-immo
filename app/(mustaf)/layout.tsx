@@ -22,7 +22,15 @@ export default async function MustafLayout({ children }: { children: React.React
   const tierLabel = TIER_LABEL[project.subscriptionTier];
 
   return (
-    <div className="mustaf-shell min-h-screen lg:pl-64">
+    <>
+      {/* Applique le thème clair AVANT le premier rendu (pas de flash sombre). */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html:
+            "(function(){try{if(localStorage.getItem('mustaf-theme')==='light'){document.documentElement.classList.add('mustaf-light')}}catch(e){}})()",
+        }}
+      />
+      <div className="mustaf-shell min-h-screen lg:pl-64">
       <MustafSidebar
         ownerName={project.ownerName}
         tierLabel={tierLabel}
@@ -58,6 +66,7 @@ export default async function MustafLayout({ children }: { children: React.React
       </div>
 
       <MustafMobileNav />
-    </div>
+      </div>
+    </>
   );
 }

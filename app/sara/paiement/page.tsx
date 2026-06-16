@@ -5,6 +5,7 @@ import { join } from 'path';
 import { ArrowLeft } from 'lucide-react';
 import { Checkout } from './Checkout';
 import { getStripe } from '@/lib/stripe';
+import { isPlanId, isPeriodId, type PlanId, type PeriodId } from '../plans';
 import '../../landing.css';
 import './checkout.css';
 
@@ -13,10 +14,6 @@ export const metadata: Metadata = {
   description: 'Active ton abonnement à Sara : paiement par Wave (carte bancaire, PayPal et Stripe bientôt disponibles).',
 };
 
-// Montant total à payer aujourd'hui (FCFA)
-const TODAY = '150 000';
-
-/** Au retour de Stripe (?paid=1&session_id=…), confirme que la session est payée. */
 async function confirmStripeReturn(sessionId?: string): Promise<string | null> {
   if (!sessionId) return null;
   try {
@@ -25,7 +22,7 @@ async function confirmStripeReturn(sessionId?: string): Promise<string | null> {
       return session.customer_details?.email ?? session.customer_email ?? '';
     }
   } catch {
-    // session introuvable / clé absente → on n'affiche pas la confirmation
+    // session introuvable / clé absente
   }
   return null;
 }
@@ -33,18 +30,19 @@ async function confirmStripeReturn(sessionId?: string): Promise<string | null> {
 export default async function PaiementPage({
   searchParams,
 }: {
-  searchParams: Promise<{ paid?: string; session_id?: string; canceled?: string }>;
+  searchParams: Promise<{ paid?: string; session_id?: string; canceled?: string; plan?: string; period?: string }>;
 }) {
   const sp = await searchParams;
   const paidEmail = sp.paid === '1' ? await confirmStripeReturn(sp.session_id) : null;
   const canceled = sp.canceled === '1';
 
-  // QR Wave officiel de Litug, déposé dans public/wave-qr.png.
+  const plan: PlanId   = isPlanId(sp.plan)     ? sp.plan   : 'essai';
+  const period: PeriodId = isPeriodId(sp.period) ? sp.period : 'mensuel';
+
   const hasQr = existsSync(join(process.cwd(), 'public', 'wave-qr.png'));
 
   return (
     <div className="landing-root">
-      {/* Nav simple */}
       <nav className="offer-nav">
         <Link className="brand" href="/">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -62,7 +60,13 @@ export default async function PaiementPage({
       </header>
 
       <section className="section wrap" style={{ paddingTop: 'clamp(24px,3vw,36px)' }}>
-        <Checkout hasQr={hasQr} today={TODAY} paidEmail={paidEmail} canceled={canceled} />
+        <Checkout
+          hasQr={hasQr}
+          plan={plan}
+          defaultPeriod={period}
+          paidEmail={paidEmail}
+          canceled={canceled}
+        />
       </section>
 
       <footer className="offer-foot">

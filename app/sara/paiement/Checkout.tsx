@@ -2,12 +2,13 @@
 
 import { useActionState, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ShieldCheck, Lock, Mail, Check, ExternalLink } from 'lucide-react';
+import { ShieldCheck, Lock, Mail, Check, ExternalLink, Sparkles, Star } from 'lucide-react';
+import { formatFcfa, formatEur } from '@/lib/utils';
+import { SETUP_FEE, PERIODS, PERIOD_IDS, getTotal, type PlanId, type PeriodId } from '../plans';
 import { submitCheckout } from './actions';
 
 type Method = 'wave' | 'mastercard' | 'paypal' | 'stripe';
 
-/* Logos de marque officiels (public/pay/*.svg + Wave). */
 function Logo({ src, alt, h = 22 }: { src: string; alt: string; h?: number }) {
   // eslint-disable-next-line @next/next/no-img-element
   return <img className="pay-logo" src={src} alt={alt} style={{ height: h }} />;
@@ -46,32 +47,37 @@ const METHODS: { id: Method; label: string; logos: React.ReactNode; soon?: boole
 
 interface Props {
   hasQr: boolean;
-  today: string; // ex. "150 000"
-  paidEmail?: string | null; // rempli au retour de Stripe (paiement réussi)
-  canceled?: boolean; // rempli au retour de Stripe (paiement annulé)
+  plan: PlanId;
+  defaultPeriod: PeriodId;
+  paidEmail?: string | null;
+  canceled?: boolean;
 }
 
-export function Checkout({ hasQr, today, paidEmail, canceled }: Props) {
+export function Checkout({ hasQr, plan, defaultPeriod, paidEmail, canceled }: Props) {
   const [state, action, isPending] = useActionState(submitCheckout, null);
 
   const [method, setMethod] = useState<Method>('wave');
+  const [period, setPeriod] = useState<PeriodId>(defaultPeriod);
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [captcha, setCaptcha] = useState(false);
 
-  // Le paiement carte/Stripe se fait sur la page hébergée Stripe : on redirige dès
-  // que le serveur renvoie l'URL de la session (aucune donnée carte sur notre site).
   useEffect(() => {
     if (state && 'checkoutUrl' in state && state.checkoutUrl) {
       window.location.href = state.checkoutUrl;
     }
   }, [state]);
 
+  const isCard = method === 'mastercard' || method === 'stripe';
   const pwTooShort = password.length > 0 && password.length < 8;
   const pwMismatch = confirm.length > 0 && password !== confirm;
   const redirecting = !!(state && 'checkoutUrl' in state && state.checkoutUrl);
   const canSubmit =
     !isPending && !redirecting && captcha && password.length >= 8 && password === confirm;
+
+  const total = getTotal(plan, period);
+  const totalLabel = formatFcfa(total);
+  const periodInfo = PERIODS[period];
 
   // --- Retour de Stripe : paiement confirmé ---
   if (paidEmail !== null && paidEmail !== undefined) {
@@ -86,8 +92,7 @@ export function Checkout({ hasQr, today, paidEmail, canceled }: Props) {
         {paidEmail && <span className="email-pill">{paidEmail}</span>}
         <p className="co-confirm-note">
           <ShieldCheck size={15} />
-          Notre équipe vérifie ton inscription sous <b>24&nbsp;h</b> maximum. En attendant, tu
-          pourras te connecter mais pas encore publier de terrain.
+          Notre équipe vérifie ton inscription sous <b>24&nbsp;h</b> maximum.
         </p>
         <Link href="/login" className="btn btn-primary btn-lg" style={{ marginTop: 18 }}>
           Aller à la connexion
@@ -96,7 +101,7 @@ export function Checkout({ hasQr, today, paidEmail, canceled }: Props) {
     );
   }
 
-  // --- Écran de confirmation : « un email t'a été envoyé » ---
+  // --- Confirmation Wave / non-carte ---
   if (state?.ok) {
     return (
       <div className="co-card co-confirm">
@@ -126,6 +131,10 @@ export function Checkout({ hasQr, today, paidEmail, canceled }: Props) {
 
   return (
     <form action={action} className="checkout-grid">
+      {/* Champs cachés transmis à l'action */}
+      <input type="hidden" name="plan" value={plan} />
+      <input type="hidden" name="period" value={period} />
+
       {/* ── Colonne gauche : compte + mot de passe ── */}
       <div className="checkout-form-col">
         <div className="co-card">
@@ -184,7 +193,6 @@ export function Checkout({ hasQr, today, paidEmail, canceled }: Props) {
               {pwMismatch && <p className="field-err">Les deux mots de passe ne correspondent pas.</p>}
             </div>
 
-            {/* « Je ne suis pas un robot » */}
             <label className={`captcha ${captcha ? 'is-checked' : ''}`}>
               <input
                 type="checkbox" name="captcha"
@@ -195,13 +203,13 @@ export function Checkout({ hasQr, today, paidEmail, canceled }: Props) {
             </label>
 
             <button type="submit" className="btn btn-primary btn-lg" disabled={!canSubmit}>
-              {method === 'mastercard' || method === 'stripe' ? <ExternalLink size={16} /> : <Lock size={16} />}
+              {isCard ? <ExternalLink size={16} /> : <Lock size={16} />}
               {redirecting
                 ? 'Redirection vers Stripe…'
                 : isPending
                   ? 'Traitement…'
-                  : method === 'mastercard' || method === 'stripe'
-                    ? `Payer ${today} FCFA par carte`
+                  : isCard
+                    ? `Payer ${totalLabel} par carte`
                     : `J'ai payé — Activer mon abonnement`}
             </button>
             <p className="hint" style={{ textAlign: 'center', marginTop: 2 }}>
@@ -213,6 +221,100 @@ export function Checkout({ hasQr, today, paidEmail, canceled }: Props) {
 
       {/* ── Colonne droite : récap + moyen de paiement ── */}
       <div className="checkout-pay-col">
+
+        {/* Récap tarifaire */}
+        <div className="co-card">
+          <h2>Ton abonnement</h2>
+
+          {/* Badge du plan */}
+          <p className="co-plan-badge">
+            {plan === 'essai'
+              ? <><Sparkles size={13} /> Essai — mise en service uniquement</>
+              : <><Star size={13} /> Tout compris</>}
+          </p>
+
+          {/* Sélecteur de période (plan pro uniquement) */}
+          {plan === 'pro' && (
+            <div className="period-tabs" style={{ marginBottom: 16 }}>
+              {PERIOD_IDS.map((pid) => {
+                const p = PERIODS[pid];
+                return (
+                  <button
+                    key={pid}
+                    type="button"
+                    className={`period-tab${period === pid ? ' active' : ''}`}
+                    onClick={() => setPeriod(pid)}
+                  >
+                    <span>{p.label}</span>
+                    {p.discount_pct > 0 && (
+                      <span className="period-badge">-{p.discount_pct}%</span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Lignes du récap */}
+          <div className="co-line">
+            <span className="desc">
+              Mise en service<small>Frais d&apos;installation unique</small>
+            </span>
+            <span className="amt">{formatFcfa(SETUP_FEE)}</span>
+          </div>
+
+          {plan === 'pro' && (
+            <div className="co-line">
+              <span className="desc">
+                Abonnement Sara
+                <small>
+                  {periodInfo.months === 1
+                    ? 'Premier mois'
+                    : `${periodInfo.months} mois · ${formatFcfa(periodInfo.monthly_fcfa)}/mois`}
+                </small>
+              </span>
+              <span className="amt">{formatFcfa(periodInfo.total_fcfa)}</span>
+            </div>
+          )}
+
+          {plan === 'essai' && (
+            <div className="co-line">
+              <span className="desc">
+                Abonnement Sara<small>Inclus pendant la période d&apos;essai</small>
+              </span>
+              <span className="amt co-free">Offert</span>
+            </div>
+          )}
+
+          <div className="co-total">
+            <span className="lbl">À payer aujourd&apos;hui</span>
+            <span className="val">
+              <span className="big">{totalLabel}</span>
+              <small>≈ {formatEur(total)}</small>
+            </span>
+          </div>
+
+          {plan === 'pro' && period !== 'mensuel' && (
+            <p className="price-save" style={{ marginTop: 8, marginBottom: 0 }}>
+              Tu économises {formatFcfa(PERIODS.mensuel.monthly_fcfa - periodInfo.monthly_fcfa)}/mois
+              vs mensuel (-{periodInfo.discount_pct}%)
+            </p>
+          )}
+
+          {plan === 'pro' && period === 'mensuel' && (
+            <p className="co-recurring">
+              Puis {formatFcfa(periodInfo.monthly_fcfa)} / mois · sans engagement, résiliable à tout moment.
+            </p>
+          )}
+
+          {plan === 'essai' && (
+            <p className="co-recurring">
+              Sans abonnement mensuel — tu accèdes à Sara et au tableau de bord dès la mise en service.
+            </p>
+          )}
+        </div>
+
+        {/* Moyen de paiement */}
         <div className="co-card">
           <div className="pay-head">
             <h2>Moyen de paiement</h2>
@@ -249,18 +351,17 @@ export function Checkout({ hasQr, today, paidEmail, canceled }: Props) {
             ))}
           </div>
 
-          {/* Détail Wave (réel) */}
           {method === 'wave' && (
             <div className="pay-panel">
               <div className="qr-box">
                 {hasQr ? (
-                  /* eslint-disable-next-line @next/next/no-img-element */
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img src="/wave-qr.png" alt="QR code Wave — Litug" />
                 ) : (
                   <span className="qr-missing">QR Wave à ajouter</span>
                 )}
               </div>
-              <p className="qr-cap">Scanne avec l&apos;app Wave et envoie <b>{today} FCFA</b>.</p>
+              <p className="qr-cap">Scanne avec l&apos;app Wave et envoie <b>{totalLabel}</b>.</p>
               <div className="co-tx field">
                 <label htmlFor="tx">Numéro de transaction Wave</label>
                 <input id="tx" name="tx" placeholder="Ex. TXN-AB12CD34" />
@@ -271,8 +372,7 @@ export function Checkout({ hasQr, today, paidEmail, canceled }: Props) {
             </div>
           )}
 
-          {/* Détail Carte / Stripe — paiement sur la page sécurisée Stripe (mode test) */}
-          {(method === 'mastercard' || method === 'stripe') && (
+          {isCard && (
             <div className="pay-panel">
               <div className="pay-alt">
                 <span className="pay-alt-logos">
@@ -282,18 +382,17 @@ export function Checkout({ hasQr, today, paidEmail, canceled }: Props) {
                   <Logo src="/pay/stripe.svg" alt="Stripe" h={14} />
                 </span>
                 <p>
-                  Après « <b>J&apos;ai payé</b> », tu seras redirigé vers la page de paiement
-                  <b> sécurisée Stripe</b> pour saisir ta carte, puis ramené ici.
+                  Tu seras redirigé vers la page de paiement <b>sécurisée Stripe</b> pour saisir
+                  ta carte, puis ramené ici.
                 </p>
               </div>
               <p className="pay-sim">
-                <ShieldCheck size={14} /> Mode test — utilise la carte de démonstration
-                <b> 4242 4242 4242 4242</b>, une date future et n&apos;importe quel CVC.
+                <ShieldCheck size={14} /> Mode test — carte de démonstration
+                <b> 4242 4242 4242 4242</b>, date future, n&apos;importe quel CVC.
               </p>
             </div>
           )}
 
-          {/* Détail PayPal (simulé — démo) */}
           {method === 'paypal' && (
             <div className="pay-panel">
               <div className="paypal-mock">
@@ -306,23 +405,6 @@ export function Checkout({ hasQr, today, paidEmail, canceled }: Props) {
               </p>
             </div>
           )}
-        </div>
-
-        <div className="co-card">
-          <h2>Ton abonnement</h2>
-          <div className="co-line">
-            <span className="desc">Mise en service<small>Frais d&apos;installation unique</small></span>
-            <span className="amt">100 000 FCFA</span>
-          </div>
-          <div className="co-line">
-            <span className="desc">Abonnement Sara<small>Premier mois</small></span>
-            <span className="amt">50 000 FCFA</span>
-          </div>
-          <div className="co-total">
-            <span className="lbl">À payer aujourd&apos;hui</span>
-            <span className="val"><span className="big">{today} FCFA</span><small>≈ 228 €</small></span>
-          </div>
-          <p className="co-recurring">Puis 50 000 FCFA / mois · sans engagement, résiliable à tout moment.</p>
         </div>
 
         <p className="price-note" style={{ marginTop: 16 }}>

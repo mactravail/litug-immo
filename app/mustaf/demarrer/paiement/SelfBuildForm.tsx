@@ -3,8 +3,11 @@
 import { useActionState, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Lock, ExternalLink, ShieldCheck, Mail, Check } from 'lucide-react';
-import type { TierId } from '../../offers';
+import { DASHBOARD_FEE_EUR, DASHBOARD_FEE, type TierId } from '../../offers';
+import { formatFcfa } from '@/lib/utils';
 import { submitSelfBuild } from './actions';
+
+const PRICE_LABEL = `${DASHBOARD_FEE_EUR} € (${formatFcfa(DASHBOARD_FEE)})`;
 
 type Method = 'wave' | 'mastercard' | 'paypal' | 'stripe';
 
@@ -217,7 +220,7 @@ export function SelfBuildForm({ canceled, tier }: { canceled?: boolean; tier?: T
               <img src="/wave-qr.png" alt="QR code Wave — Litug" />
             </div>
             <p className="qr-cap">
-              Scannez ce code avec l&apos;application <b>Wave</b> et envoyez <b>50&nbsp;€</b>.
+              Scannez ce code avec l&apos;application <b>Wave</b> et envoyez <b>{PRICE_LABEL}</b>.
             </p>
             <p className="pay-sim">
               <ShieldCheck size={14} />
@@ -274,8 +277,8 @@ export function SelfBuildForm({ canceled, tier }: { canceled?: boolean; tier?: T
             : isPending
               ? 'Traitement…'
               : isCard
-                ? 'Payer 50 € par carte'
-                : 'Payer 50 € et commencer'}
+                ? `Payer ${PRICE_LABEL} par carte`
+                : `Payer ${PRICE_LABEL} et commencer`}
         </button>
         <p className="pay-secure" style={{ marginTop: 2 }}>
           Un email d&apos;activation te sera envoyé après l&apos;inscription.

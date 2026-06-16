@@ -13,7 +13,7 @@ const NAV = [
   { href: '/admin/prospection', label: 'Prospection',  icon: Target },
 ];
 
-export function AdminMobileNav({ pendingCount = 0 }: { pendingCount?: number }) {
+export function AdminMobileNav({ pendingCount = 0, prospectionCount = 0 }: { pendingCount?: number; prospectionCount?: number }) {
   const pathname = usePathname();
 
   return (
@@ -21,7 +21,9 @@ export function AdminMobileNav({ pendingCount = 0 }: { pendingCount?: number }) 
       <div className="flex">
         {NAV.map(({ href, label, icon: Icon }) => {
           const active = href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
-          const badge = href === '/admin/demandes' && pendingCount > 0;
+          const badgeCount =
+            href === '/admin/demandes'    ? pendingCount :
+            href === '/admin/prospection' ? prospectionCount : 0;
           return (
             <Link
               key={href}
@@ -33,9 +35,9 @@ export function AdminMobileNav({ pendingCount = 0 }: { pendingCount?: number }) 
             >
               <span className="relative">
                 <Icon size={20} />
-                {badge && (
+                {badgeCount > 0 && (
                   <span className="absolute -top-1.5 -right-2 min-w-4 h-4 px-1 inline-flex items-center justify-center rounded-full bg-accent text-white text-[9px] font-bold">
-                    {pendingCount > 9 ? '9+' : pendingCount}
+                    {badgeCount > 9 ? '9+' : badgeCount}
                   </span>
                 )}
               </span>

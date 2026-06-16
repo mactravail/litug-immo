@@ -128,6 +128,7 @@ export interface AdminProvider {
   escalateIncident(id: string): Promise<Incident>;
   // Prospection commerciale (lecture admin)
   listProspectEntries(filter?: { prospectorId?: string; status?: ProspectEntry['status'] }): Promise<ProspectEntry[]>;
+  countSentProspectEntries(): Promise<number>;
 }
 
 export interface RecordInvoiceInput {
@@ -739,6 +740,10 @@ export const adminMockProvider: AdminProvider = {
     return rows.sort((a, b) =>
       b.prospectedAt.localeCompare(a.prospectedAt) ||
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  },
+
+  async countSentProspectEntries() {
+    return SEED_PROSPECT_ENTRIES.filter(p => p.status === 'sent').length;
   },
 };
 

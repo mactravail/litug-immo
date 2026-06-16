@@ -355,6 +355,16 @@ export const supabaseAdminProvider: AdminProvider = {
 
   /* ---------------- Prospection commerciale (réel) ---------------- */
 
+  async countSentProspectEntries() {
+    const admin = createSupabaseAdminClient();
+    const { count, error } = await admin
+      .from('prospect_entries')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'sent');
+    if (error) return 0;
+    return count ?? 0;
+  },
+
   async listProspectEntries(filter) {
     const admin = createSupabaseAdminClient();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

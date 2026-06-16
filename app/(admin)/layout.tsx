@@ -2,7 +2,7 @@ import './admin-theme.css';
 import { ShieldCheck, LogOut } from 'lucide-react';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import { AdminMobileNav } from '@/components/admin/AdminMobileNav';
-import { ADMIN_USER_NAME } from '@/lib/admin/provider';
+import { ADMIN_USER_NAME, getAdminProvider } from '@/lib/admin/provider';
 import { countPendingAccounts } from '@/lib/admin/pending-accounts';
 import { logout } from '@/app/(auth)/login/actions';
 
@@ -21,12 +21,15 @@ export const dynamic = 'force-dynamic';
  * open in mock mode for the demo, exactly like /projet).
  */
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  // Pastille « Demandes » : nombre de comptes en attente de validation (tolérant à 0).
-  const pendingCount = await countPendingAccounts();
+  const ap = getAdminProvider();
+  const [pendingCount, prospectionCount] = await Promise.all([
+    countPendingAccounts(),
+    ap.countSentProspectEntries(),
+  ]);
 
   return (
     <div className="admin-shell flex h-screen overflow-hidden">
-      <AdminSidebar adminName={ADMIN_USER_NAME} pendingCount={pendingCount} />
+      <AdminSidebar adminName={ADMIN_USER_NAME} pendingCount={pendingCount} prospectionCount={prospectionCount} />
 
       <div className="flex-1 min-w-0 flex flex-col overflow-y-auto pb-20 lg:pb-0">
         {/* Trust strip — every sensitive action is traced in the audit log. */}
@@ -51,7 +54,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </main>
       </div>
 
-      <AdminMobileNav pendingCount={pendingCount} />
+      <AdminMobileNav pendingCount={pendingCount} prospectionCount={prospectionCount} />
     </div>
   );
 }

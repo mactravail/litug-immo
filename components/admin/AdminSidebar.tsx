@@ -43,7 +43,7 @@ const GROUPS: { title: string; items: { href: string; label: string; icon: typeo
   },
 ];
 
-export function AdminSidebar({ adminName, pendingCount = 0 }: { adminName: string; pendingCount?: number }) {
+export function AdminSidebar({ adminName, pendingCount = 0, prospectionCount = 0 }: { adminName: string; pendingCount?: number; prospectionCount?: number }) {
   const pathname = usePathname();
 
   return (
@@ -66,6 +66,9 @@ export function AdminSidebar({ adminName, pendingCount = 0 }: { adminName: strin
                   <span className="flex-1">{label}</span>
                   {href === '/admin/demandes' && pendingCount > 0 && (
                     <span className="a-nav-badge">{pendingCount > 99 ? '99+' : pendingCount}</span>
+                  )}
+                  {href === '/admin/prospection' && prospectionCount > 0 && (
+                    <span className="a-nav-badge">{prospectionCount > 99 ? '99+' : prospectionCount}</span>
                   )}
                 </Link>
               );
